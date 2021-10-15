@@ -12,3 +12,9 @@ To build the tool, execute the following command:
 cmake . && make all
 ```
 
+To install via cget (the lib file is saved as `/usr/lib/libmeager.so`) execute the following command:
+
+```sh
+sudo cget install zeionara/meager
+``` 
+
