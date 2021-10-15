@@ -11,3 +11,5 @@ option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
 add_library(meager ${SOURCES})
 
+install(TARGETS meager DESTINATION /usr/lib/)
+
