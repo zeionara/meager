@@ -20,58 +20,80 @@ Triple *trainRel;
 INT *testLef, *testRig;
 INT *validLef, *validRig;
 
-extern "C"
-void importTrainFiles() {
 
-	printf("The toolkit is importing datasets.\n");
-	FILE *fin;
+void print_triples(std::string header, Triple* triples, int nTriples) {
+    std::cout << header << "\n";
+    for (int i = 0; i < nTriples; i++) {
+        triples[i].print();
+    }
+}
+
+extern "C"
+void importTrainFiles(bool verbose = false) {
+
+    if (verbose) {
+        printf("The toolkit is importing datasets.\n");
+    }
+
+	FILE *input_file;
 	int tmp;
 
-	fin = fopen((inPath + "relation2id.txt").c_str(), "r");
+	input_file = fopen((inPath + "relation2id.txt").c_str(), "r");
 
-	if (fin == nullptr) {
+	if (input_file == nullptr) {
 		std::cout << '`' << inPath << "relation2id.txt" << '`' << " does not exist"
 		          << std::endl;
 		return;
 	}
 
-	tmp = fscanf(fin, "%ld", &relationTotal);
-	printf("The total of relations is %ld.\n", relationTotal);
-	fclose(fin);
+	tmp = fscanf(input_file, "%ld", &relationTotal);
+    if (verbose) {
+        printf("The total of relations is %ld.\n", relationTotal);
+    }
 
-	fin = fopen((inPath + "entity2id.txt").c_str(), "r");
+	fclose(input_file);
 
-	if (fin == nullptr) {
+	input_file = fopen((inPath + "entity2id.txt").c_str(), "r");
+
+	if (input_file == nullptr) {
 		std::cout << '`' << inPath << "entity2id.txt" << '`' << " does not exist"
 		          << std::endl;
 		return;
 	}
 
-	tmp = fscanf(fin, "%ld", &entityTotal);
-	printf("The total of entities is %ld.\n", entityTotal);
-	fclose(fin);
+	tmp = fscanf(input_file, "%ld", &entityTotal);
+    if (verbose) {
+        printf("The total of entities is %ld.\n", entityTotal);
+    }
 
-	fin = fopen((inPath + "train2id.txt").c_str(), "r");
+	fclose(input_file);
 
-	if (fin == nullptr) {
+	input_file = fopen((inPath + "train2id.txt").c_str(), "r");
+
+	if (input_file == nullptr) {
 		std::cout << '`' << inPath << "train2id.txt" << '`' << " does not exist"
 		          << std::endl;
 		return;
 	}
 
-	tmp = fscanf(fin, "%ld", &trainTotal);
+	tmp = fscanf(input_file, "%ld", &trainTotal); // Reading number of train samples
 	trainList = (Triple *)calloc(trainTotal, sizeof(Triple));
 	trainHead = (Triple *)calloc(trainTotal, sizeof(Triple));
 	trainTail = (Triple *)calloc(trainTotal, sizeof(Triple));
 	trainRel = (Triple *)calloc(trainTotal, sizeof(Triple));
 	freqRel = (INT *)calloc(relationTotal, sizeof(INT));
 	freqEnt = (INT *)calloc(entityTotal, sizeof(INT));
-	for (INT i = 0; i < trainTotal; i++) {
-		tmp = fscanf(fin, "%ld", &trainList[i].h);
-		tmp = fscanf(fin, "%ld", &trainList[i].t);
-		tmp = fscanf(fin, "%ld", &trainList[i].r);
+    // std::cout << trainList << " | " << trainHead;
+	for (INT i = 0; i < trainTotal; i++) { // Reading train samples
+		tmp = fscanf(input_file, "%ld", &trainList[i].h);
+		tmp = fscanf(input_file, "%ld", &trainList[i].t);
+		tmp = fscanf(input_file, "%ld", &trainList[i].r);
 	}
-	fclose(fin);
+
+    print_triples("Train triples", trainList, trainTotal);
+    print_triples("Train triples (head)", trainHead, trainTotal);
+
+	fclose(input_file);
 	std::sort(trainList, trainList + trainTotal, Triple::cmp_head);
 	tmp = trainTotal;
 	trainTotal = 1;
@@ -94,7 +116,9 @@ void importTrainFiles() {
 	std::sort(trainHead, trainHead + trainTotal, Triple::cmp_head);
 	std::sort(trainTail, trainTail + trainTotal, Triple::cmp_tail);
 	std::sort(trainRel, trainRel + trainTotal, Triple::cmp_rel);
-	printf("The total of train triples is %ld.\n", trainTotal);
+    if (verbose) {
+        printf("The total of train triples is %ld.\n", trainTotal);
+    }
 
 	lefHead = (INT *)calloc(entityTotal, sizeof(INT));
 	rigHead = (INT *)calloc(entityTotal, sizeof(INT));

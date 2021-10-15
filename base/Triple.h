@@ -1,6 +1,8 @@
 #ifndef TRIPLE_H
 #define TRIPLE_H
 #include "Setting.h"
+#include <iostream>
+
 
 struct Triple {
 
@@ -31,6 +33,9 @@ struct Triple {
 		return (a.r < b.r)||(a.r == b.r && a.h < b.h)||(a.r == b.r && a.h == b.h && a.t < b.t);
 	}
 
+    void print() {
+        std::cout << "head = " << h << ", rel = " << r << ", tail = " << t << "\n";
+    }
 };
 
 #endif

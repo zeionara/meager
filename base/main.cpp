@@ -50,7 +50,7 @@ extern "C"
 void randReset();
 
 extern "C"
-void importTrainFiles();
+void importTrainFiles(bool);
 
 struct Parameter {
 	INT id;
