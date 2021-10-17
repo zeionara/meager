@@ -6,7 +6,7 @@
 #include <cstdio>
 #include <string>
 
-std::string inPath = "../data/FB15K/";
+std::string inPath = "../data/FB15K/"; // By default fb15k corpus is used
 std::string outPath = "../data/FB15K/";
 
 extern "C"
@@ -31,7 +31,7 @@ void setOutPath(char *path) {
 ============================================================
 */
 
-INT workThreads = 1;
+INT workThreads = 1; // By default concurrency is disabled
 
 extern "C"
 void setWorkThreads(INT threads) {
