@@ -101,7 +101,7 @@ void importTrainFiles(bool verbose = false) {
 	freqEnt[trainList[0].t] += 1;
 	freqEnt[trainList[0].h] += 1;
 	freqRel[trainList[0].r] += 1;
-	for (INT i = 1; i < tmp; i++)
+	for (INT i = 1; i < tmp; i++) // Remove duplicated triples
 		if (trainList[i].h != trainList[i - 1].h ||
 		    trainList[i].r != trainList[i - 1].r ||
 		    trainList[i].t != trainList[i - 1].t) {
@@ -129,8 +129,8 @@ void importTrainFiles(bool verbose = false) {
 	memset(rigHead, -1, sizeof(INT) * entityTotal);
 	memset(rigTail, -1, sizeof(INT) * entityTotal);
 	memset(rigRel, -1, sizeof(INT) * entityTotal);
-	for (INT i = 1; i < trainTotal; i++) {
-		if (trainTail[i].t != trainTail[i - 1].t) {
+	for (INT i = 1; i < trainTotal; i++) { // For each element in any triple position found a (closed) interval in the list of sorted triples in which entries with this element occur
+		if (trainTail[i].t != trainTail[i - 1].t) { // lef - left boundary of such an interval, rig - right boundary
 			rigTail[trainTail[i - 1].t] = i - 1;
 			lefTail[trainTail[i].t] = i;
 		}
@@ -154,19 +154,19 @@ void importTrainFiles(bool verbose = false) {
 	right_mean = (REAL *)calloc(relationTotal, sizeof(REAL));
 	for (INT i = 0; i < entityTotal; i++) {
 		for (INT j = lefHead[i] + 1; j <= rigHead[i]; j++)
-			if (trainHead[j].r != trainHead[j - 1].r)
-				left_mean[trainHead[j].r] += 1.0;
-		if (lefHead[i] <= rigHead[i])
-			left_mean[trainHead[lefHead[i]].r] += 1.0;
+			if (trainHead[j].r != trainHead[j - 1].r) // Count number of triples in which a given head entity is occurred skipping ones in which the relationship is repeating
+				left_mean[trainHead[j].r] += 1.0; // because since the relationship is the same and the head is the same, then the tail entity must be different, but tail entities
+		if (lefHead[i] <= rigHead[i]) // will be considered in the following loop
+			left_mean[trainHead[lefHead[i]].r] += 1.0; // Consider case of interval which consists of just one triple (in these circumstances the loop above won't execute)
 		for (INT j = lefTail[i] + 1; j <= rigTail[i]; j++)
-			if (trainTail[j].r != trainTail[j - 1].r)
+			if (trainTail[j].r != trainTail[j - 1].r) // The same as for the head entities in the previous loop - skip ones in which head entity is unique
 				right_mean[trainTail[j].r] += 1.0;
 		if (lefTail[i] <= rigTail[i])
 			right_mean[trainTail[lefTail[i]].r] += 1.0;
 	}
 	for (INT i = 0; i < relationTotal; i++) {
-		left_mean[i] = freqRel[i] / left_mean[i];
-		right_mean[i] = freqRel[i] / right_mean[i];
+		left_mean[i] = freqRel[i] / left_mean[i]; // Compute portion of triples in which some relationship is presented across all triples using number of triples which discards elements in which
+		right_mean[i] = freqRel[i] / right_mean[i]; // only the opposite item (for lef - tail and for rig - head) is unique.
 	}
 }
 
@@ -186,7 +186,7 @@ void importTestFiles() {
 		return;
 	}
 
-	tmp = fscanf(fin, "%ld", &relationTotal);
+	tmp = fscanf(fin, "%ld", &relationTotal); // Read number of relationships
 	fclose(fin);
 
 	fin = fopen((inPath + "entity2id.txt").c_str(), "r");
@@ -196,7 +196,7 @@ void importTestFiles() {
 		return;
 	}
 
-	tmp = fscanf(fin, "%ld", &entityTotal);
+	tmp = fscanf(fin, "%ld", &entityTotal); // Read number of entities
 	fclose(fin);
 
 	FILE *f_kb1 = fopen((inPath + "test2id.txt").c_str(), "r");
@@ -228,18 +228,18 @@ void importTestFiles() {
 	testList = (Triple *)calloc(testTotal, sizeof(Triple));
 	validList = (Triple *)calloc(validTotal, sizeof(Triple));
 	tripleList = (Triple *)calloc(tripleTotal, sizeof(Triple));
-	for (INT i = 0; i < testTotal; i++) {
+	for (INT i = 0; i < testTotal; i++) { // Read test triples, copy each triple into the begging of the tripleList array
 		tmp = fscanf(f_kb1, "%ld", &testList[i].h);
 		tmp = fscanf(f_kb1, "%ld", &testList[i].t);
 		tmp = fscanf(f_kb1, "%ld", &testList[i].r);
 		tripleList[i] = testList[i];
 	}
-	for (INT i = 0; i < trainTotal; i++) {
+	for (INT i = 0; i < trainTotal; i++) { // Read train triples into the middle of the tripleList array
 		tmp = fscanf(f_kb2, "%ld", &tripleList[i + testTotal].h);
 		tmp = fscanf(f_kb2, "%ld", &tripleList[i + testTotal].t);
 		tmp = fscanf(f_kb2, "%ld", &tripleList[i + testTotal].r);
 	}
-	for (INT i = 0; i < validTotal; i++) {
+	for (INT i = 0; i < validTotal; i++) { // Read valid triples into the end of the tripleList array, copy each triple to a separate array
 		tmp = fscanf(f_kb3, "%ld", &tripleList[i + testTotal + trainTotal].h);
 		tmp = fscanf(f_kb3, "%ld", &tripleList[i + testTotal + trainTotal].t);
 		tmp = fscanf(f_kb3, "%ld", &tripleList[i + testTotal + trainTotal].r);
@@ -259,7 +259,7 @@ void importTestFiles() {
 	testRig = (INT *)calloc(relationTotal, sizeof(INT));
 	memset(testLef, -1, sizeof(INT) * relationTotal);
 	memset(testRig, -1, sizeof(INT) * relationTotal);
-	for (INT i = 1; i < testTotal; i++) {
+	for (INT i = 1; i < testTotal; i++) { // Get intervals for unique relationships in the test subset
 		if (testList[i].r != testList[i - 1].r) {
 			testRig[testList[i - 1].r] = i - 1;
 			testLef[testList[i].r] = i;
@@ -272,7 +272,7 @@ void importTestFiles() {
 	validRig = (INT *)calloc(relationTotal, sizeof(INT));
 	memset(validLef, -1, sizeof(INT) * relationTotal);
 	memset(validRig, -1, sizeof(INT) * relationTotal);
-	for (INT i = 1; i < validTotal; i++) {
+	for (INT i = 1; i < validTotal; i++) { // Get intervals for unique relationships in the validation subset
 		if (validList[i].r != validList[i - 1].r) {
 			validRig[validList[i - 1].r] = i - 1;
 			validLef[validList[i].r] = i;
@@ -308,7 +308,7 @@ void importTypeFiles() {
 
 	INT tmp;
 	tmp = fscanf(f_type, "%ld", &tmp);
-	for (INT i = 0; i < relationTotal; i++) {
+	for (INT i = 0; i < relationTotal; i++) { // Count total number of entities enumerated for all relations - separately for head and tail entries
 		INT rel, tot;
 		tmp = fscanf(f_type, "%ld %ld", &rel, &tot);
 		for (INT j = 0; j < tot; j++) {
@@ -323,7 +323,7 @@ void importTypeFiles() {
 	}
 	fclose(f_type);
 
-	head_type = (INT *)calloc(total_lef, sizeof(INT));
+	head_type = (INT *)calloc(total_lef, sizeof(INT)); // Allocate space for the total amount of entity ids got from the previous loop
 	tail_type = (INT *)calloc(total_rig, sizeof(INT));
 	total_lef = 0;
 	total_rig = 0;
@@ -338,15 +338,17 @@ void importTypeFiles() {
 	tmp = fscanf(f_type, "%ld", &tmp);
 	for (INT i = 0; i < relationTotal; i++) {
 		INT rel, tot;
+
 		tmp = fscanf(f_type, "%ld%ld", &rel, &tot);
-		head_lef[rel] = total_lef;
+		head_lef[rel] = total_lef; // Write initial offset of entity id sublist correspoding to a relation in the shared list to the head_lef array for a given relationship
 		for (INT j = 0; j < tot; j++) {
 			tmp = fscanf(f_type, "%ld", &head_type[total_lef]);
 			total_lef++;
 		}
-		head_rig[rel] = total_lef;
-		std::sort(head_type + head_lef[rel], head_type + head_rig[rel]);
-		tmp = fscanf(f_type, "%ld%ld", &rel, &tot);
+		head_rig[rel] = total_lef; // Write last element index of entity id sublist correspoding to a relation in the shared list to the head_rig array for a given relationship
+		std::sort(head_type + head_lef[rel], head_type + head_rig[rel]); // Sort gathered entity ids
+
+		tmp = fscanf(f_type, "%ld%ld", &rel, &tot); // Repeat the same procedure for the tail list of entities mentioned in the triple tail for a given relationship
 		tail_lef[rel] = total_rig;
 		for (INT j = 0; j < tot; j++) {
 			tmp = fscanf(f_type, "%ld", &tail_type[total_rig]);
