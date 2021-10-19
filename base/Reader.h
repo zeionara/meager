@@ -90,8 +90,8 @@ void importTrainFiles(bool verbose = false) {
 		tmp = fscanf(input_file, "%ld", &trainList[i].r);
 	}
 
-    print_triples("Train triples", trainList, trainTotal);
-    print_triples("Train triples (head)", trainHead, trainTotal);
+    // print_triples("Train triples", trainList, trainTotal);
+    // print_triples("Train triples (head)", trainHead, trainTotal);
 
 	fclose(input_file);
 	std::sort(trainList, trainList + trainTotal, Triple::cmp_head);
