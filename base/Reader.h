@@ -291,11 +291,6 @@ INT *tail_type;
 
 extern "C"
 void importTypeFiles() {
-	head_lef = (INT *)calloc(relationTotal, sizeof(INT));
-	head_rig = (INT *)calloc(relationTotal, sizeof(INT));
-	tail_lef = (INT *)calloc(relationTotal, sizeof(INT));
-	tail_rig = (INT *)calloc(relationTotal, sizeof(INT));
-
 	INT total_lef = 0;
 	INT total_rig = 0;
 	FILE *f_type = fopen((inPath + "type_constrain.txt").c_str(), "r");
@@ -306,9 +301,15 @@ void importTypeFiles() {
 		return;
 	}
 
-	INT tmp;
-	tmp = fscanf(f_type, "%ld", &tmp);
-	for (INT i = 0; i < relationTotal; i++) { // Count total number of entities enumerated for all relations - separately for head and tail entries
+    INT nTypeConstrainedRelations;
+	INT tmp = fscanf(f_type, "%ld", &nTypeConstrainedRelations);
+
+	head_lef = (INT *)calloc(nTypeConstrainedRelations, sizeof(INT));
+	head_rig = (INT *)calloc(nTypeConstrainedRelations, sizeof(INT));
+	tail_lef = (INT *)calloc(nTypeConstrainedRelations, sizeof(INT));
+	tail_rig = (INT *)calloc(nTypeConstrainedRelations, sizeof(INT));
+
+	for (INT i = 0; i < nTypeConstrainedRelations; i++) { // Count total number of entities enumerated for all relations - separately for head and tail entries
 		INT rel, tot;
 		tmp = fscanf(f_type, "%ld %ld", &rel, &tot);
 		for (INT j = 0; j < tot; j++) {
@@ -336,18 +337,22 @@ void importTypeFiles() {
 	}
 
 	tmp = fscanf(f_type, "%ld", &tmp);
-	for (INT i = 0; i < relationTotal; i++) {
+	for (INT i = 0; i < nTypeConstrainedRelations; i++) {
+        // printf("Setting head lef, i = %ld \n", i);
 		INT rel, tot;
 
 		tmp = fscanf(f_type, "%ld%ld", &rel, &tot);
 		head_lef[rel] = total_lef; // Write initial offset of entity id sublist correspoding to a relation in the shared list to the head_lef array for a given relationship
+        // printf("Head lef at 0 = %ld \n", head_lef[0]);
 		for (INT j = 0; j < tot; j++) {
 			tmp = fscanf(f_type, "%ld", &head_type[total_lef]);
+            // printf("%ld %ld Some head %ld \n", j, total_lef, head_type[total_lef]);
 			total_lef++;
 		}
 		head_rig[rel] = total_lef; // Write last element index of entity id sublist correspoding to a relation in the shared list to the head_rig array for a given relationship
 		std::sort(head_type + head_lef[rel], head_type + head_rig[rel]); // Sort gathered entity ids
 
+        // printf("Head lef at 0 = %ld \n", head_lef[0]);
 		tmp = fscanf(f_type, "%ld%ld", &rel, &tot); // Repeat the same procedure for the tail list of entities mentioned in the triple tail for a given relationship
 		tail_lef[rel] = total_rig;
 		for (INT j = 0; j < tot; j++) {
@@ -357,6 +362,7 @@ void importTypeFiles() {
 		tail_rig[rel] = total_rig;
 		std::sort(tail_type + tail_lef[rel], tail_type + tail_rig[rel]);
 	}
+    // printf("Head lef at 0 = %ld \n", head_lef[0]);
 	fclose(f_type);
 }
 

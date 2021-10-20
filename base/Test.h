@@ -28,7 +28,7 @@ void initTest() {
 
 
 extern "C"
-void getHeadBatch(INT *ph, INT *pt, INT *pr) {
+void getHeadBatch(INT *ph, INT *pt, INT *pr) { // Generate all possible triples for every entity which may be used as a triple head
     for (INT i = 0; i < entityTotal; i++) {
         ph[i] = i;
         pt[i] = testList[lastHead].t;
@@ -46,35 +46,41 @@ void getTailBatch(INT *ph, INT *pt, INT *pr) {
 }
 
 extern "C"
-void testHead(REAL *con) {
-    INT h = testList[lastHead].h;
-    INT t = testList[lastHead].t;
-    INT r = testList[lastHead].r;
-    INT lef = head_lef[r], rig = head_rig[r];
+void testHead(REAL *probabilities) {
+    INT reference_head = testList[lastHead].h;
+    INT reference_tail = testList[lastHead].t;
+    INT reference_rel = testList[lastHead].r;
+    INT lef = head_lef[reference_rel], rig = head_rig[reference_rel]; // Left and right bound of sets of entity-ids in the common list of acceptable entities for relationships (see type_constraints)
+    // printf("lef = %ld, rig = %ld, rel = %ld", lef, rig, reference_rel);
 
-    REAL minimal = con[h];
+    REAL reference_distance = probabilities[reference_head];
     INT l_s = 0;
     INT l_filter_s = 0;
     INT l_s_constrain = 0;
     INT l_filter_s_constrain = 0;
 
-    for (INT j = 0; j < entityTotal; j++) {
-        if (j != h) {
-            REAL value = con[j];
-            if (value < minimal) {
-                l_s += 1;
-                if (not _find(j, t, r))
-                    l_filter_s += 1;
+    for (INT hypothesis_head = 0; hypothesis_head < entityTotal; hypothesis_head++) {
+        if (hypothesis_head != reference_head) { 
+            REAL hypothesis_distance = probabilities[hypothesis_head];
+            if (hypothesis_distance < reference_distance) { // If model thinks that the reference triple is more probable (for transe that means less distance between h + r and t)
+                l_s += 1; // Count incorrectly classified triples
+                if (not _find(hypothesis_head, reference_tail, reference_rel)) // If less probable triple is not present in the dataset
+                    l_filter_s += 1; // Count incorrectly classified triples which are not present in the dataset (filtered score must be better than unfiltered concerning rank)
             }
-            while (lef < rig && head_type[lef] < j) lef ++;
-            if (lef < rig && j == head_type[lef]) {
-                if (value < minimal) {
-                    l_s_constrain += 1;
-                    if (not _find(j, t, r)) {
-                        l_filter_s_constrain += 1;
+
+            // printf("Initial head type at %ld = %ld", lef, head_type[lef]);
+            while (lef < rig && head_type[lef] < hypothesis_head) lef ++;
+            if (lef < rig && hypothesis_head == head_type[lef]) {
+                if (hypothesis_distance < reference_distance) {
+                    l_s_constrain += 1; // Count incorrectly classified triples the head of which is presented in type constraint list for heads (constrained score must be better than unconstrained)
+                    if (not _find(hypothesis_head, reference_tail, reference_rel)) {
+                        l_filter_s_constrain += 1; // Count incorrectly classified triples the head of which is presented in type constraint list for heads but triple does not exist
                     }
                 }  
             }
+            // else {
+            //     printf("No head %ld \n", hypothesis_head);
+            // }
         }
     }
 
@@ -106,27 +112,27 @@ void testHead(REAL *con) {
 }
 
 extern "C"
-void testTail(REAL *con) {
+void testTail(REAL *probabilities) {
     INT h = testList[lastTail].h;
     INT t = testList[lastTail].t;
     INT r = testList[lastTail].r;
     INT lef = tail_lef[r], rig = tail_rig[r];
-    REAL minimal = con[t];
+    REAL reference_distance = probabilities[t];
     INT r_s = 0;
     INT r_filter_s = 0;
     INT r_s_constrain = 0;
     INT r_filter_s_constrain = 0;
     for (INT j = 0; j < entityTotal; j++) {
         if (j != t) {
-            REAL value = con[j];
-            if (value < minimal) {
+            REAL hypothesis_distance = probabilities[j];
+            if (hypothesis_distance < reference_distance) {
                 r_s += 1;
                 if (not _find(h, j, r))
                     r_filter_s += 1;
             }
             while (lef < rig && tail_type[lef] < j) lef ++;
             if (lef < rig && j == tail_type[lef]) {
-                    if (value < minimal) {
+                    if (hypothesis_distance < reference_distance) {
                         r_s_constrain += 1;
                         if (not _find(h, j ,r)) {
                             r_filter_s_constrain += 1;
@@ -166,6 +172,9 @@ void testTail(REAL *con) {
 
 extern "C"
 void test_link_prediction() {
+    // l_* - metrics computed on batches with replacing triple heads with all possible entities
+    // r_* - metrics computed on batches with replacing triple tails with all possible entities
+
     l_rank /= testTotal;
     r_rank /= testTotal;
     l_reci_rank /= testTotal;
@@ -195,15 +204,15 @@ void test_link_prediction() {
 
     printf("no type constraint results:\n");
     
-    printf("metric:\t\t\t MRR \t\t MR \t\t hit@10 \t hit@3  \t hit@1 \n");
-    printf("l(raw):\t\t\t %f \t %f \t %f \t %f \t %f \n", l_reci_rank, l_rank, l_tot, l3_tot, l1_tot);
-    printf("r(raw):\t\t\t %f \t %f \t %f \t %f \t %f \n", r_reci_rank, r_rank, r_tot, r3_tot, r1_tot);
-    printf("averaged(raw):\t\t %f \t %f \t %f \t %f \t %f \n",
+    printf("metric:\tMRR\tMR\thit@10\thit@3\thit@1 \n");
+    printf("head (all entities):\t%f\t%f\t%f\t%f\t%f \n", l_reci_rank, l_rank, l_tot, l3_tot, l1_tot);
+    printf("tail (all entities):\t%f\t%f\t%f\t%f\t%f \n", r_reci_rank, r_rank, r_tot, r3_tot, r1_tot);
+    printf("averaged (all entities):\t%f\t%f\t%f\t%f\t%f \n",
             (l_reci_rank+r_reci_rank)/2, (l_rank+r_rank)/2, (l_tot+r_tot)/2, (l3_tot+r3_tot)/2, (l1_tot+r1_tot)/2);
     printf("\n");
-    printf("l(filter):\t\t %f \t %f \t %f \t %f \t %f \n", l_filter_reci_rank, l_filter_rank, l_filter_tot, l3_filter_tot, l1_filter_tot);
-    printf("r(filter):\t\t %f \t %f \t %f \t %f \t %f \n", r_filter_reci_rank, r_filter_rank, r_filter_tot, r3_filter_tot, r1_filter_tot);
-    printf("averaged(filter):\t %f \t %f \t %f \t %f \t %f \n",
+    printf("head (triples not present in the dataset):\t%f\t%f\t%f\t%f\t%f \n", l_filter_reci_rank, l_filter_rank, l_filter_tot, l3_filter_tot, l1_filter_tot);
+    printf("tail (triples not present in the dataset):\t%f\t%f\t%f\t%f\t%f \n", r_filter_reci_rank, r_filter_rank, r_filter_tot, r3_filter_tot, r1_filter_tot);
+    printf("averaged (triples not present in the dataset):\t%f\t%f\t%f\t%f\t%f \n",
             (l_filter_reci_rank+r_filter_reci_rank)/2, (l_filter_rank+r_filter_rank)/2, (l_filter_tot+r_filter_tot)/2, (l3_filter_tot+r3_filter_tot)/2, (l1_filter_tot+r1_filter_tot)/2);
 
     //type constrain
@@ -234,18 +243,21 @@ void test_link_prediction() {
     r3_filter_tot_constrain /= testTotal;
     r1_filter_tot_constrain /= testTotal;
 
+    printf("\n");
+    printf("\n");
     printf("type constraint results:\n");
+    printf("\n");
+    printf("\n");
     
-    printf("metric:\t\t\t MRR \t\t MR \t\t hit@10 \t hit@3  \t hit@1 \n");
-    printf("l(raw):\t\t\t %f \t %f \t %f \t %f \t %f \n", l_reci_rank_constrain, l_rank_constrain, l_tot_constrain, l3_tot_constrain, l1_tot_constrain);
-    printf("r(raw):\t\t\t %f \t %f \t %f \t %f \t %f \n", r_reci_rank_constrain, r_rank_constrain, r_tot_constrain, r3_tot_constrain, r1_tot_constrain);
-    printf("averaged(raw):\t\t %f \t %f \t %f \t %f \t %f \n",
+    printf("metric:\tMRR\tMR\thit@10\thit@3\thit@1 \n");
+    printf("head (all entities):\t%f\t%f\t%f\t%f\t%f \n", l_reci_rank_constrain, l_rank_constrain, l_tot_constrain, l3_tot_constrain, l1_tot_constrain);
+    printf("tail (all entities):\t%f\t%f\t%f\t%f\t%f \n", r_reci_rank_constrain, r_rank_constrain, r_tot_constrain, r3_tot_constrain, r1_tot_constrain);
+    printf("averaged (all entities):\t%f\t%f\t%f\t%f\t%f \n",
             (l_reci_rank_constrain+r_reci_rank_constrain)/2, (l_rank_constrain+r_rank_constrain)/2, (l_tot_constrain+r_tot_constrain)/2, (l3_tot_constrain+r3_tot_constrain)/2, (l1_tot_constrain+r1_tot_constrain)/2);
     printf("\n");
-    printf("l(filter):\t\t %f \t %f \t %f \t %f \t %f \n", l_filter_reci_rank_constrain, l_filter_rank_constrain, l_filter_tot_constrain, l3_filter_tot_constrain, l1_filter_tot_constrain);
-    printf("r(filter):\t\t %f \t %f \t %f \t %f \t %f \n", r_filter_reci_rank_constrain, r_filter_rank_constrain, r_filter_tot_constrain, r3_filter_tot_constrain, r1_filter_tot_constrain);
-    printf("averaged(filter):\t %f \t %f \t %f \t %f \t %f \n",
-            (l_filter_reci_rank_constrain+r_filter_reci_rank_constrain)/2, (l_filter_rank_constrain+r_filter_rank_constrain)/2, (l_filter_tot_constrain+r_filter_tot_constrain)/2, (l3_filter_tot_constrain+r3_filter_tot_constrain)/2, (l1_filter_tot_constrain+r1_filter_tot_constrain)/2);
+    printf("head (triples not present in the dataset):\t%f\t%f\t%f\t%f\t%f \n", l_filter_reci_rank_constrain, l_filter_rank_constrain, l_filter_tot_constrain, l3_filter_tot_constrain, l1_filter_tot_constrain);
+    printf("tail (triples not present in the dataset):\t%f\t%f\t%f\t%f\t%f \n", r_filter_reci_rank_constrain, r_filter_rank_constrain, r_filter_tot_constrain, r3_filter_tot_constrain, r1_filter_tot_constrain);
+    printf("averaged (triples not present in the dataset):\t%f\t%f\t%f\t%f\t%f \n", (l_filter_reci_rank_constrain+r_filter_reci_rank_constrain)/2, (l_filter_rank_constrain+r_filter_rank_constrain)/2, (l_filter_tot_constrain+r_filter_tot_constrain)/2, (l3_filter_tot_constrain+r3_filter_tot_constrain)/2, (l1_filter_tot_constrain+r1_filter_tot_constrain)/2);
 }
 
 /*=====================================================================================
