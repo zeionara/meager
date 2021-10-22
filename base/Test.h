@@ -207,17 +207,17 @@ void test_link_prediction(bool as_tsv = false) {
         printf("no type constraint results:\n");
     }
     
-    printf("metric:\tMRR\tMR\thit@10\thit@3\thit@1 \n");
-    printf("head (all entities):\t%f\t%f\t%f\t%f\t%f \n", l_reci_rank, l_rank, l_tot, l3_tot, l1_tot);
-    printf("tail (all entities):\t%f\t%f\t%f\t%f\t%f \n", r_reci_rank, r_rank, r_tot, r3_tot, r1_tot);
-    printf("averaged (all entities):\t%f\t%f\t%f\t%f\t%f \n",
+    printf("metric:\tMRR\tMR\thit@10\thit@3\thit@1\n");
+    printf("head (all entities):\t%f\t%f\t%f\t%f\t%f\n", l_reci_rank, l_rank, l_tot, l3_tot, l1_tot);
+    printf("tail (all entities):\t%f\t%f\t%f\t%f\t%f\n", r_reci_rank, r_rank, r_tot, r3_tot, r1_tot);
+    printf("averaged (all entities):\t%f\t%f\t%f\t%f\t%f\n",
             (l_reci_rank+r_reci_rank)/2, (l_rank+r_rank)/2, (l_tot+r_tot)/2, (l3_tot+r3_tot)/2, (l1_tot+r1_tot)/2);
     if (!as_tsv) {
         printf("\n");
     }
-    printf("head (triples not present in the dataset):\t%f\t%f\t%f\t%f\t%f \n", l_filter_reci_rank, l_filter_rank, l_filter_tot, l3_filter_tot, l1_filter_tot);
-    printf("tail (triples not present in the dataset):\t%f\t%f\t%f\t%f\t%f \n", r_filter_reci_rank, r_filter_rank, r_filter_tot, r3_filter_tot, r1_filter_tot);
-    printf("averaged (triples not present in the dataset):\t%f\t%f\t%f\t%f\t%f \n",
+    printf("head (triples not present in the dataset):\t%f\t%f\t%f\t%f\t%f\n", l_filter_reci_rank, l_filter_rank, l_filter_tot, l3_filter_tot, l1_filter_tot);
+    printf("tail (triples not present in the dataset):\t%f\t%f\t%f\t%f\t%f\n", r_filter_reci_rank, r_filter_rank, r_filter_tot, r3_filter_tot, r1_filter_tot);
+    printf("averaged (triples not present in the dataset):\t%f\t%f\t%f\t%f\t%f\n",
             (l_filter_reci_rank+r_filter_reci_rank)/2, (l_filter_rank+r_filter_rank)/2, (l_filter_tot+r_filter_tot)/2, (l3_filter_tot+r3_filter_tot)/2, (l1_filter_tot+r1_filter_tot)/2);
 
     //type constrain
@@ -256,17 +256,17 @@ void test_link_prediction(bool as_tsv = false) {
         printf("\n");
     }
     
-    printf("metric:\tMRR\tMR\thit@10\thit@3\thit@1 \n");
-    printf("head (all entities):\t%f\t%f\t%f\t%f\t%f \n", l_reci_rank_constrain, l_rank_constrain, l_tot_constrain, l3_tot_constrain, l1_tot_constrain);
-    printf("tail (all entities):\t%f\t%f\t%f\t%f\t%f \n", r_reci_rank_constrain, r_rank_constrain, r_tot_constrain, r3_tot_constrain, r1_tot_constrain);
-    printf("averaged (all entities):\t%f\t%f\t%f\t%f\t%f \n",
+    printf("metric:\tMRR\tMR\thit@10\thit@3\thit@1\n");
+    printf("head (all entities):\t%f\t%f\t%f\t%f\t%f\n", l_reci_rank_constrain, l_rank_constrain, l_tot_constrain, l3_tot_constrain, l1_tot_constrain);
+    printf("tail (all entities):\t%f\t%f\t%f\t%f\t%f\n", r_reci_rank_constrain, r_rank_constrain, r_tot_constrain, r3_tot_constrain, r1_tot_constrain);
+    printf("averaged (all entities):\t%f\t%f\t%f\t%f\t%f\n",
             (l_reci_rank_constrain+r_reci_rank_constrain)/2, (l_rank_constrain+r_rank_constrain)/2, (l_tot_constrain+r_tot_constrain)/2, (l3_tot_constrain+r3_tot_constrain)/2, (l1_tot_constrain+r1_tot_constrain)/2);
     if (!as_tsv) {
         printf("\n");
     }
-    printf("head (triples not present in the dataset):\t%f\t%f\t%f\t%f\t%f \n", l_filter_reci_rank_constrain, l_filter_rank_constrain, l_filter_tot_constrain, l3_filter_tot_constrain, l1_filter_tot_constrain);
-    printf("tail (triples not present in the dataset):\t%f\t%f\t%f\t%f\t%f \n", r_filter_reci_rank_constrain, r_filter_rank_constrain, r_filter_tot_constrain, r3_filter_tot_constrain, r1_filter_tot_constrain);
-    printf("averaged (triples not present in the dataset):\t%f\t%f\t%f\t%f\t%f \n", (l_filter_reci_rank_constrain+r_filter_reci_rank_constrain)/2, (l_filter_rank_constrain+r_filter_rank_constrain)/2, (l_filter_tot_constrain+r_filter_tot_constrain)/2, (l3_filter_tot_constrain+r3_filter_tot_constrain)/2, (l1_filter_tot_constrain+r1_filter_tot_constrain)/2);
+    printf("head (triples not present in the dataset):\t%f\t%f\t%f\t%f\t%f\n", l_filter_reci_rank_constrain, l_filter_rank_constrain, l_filter_tot_constrain, l3_filter_tot_constrain, l1_filter_tot_constrain);
+    printf("tail (triples not present in the dataset):\t%f\t%f\t%f\t%f\t%f\n", r_filter_reci_rank_constrain, r_filter_rank_constrain, r_filter_tot_constrain, r3_filter_tot_constrain, r1_filter_tot_constrain);
+    printf("averaged (triples not present in the dataset):\t%f\t%f\t%f\t%f\t%f\n", (l_filter_reci_rank_constrain+r_filter_reci_rank_constrain)/2, (l_filter_rank_constrain+r_filter_rank_constrain)/2, (l_filter_tot_constrain+r_filter_tot_constrain)/2, (l3_filter_tot_constrain+r3_filter_tot_constrain)/2, (l1_filter_tot_constrain+r1_filter_tot_constrain)/2);
 }
 
 /*=====================================================================================
