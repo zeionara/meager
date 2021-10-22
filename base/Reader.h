@@ -175,7 +175,7 @@ Triple *validList;
 Triple *tripleList;
 
 extern "C"
-void importTestFiles() {
+void importTestFiles(bool verbose = false) {
 	FILE *fin;
 	INT tmp;
 
@@ -252,8 +252,10 @@ void importTestFiles() {
 	std::sort(tripleList, tripleList + tripleTotal, Triple::cmp_head);
 	std::sort(testList, testList + testTotal, Triple::cmp_rel2);
 	std::sort(validList, validList + validTotal, Triple::cmp_rel2);
-	printf("The total of test triples is %ld.\n", testTotal);
-	printf("The total of valid triples is %ld.\n", validTotal);
+    if (verbose) {
+        printf("The total of test triples is %ld.\n", testTotal);
+        printf("The total of valid triples is %ld.\n", validTotal);
+    }
 
 	testLef = (INT *)calloc(relationTotal, sizeof(INT));
 	testRig = (INT *)calloc(relationTotal, sizeof(INT));

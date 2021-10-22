@@ -8,7 +8,7 @@
 #include <pthread.h>
 
 extern "C"
-void setInPath(char *path);
+void setInPath(char *path, bool as_tsv);
 
 extern "C"
 void setOutPath(char *path);

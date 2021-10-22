@@ -10,12 +10,14 @@ std::string inPath = "../data/FB15K/"; // By default fb15k corpus is used
 std::string outPath = "../data/FB15K/";
 
 extern "C"
-void setInPath(char *path) {
+void setInPath(char *path, bool as_tsv = false) {
 	INT len = strlen(path);
 	inPath = "";
 	for (INT i = 0; i < len; i++)
 		inPath = inPath + path[i];
-	printf("Input Files Path : %s\n", inPath.c_str());
+    if (!as_tsv) {
+        printf("Input Files Path : %s\n", inPath.c_str());
+    }
 }
 
 extern "C"
