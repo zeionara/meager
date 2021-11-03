@@ -31,13 +31,13 @@ extern "C"
 void getHeadBatch(INT *ph, INT *pt, INT *pr) { // Generate all possible triples for every entity which may be used as a triple head
     for (INT i = 0; i < entityTotal; i++) {
         ph[i] = i;
-        pt[i] = validList[lastHead].t;
-        pr[i] = validList[lastHead].r;
+        pt[i] = testList[lastHead].t;
+        pr[i] = testList[lastHead].r;
     }
 }
 
 extern "C"
-void getValiddHeadBatch(INT *ph, INT *pt, INT *pr) { // Generate all possible triples for every entity which may be used as a triple head
+void getValidHeadBatch(INT *ph, INT *pt, INT *pr) { // Generate all possible triples for every entity which may be used as a triple head
     for (INT i = 0; i < entityTotal; i++) {
         ph[i] = i;
         pt[i] = validList[lastHead].t;
