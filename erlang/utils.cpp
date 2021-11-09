@@ -2,10 +2,10 @@
 #include <iostream>
 #include <string.h>
 
-char* enif_get_string_(ErlNifEnv *env, ERL_NIF_TERM string, int length) {
+char* enif_get_string_(ErlNifEnv *env, ERL_NIF_TERM string, ERL_NIF_TERM length) {
     int decoded_length;
 
-    enif_get_int(env, string, &decoded_length);
+    enif_get_int(env, length, &decoded_length);
     decoded_length += 1;
     
     char* decoded_string = new char[decoded_length]();
@@ -15,10 +15,10 @@ char* enif_get_string_(ErlNifEnv *env, ERL_NIF_TERM string, int length) {
     return decoded_string;
 }
 
-char* enif_get_atom_(ErlNifEnv *env, ERL_NIF_TERM atom, int length) {
+char* enif_get_atom_(ErlNifEnv *env, ERL_NIF_TERM atom, ERL_NIF_TERM length) {
     int decoded_length;
 
-    enif_get_int(env, atom, &decoded_length);
+    enif_get_int(env, length, &decoded_length);
     decoded_length += 1;
     
     char* decoded_atom = new char[decoded_length]();
@@ -28,7 +28,7 @@ char* enif_get_atom_(ErlNifEnv *env, ERL_NIF_TERM atom, int length) {
     return decoded_atom;
 }
 
-bool enif_get_bool(ErlNifEnv *env, ERL_NIF_TERM atom, int length) {
+bool enif_get_bool(ErlNifEnv *env, ERL_NIF_TERM atom, ERL_NIF_TERM length) {
     char* decoded_atom = enif_get_atom_(env, atom, length);
     
     if (strcmp(decoded_atom, "true") == 0) {

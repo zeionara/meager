@@ -8,7 +8,7 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/release)
 set(SOURCES base/main.cpp base/Setting.cpp erlang/utils.cpp erlang/setting.cpp erlang/main.cpp)
 # set(SOURCES base/main.cpp base erlang)
 
-include_directories(/usr/lib/erlang/erts-12.1.3/include)
+include_directories(/usr/lib/erlang/usr/include)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
