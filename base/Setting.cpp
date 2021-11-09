@@ -1,5 +1,3 @@
-#ifndef SETTING_H
-#define SETTING_H
 #define INT long
 #define REAL float
 #include <cstring>
@@ -102,4 +100,3 @@ void setHeadTailCrossSampling(INT con){
 	crossSamplingFlag = con;
 }
 
-#endif
