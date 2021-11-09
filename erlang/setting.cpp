@@ -12,3 +12,12 @@ set_in_path(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     return enif_make_int(env, 0);
 }
 
+extern ERL_NIF_TERM
+set_bern(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    setBern(
+        enif_get_int_(env, argv[0])
+    );
+
+    return enif_make_int(env, 0);
+}
+

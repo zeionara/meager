@@ -41,3 +41,11 @@ bool enif_get_bool(ErlNifEnv *env, ERL_NIF_TERM atom, int length) {
     }
 }
 
+int enif_get_int_(ErlNifEnv *env, ERL_NIF_TERM value) {
+    int decoded_value; 
+    
+    enif_get_int(env, value, &decoded_value);
+
+    return decoded_value;
+}
+

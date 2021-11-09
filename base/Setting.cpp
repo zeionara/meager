@@ -8,7 +8,7 @@ std::string inPath = "../data/FB15K/"; // By default fb15k corpus is used
 std::string outPath = "../data/FB15K/";
 
 extern "C"
-void setInPath(char *path, bool as_tsv = false) {
+void setInPath(char *path, bool as_tsv = false) { // supported by erlang adapter
 	INT len = strlen(path);
 	inPath = "";
 	for (INT i = 0; i < len; i++)
@@ -91,7 +91,7 @@ INT bernFlag = 0;
 INT crossSamplingFlag = 0;
 
 extern "C"
-void setBern(INT con) {
+void setBern(INT con) { // supported by erlang adapter
 	bernFlag = con;
 }
 
