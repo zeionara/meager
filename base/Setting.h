@@ -6,100 +6,67 @@
 #include <cstdio>
 #include <string>
 
-std::string inPath = "../data/FB15K/"; // By default fb15k corpus is used
-std::string outPath = "../data/FB15K/";
+extern std::string inPath;
+extern std::string outPath;
 
 extern "C"
-void setInPath(char *path, bool as_tsv = false) {
-	INT len = strlen(path);
-	inPath = "";
-	for (INT i = 0; i < len; i++)
-		inPath = inPath + path[i];
-    if (!as_tsv) {
-        printf("Input Files Path : %s\n", inPath.c_str());
-    }
-}
+void setInPath(char *path, bool as_tsv = false);
 
 extern "C"
-void setOutPath(char *path) {
-	INT len = strlen(path);
-	outPath = "";
-	for (INT i = 0; i < len; i++)
-		outPath = outPath + path[i];
-	printf("Output Files Path : %s\n", outPath.c_str());
-}
+void setOutPath(char *path);
 
 /*
 ============================================================
 */
 
-INT workThreads = 1; // By default concurrency is disabled
+extern INT workThreads; // By default concurrency is disabled
 
 extern "C"
-void setWorkThreads(INT threads) {
-	workThreads = threads;
-}
+void setWorkThreads(INT threads); 
 
 extern "C"
-INT getWorkThreads() {
-	return workThreads;
-}
+INT getWorkThreads(); 
 
 /*
 ============================================================
 */
 
-INT relationTotal = 0;
-INT entityTotal = 0;
-INT tripleTotal = 0;
-INT testTotal = 0;
-INT trainTotal = 0;
-INT validTotal = 0;
+extern INT relationTotal;
+extern INT entityTotal;
+extern INT tripleTotal;
+extern INT testTotal;
+extern INT trainTotal;
+extern INT validTotal;
 
 extern "C"
-INT getEntityTotal() {
-	return entityTotal;
-}
+INT getEntityTotal(); 
 
 extern "C"
-INT getRelationTotal() {
-	return relationTotal;
-}
+INT getRelationTotal(); 
 
 extern "C"
-INT getTripleTotal() {
-	return tripleTotal;
-}
+INT getTripleTotal(); 
 
 extern "C"
-INT getTrainTotal() {
-	return trainTotal;
-}
+INT getTrainTotal(); 
 
 extern "C"
-INT getTestTotal() {
-	return testTotal;
-}
+INT getTestTotal(); 
 
 extern "C"
-INT getValidTotal() {
-	return validTotal;
-}
+INT getValidTotal(); 
 /*
 ============================================================
 */
 
-INT bernFlag = 0;
-INT crossSamplingFlag = 0;
+extern INT bernFlag;
+extern INT crossSamplingFlag;
 
 extern "C"
-void setBern(INT con) {
-	bernFlag = con;
-}
+void setBern(INT con); 
 
 extern "C"
-void setHeadTailCrossSampling(INT con){
-	crossSamplingFlag = con;
-}
+void setHeadTailCrossSampling(INT con);
 
 #endif
+
