@@ -104,7 +104,18 @@ static ErlNifFunc meager_nif_funcs[] = {
     {"get_head_batch", 0, get_head_batch},
     {"test_head", 1, test_head},
     {"get_tail_batch", 0, get_tail_batch},
-    {"test_tail", 1, test_tail}
+    {"test_tail", 1, test_tail},
+
+    //
+    //  Validation
+    //
+
+    {"get_valid_head_batch", 0, get_valid_head_batch},
+    {"valid_head", 1, valid_head},
+    {"get_valid_tail_batch", 0, get_valid_tail_batch},
+    {"valid_tail", 1, valid_tail},
+
+    {"test_link_prediction", 2, test_link_prediction_}
 };
 
 ERL_NIF_INIT(Elixir.Meager, meager_nif_funcs, NULL, NULL, NULL, NULL)

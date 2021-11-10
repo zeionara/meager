@@ -34,7 +34,7 @@ void getHeadBatch(INT *ph, INT *pt, INT *pr) { // Generate all possible triples 
     }
 }
 
-extern "C"
+// extern "C"
 void getValidHeadBatch(INT *ph, INT *pt, INT *pr) { // Generate all possible triples for every entity which may be used as a triple head
     for (INT i = 0; i < entityTotal; i++) {
         ph[i] = i;
@@ -52,7 +52,7 @@ void getTailBatch(INT *ph, INT *pt, INT *pr) {
     }
 }
 
-extern "C"
+// extern "C"
 void getValidTailBatch(INT *ph, INT *pt, INT *pr) {
     for (INT i = 0; i < entityTotal; i++) {
         ph[i] = validList[lastTail].h;
@@ -127,7 +127,7 @@ void testHead(REAL *probabilities) {
     lastHead++;
 }
 
-extern "C"
+// extern "C"
 void validHead(REAL *probabilities) {
     INT reference_head = validList[lastHead].h;
     INT reference_tail = validList[lastHead].t;
@@ -252,7 +252,7 @@ void testTail(REAL *probabilities) {
     lastTail++;
 }
 
-extern "C"
+// extern "C"
 void validTail(REAL *probabilities) {
     INT h = validList[lastTail].h;
     INT t = validList[lastTail].t;
@@ -311,7 +311,7 @@ void validTail(REAL *probabilities) {
     lastTail++;
 }
 
-extern "C"
+// extern "C"
 void test_link_prediction(bool as_tsv = false) {
     // printf("As tsv = %d\n", as_tsv);
     // l_* - metrics computed on batches with replacing triple heads with all possible entities
