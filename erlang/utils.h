@@ -25,5 +25,8 @@ void enif_encode_array_of_long(ErlNifEnv *env, long* source, ERL_NIF_TERM* desti
 extern
 void enif_encode_array_of_float(ErlNifEnv *env, float* source, ERL_NIF_TERM* destination, int length);
 
+extern
+void encode_array_of_float(ErlNifEnv *env, ERL_NIF_TERM source, float* destination, int length);
+
 #endif
 

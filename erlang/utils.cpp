@@ -69,3 +69,16 @@ void enif_encode_array_of_float(ErlNifEnv* env, float* source, ERL_NIF_TERM* des
     }
 }
 
+void encode_array_of_float(ErlNifEnv *env, ERL_NIF_TERM source, float* destination, int length) {
+    ERL_NIF_TERM head;
+    ERL_NIF_TERM tail = source;
+
+    double current_value;
+
+    for (int i = 0; i < length; i++) {
+        enif_get_list_cell(env, tail, &head, &tail);
+        enif_get_double(env, head, &current_value);
+        destination[i] = current_value;
+    }
+}
+

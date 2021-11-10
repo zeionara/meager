@@ -6,6 +6,7 @@
 #include "utils.h"
 #include "../base/main.h"
 #include <iostream>
+#include "test.h"
 
 extern ERL_NIF_TERM
 sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
@@ -30,11 +31,7 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     INT* batch_r_encoded = new INT[batch_tuple_size]();
     REAL* batch_y_encoded = new REAL[batch_tuple_size]();
 
-    // std::cout << "Sampling...\n";
-
     sampling(batch_h_encoded, batch_t_encoded, batch_r_encoded, batch_y_encoded, batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag);
-
-    // std::cout << "Sampled\n";
 
     enif_encode_array_of_long(env, batch_h_encoded, batch_h, batch_tuple_size);
     enif_encode_array_of_long(env, batch_t_encoded, batch_t, batch_tuple_size);
@@ -63,22 +60,6 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     delete [] batch;
 
     return result;
-
-    // ERL_NIF_TERM* batch_h = new ERL_NIF_TERM[2]();
-
-    // batch_h[0] = enif_make_int(env, 17);
-    // batch_h[1] = enif_make_int(env, 18);
-
-    // return enif_make_list_from_array(env, batch_h, 2);
-
-    // const ERL_NIF_TERM* batch_h;
-    // int batch_h_size;
-
-    // enif_get_tuple(env, argv[0], &batch_h_size, &batch_h);
-    // 
-    // printf("N elements in tuple: %d\n\r", batch_h_size); 
-
-    // return enif_make_int(env, 0);
 }
 
 static ErlNifFunc meager_nif_funcs[] = {
@@ -114,7 +95,16 @@ static ErlNifFunc meager_nif_funcs[] = {
     //  Sampling
     //
 
-    {"sample", 5, sample}
+    {"sample", 5, sample},
+
+    //
+    //  Testing
+    //
+    
+    {"get_head_batch", 0, get_head_batch},
+    {"test_head", 1, test_head},
+    {"get_tail_batch", 0, get_tail_batch},
+    {"test_tail", 1, test_tail}
 };
 
 ERL_NIF_INIT(Elixir.Meager, meager_nif_funcs, NULL, NULL, NULL, NULL)

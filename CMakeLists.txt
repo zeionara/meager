@@ -7,8 +7,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -pthread -march=native")
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/release)
 set(
     SOURCES
-    base/main.cpp base/Setting.cpp base/Random.cpp base/Reader.cpp
-    erlang/utils.cpp erlang/setting.cpp erlang/main.cpp erlang/random.cpp erlang/reader.cpp
+    base/main.cpp base/Setting.cpp base/Random.cpp base/Reader.cpp base/Test.cpp base/Corrupt.cpp
+    erlang/utils.cpp erlang/setting.cpp erlang/main.cpp erlang/random.cpp erlang/reader.cpp erlang/test.cpp
 )
 # set(SOURCES base/main.cpp base erlang)
 

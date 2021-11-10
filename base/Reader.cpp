@@ -1,5 +1,3 @@
-#ifndef READER_H
-#define READER_H
 #include "Setting.h"
 #include "Triple.h"
 #include <cstdlib>
@@ -368,4 +366,3 @@ void importTypeFiles() {
 	fclose(f_type);
 }
 
-#endif
