@@ -9,5 +9,8 @@ set_in_path(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 extern ERL_NIF_TERM
 set_bern(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 
+extern ERL_NIF_TERM
+set_work_threads(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+
 #endif
 
