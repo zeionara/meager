@@ -41,14 +41,28 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     enif_encode_array_of_long(env, batch_r_encoded, batch_r, batch_tuple_size);
     enif_encode_array_of_float(env, batch_y_encoded, batch_y, batch_tuple_size);
 
+    delete [] batch_h_encoded;
+    delete [] batch_t_encoded;
+    delete [] batch_r_encoded;
+    delete [] batch_y_encoded;
+
     ERL_NIF_TERM* batch = new ERL_NIF_TERM[4]();
 
     batch[0] = enif_make_list_from_array(env, batch_h, batch_tuple_size);
     batch[1] = enif_make_list_from_array(env, batch_t, batch_tuple_size);
     batch[2] = enif_make_list_from_array(env, batch_r, batch_tuple_size);
     batch[3] = enif_make_list_from_array(env, batch_y, batch_tuple_size);
+
+    delete [] batch_h;
+    delete [] batch_t;
+    delete [] batch_r;
+    delete [] batch_y;
     
-    return enif_make_list_from_array(env, batch, 4);
+    ERL_NIF_TERM result = enif_make_list_from_array(env, batch, 4);
+
+    delete [] batch;
+
+    return result;
 
     // ERL_NIF_TERM* batch_h = new ERL_NIF_TERM[2]();
 
