@@ -137,7 +137,7 @@ void* getBatch(void* con) {
 	pthread_exit(NULL);
 }
 
-extern "C"
+extern
 void sampling(INT *batch_h, INT *batch_t, INT *batch_r, REAL *batch_y, INT batchSize, INT negRate = 1, INT negRelRate = 0, INT headBatchFlag = 0) {
 	pthread_t *pt = (pthread_t *)malloc(workThreads * sizeof(pthread_t));
 	Parameter *para = (Parameter *)malloc(workThreads * sizeof(Parameter));
@@ -151,6 +151,7 @@ void sampling(INT *batch_h, INT *batch_t, INT *batch_r, REAL *batch_y, INT batch
 		para[thread_index].negRate = negRate;
 		para[thread_index].negRelRate = negRelRate;
 		para[thread_index].headBatchFlag = headBatchFlag;
+        // std::cout << "Creating thread...\n\r";
 		pthread_create(&pt[thread_index], NULL, getBatch, (void*)(para+thread_index));
 	}
 	for (INT thread_index = 0; thread_index < workThreads; thread_index++)

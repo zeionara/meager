@@ -49,3 +49,23 @@ int enif_get_int_(ErlNifEnv *env, ERL_NIF_TERM value) {
     return decoded_value;
 }
 
+long enif_get_long_(ErlNifEnv *env, ERL_NIF_TERM value) {
+    long decoded_value; 
+    
+    enif_get_long(env, value, &decoded_value);
+
+    return decoded_value;
+}
+
+void enif_encode_array_of_long(ErlNifEnv* env, long* source, ERL_NIF_TERM* destination, int length) {
+    for (int i = 0; i < length; i++) {
+        destination[i] = enif_make_long(env, source[i]);
+    }
+}
+
+void enif_encode_array_of_float(ErlNifEnv* env, float* source, ERL_NIF_TERM* destination, int length) {
+    for (int i = 0; i < length; i++) {
+        destination[i] = enif_make_double(env, source[i]);
+    }
+}
+

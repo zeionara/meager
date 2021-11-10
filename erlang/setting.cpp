@@ -30,3 +30,27 @@ set_work_threads(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     return enif_make_int(env, 0);
 }
 
+extern ERL_NIF_TERM
+get_relation_total(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    return enif_make_int(env, getRelationTotal());
+}
+
+extern ERL_NIF_TERM
+get_entity_total(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    return enif_make_int(env, getEntityTotal());
+}
+
+extern ERL_NIF_TERM
+get_train_total(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    return enif_make_int(env, getTrainTotal());
+}
+
+extern ERL_NIF_TERM
+get_test_total(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    return enif_make_int(env, getTestTotal());
+}
+
+extern ERL_NIF_TERM
+get_valid_total(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    return enif_make_int(env, getValidTotal());
+}
