@@ -228,3 +228,9 @@ ERL_NIF_TERM test_link_prediction_(ErlNifEnv *env, int argc, const ERL_NIF_TERM 
     return enif_make_int(env, 0);
 }
 
+ERL_NIF_TERM init_test(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    initTest();
+
+    return enif_make_int(env, 0);
+}
+

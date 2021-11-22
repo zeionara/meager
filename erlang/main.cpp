@@ -106,6 +106,8 @@ static ErlNifFunc meager_nif_funcs[] = {
     {"get_tail_batch", 0, get_tail_batch},
     {"test_tail", 1, test_tail},
 
+    {"init_test", 0, init_test},
+
     //
     //  Validation
     //
