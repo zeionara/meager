@@ -120,5 +120,5 @@ static ErlNifFunc meager_nif_funcs[] = {
     {"test_link_prediction", 2, test_link_prediction_}
 };
 
-ERL_NIF_INIT(Elixir.Meager, meager_nif_funcs, NULL, NULL, NULL, NULL)
+ERL_NIF_INIT(Elixir.Grapex.Meager, meager_nif_funcs, NULL, NULL, NULL, NULL)
 
