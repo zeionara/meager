@@ -137,8 +137,9 @@ void* getBatch(void* con) {
 	pthread_exit(NULL);
 }
 
-extern
+extern // "C"
 void sampling(INT *batch_h, INT *batch_t, INT *batch_r, REAL *batch_y, INT batchSize, INT negRate = 1, INT negRelRate = 0, INT headBatchFlag = 0) {
+    // std::cout << "Started sampling";
 	pthread_t *pt = (pthread_t *)malloc(workThreads * sizeof(pthread_t));
 	Parameter *para = (Parameter *)malloc(workThreads * sizeof(Parameter));
 	for (INT thread_index = 0; thread_index < workThreads; thread_index++) {

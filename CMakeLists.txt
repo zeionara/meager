@@ -5,18 +5,30 @@ project(meager)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -pthread -march=native")
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/release)
+
 set(
     SOURCES
     base/main.cpp base/Setting.cpp base/Random.cpp base/Reader.cpp base/Test.cpp base/Corrupt.cpp
+)
+set(
+    ERLANG_SOURCES
     erlang/utils.cpp erlang/setting.cpp erlang/main.cpp erlang/random.cpp erlang/reader.cpp erlang/test.cpp
 )
-# set(SOURCES base/main.cpp base erlang)
+set(
+    PYTHON_SOURCES
+    python/main.cpp python/setting.cpp python/random.cpp python/reader.cpp python/test.cpp
+)
 
 include_directories(/usr/lib/erlang/usr/include)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
 add_library(meager ${SOURCES})
+add_library(meager_erlang ${ERLANG_SOURCES})
+add_library(meager_python ${PYTHON_SOURCES})
 
-install(TARGETS meager DESTINATION /usr/lib/)
+target_link_libraries(meager_erlang meager)
+target_link_libraries(meager_python meager)
+
+install(TARGETS meager meager_erlang meager_python DESTINATION /usr/lib/)
 

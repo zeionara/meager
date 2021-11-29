@@ -433,7 +433,7 @@ void getNegValid() {
     }   
 }
 
-extern "C"
+extern // "C"
 void getTestBatch(INT *ph, INT *pt, INT *pr, INT *nh, INT *nt, INT *nr) {
     getNegTest();
     for (INT i = 0; i < testTotal; i++) {
@@ -446,7 +446,7 @@ void getTestBatch(INT *ph, INT *pt, INT *pr, INT *nh, INT *nt, INT *nr) {
     }
 }
 
-extern "C"
+extern // "C"
 void getValidBatch(INT *ph, INT *pt, INT *pr, INT *nh, INT *nt, INT *nr) {
     getNegValid();
     for (INT i = 0; i < validTotal; i++) {
@@ -460,7 +460,7 @@ void getValidBatch(INT *ph, INT *pt, INT *pr, INT *nh, INT *nt, INT *nr) {
 }
 
 REAL threshEntire;
-extern "C"
+extern // "C"
 void getBestThreshold(REAL *relThresh, REAL *score_pos, REAL *score_neg) {
     REAL interval = 0.01;
     REAL min_score, max_score, bestThresh, tmpThresh, bestAcc, tmpAcc;
@@ -501,7 +501,7 @@ void getBestThreshold(REAL *relThresh, REAL *score_pos, REAL *score_neg) {
 
 REAL *testAcc;
 REAL aveAcc;
-extern "C"
+extern // "C"
 void test_triple_classification(REAL *relThresh, REAL *score_pos, REAL *score_neg) {
     testAcc = (REAL *)calloc(relationTotal, sizeof(REAL));
     INT aveCorrect = 0, aveTotal = 0;
