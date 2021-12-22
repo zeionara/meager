@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <algorithm>
 #include <iostream>
+#include <vector>
 
 extern
 INT *freqRel, *freqEnt;
@@ -52,6 +53,13 @@ void importTestFiles(bool verbose = false);
 
 extern "C"
 void importTypeFiles();
+
+// Pattern-specific constructs
+
+extern
+std::vector<std::vector<Triple>> symmetricTriples;
+extern
+int nSymmetricTriples;
 
 #endif
 
