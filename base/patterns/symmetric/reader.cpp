@@ -1,57 +1,44 @@
 #include <fstream>
 #include <vector>
+#include <unordered_set>
 
+#include "main.h"
 #include "../../Reader.h"
 
-std::vector<std::vector<Triple>> symmetricTriples;
+using namespace std;
+
+vector<vector<Triple>> symmetricTriples;
 int nSymmetricTriples = 0;
 
 void separateSymmetricTriples(bool verbose = false) {
-    // FILE *input_file;
-
     if (verbose) {
-		std::cout << "Separating symmetric triples..." << std::endl;
+		cout << "Separating symmetric triples..." << endl;
     }
 
-    // input_file = fopen((inPath + "patterns/symmetric.txt").c_str(), "r");
-
-	// if (input_file == nullptr) {
-	// 	std::cout << '`' << inPath << "patterns/symmetric.txt" << '`' << " does not exist" << std::endl;
-	// 	return;
-	// }
-
-    // int tmp;
-    // int rel; 
-	// tmp = fscanf(input_file, "%d", &rel);
-    // if (verbose) {
-    //     printf("First relation is %d.\n", rel);
-    // }
-       
-    std::ifstream in_file(inPath + "patterns/symmetric.txt");
-
-	// if (in_file == nullptr) {
-	// 	std::cout << '`' << inPath << "train2id.txt" << '`' << " does not exist" << std::endl;
-	// 	return;
-	// }
+    ifstream in_file(inPath + "patterns/symmetric.txt");
 
     int relation;
-    int nSymmetricRelations = 0;
+    // int nSymmetricRelations = 0;
+
+    // vector<int> symmetricRelations;
+    unordered_set<int> symmetricRelations;
+
     while (in_file >> relation) {
-        // std::cout << "Read a relation" << std::endl;
         printf("Read relation %d.\n", relation);
 
-        nSymmetricRelations += 1;
+        symmetricRelations.insert(relation);
+        // nSymmetricRelations += 1;
     }
     
-    printf("Number of symmetric relations = %d.\n", nSymmetricRelations);
+    printf("Number of symmetric relations = %d.\n", (int)symmetricRelations.size());
 
-    in_file.clear();
-    in_file.seekg(0);
+    // in_file.clear();
+    // in_file.seekg(0);
 
-    int* symmetricRelations = (int*)calloc(nSymmetricRelations, sizeof(int));
-    int currentRelationIndex = 0;
+    // int* symmetricRelations = (int*)calloc(nSymmetricRelations, sizeof(int));
+    // int currentRelationIndex = 0;
 
-    while (in_file >> symmetricRelations[currentRelationIndex++]);
+    // while (in_file >> symmetricRelations[currentRelationIndex++]);
 
     in_file.close();
 
@@ -62,70 +49,46 @@ void separateSymmetricTriples(bool verbose = false) {
 	for (INT i = 0; i < trainTotal; i++) { // Reading train samples
         Triple triple = trainList[i];
 
-        for (int j = 0; j < nSymmetricRelations; j++) {
-            if (symmetricRelations[j] == triple.r) {
-                std::vector<Triple> pair = {triple};
+        // for (int j = 0; j < nSymmetricRelations; j++) {
+        // for(int symmetricRelation: symmetricRelations) {
+            // if (symmetricRelations[j] == triple.r) {
+        // if (symmetricRelation == triple.r) {
+        if (symmetricRelations.find(triple.r) != symmetricRelations.end()) {
+            // std::vector<Triple> pair = {triple};
 
-                Triple* mirroredTriple = (Triple*)malloc(sizeof(Triple));
+            // SymmetricPatternInstance* patternInstance = new SymmetricPatternInstance;
 
-                mirroredTriple->r = triple.r;
-                mirroredTriple->h = triple.t;
-                mirroredTriple->t = triple.h;
+            // patternInstance->triples.push_back(triple);
+            // patternInstance->observedTripleIndices.insert(0);
 
-                pair.push_back(*mirroredTriple);
+            // Triple* mirroredTriple = (Triple*)malloc(sizeof(Triple));
 
-                // Triple* pair = (Triple *)calloc(2, sizeof(Triple)); // {triple, *mirroredTriple}; // 
+            // mirroredTriple->r = triple.r;
+            // mirroredTriple->h = triple.t;
+            // mirroredTriple->t = triple.h;
 
-                // pair[1].r = triple.r;
-                // pair[1].h = triple.t;
-                // pair[1].t = triple.h;
+            // patternInstance->triples.push_back(*mirroredTriple);
+            
+            SymmetricPatternInstance* patternInstance = new SymmetricPatternInstance(triple, Triple(triple.t, triple.r, triple.h));
+            (new SymmetricPatternInstance(Triple(triple.t, triple.r, triple.h), triple, false))->print();
 
-                // memcpy(&pair[0], &triple, sizeof(Triple));
-                // memcpy(&pair[1], mirroredTriple, sizeof(Triple));
+            // patternInstance->triples[0].print();
+            // patternInstance->triples[1].print();
 
-                // free(mirroredTriple);
-                pair[0].print();
-                pair[1].print();
+            patternInstance->print();
 
-                symmetricTriples.push_back(pair);
-                // symmetricTriples.push_back(&trainList[i]);
-                nSymmetricTriples++;
-            }
+            symmetricTriples.push_back(patternInstance->triples);
+            nSymmetricTriples++;
         }
-
-        // tmp = fscanf(input_file, "%ld", &trainList[i].h);
-		// tmp = fscanf(input_file, "%ld", &trainList[i].t);
-		// tmp = fscanf(input_file, "%ld", &trainList[i].r);
+        // }
 	}
 
     std::cout << std::endl << std::endl;
-
-    // for (int i = 0; i < nSymmetricTriples; i++) {
-    //     symmetricTriples[i][0].print();
-    //     symmetricTriples[i][1].print();
-    // }
     
     for (std::vector<Triple> pair: symmetricTriples) {
-        // printf("Number of triples per symmetric pattern occurrence = %ld\n", (long)(sizeof pair / sizeof pair[0])) 
         for (Triple triple: pair) {
             triple.print();
         }
-        // pair[0].print();
-        // pair[1].print();
     }
-
-    // std::string line;
-    // while (std::getline(in_file, line))
-    // {
-    //     std::istringstream iss(line);
-    //     int a, b;
-    //     if (!(iss >> a >> b)) { break; } // error
-
-    //     // process pair (a,b)
-    // }
-
-    // for(std::string line; getline(in_file, line);) {
-    //     std::cout << line;
-    // }
 }
 
