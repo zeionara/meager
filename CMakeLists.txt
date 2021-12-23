@@ -9,6 +9,8 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/release)
 set(
     SOURCES
     base/main.cpp base/Setting.cpp base/Random.cpp base/Reader.cpp base/Test.cpp base/Corrupt.cpp
+    # patterns
+    base/patterns/symmetric/main.cpp base/patterns/symmetric/reader.cpp
 )
 set(
     ERLANG_SOURCES
