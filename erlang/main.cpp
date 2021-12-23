@@ -67,13 +67,15 @@ sample_symmetric(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     INT batch_size = enif_get_long_(env, argv[0]); 
     INT entity_negative_rate = enif_get_long_(env, argv[1]); 
     INT relation_negative_rate = enif_get_long_(env, argv[2]); 
+    int n_observed_triples_per_pattern_instance = enif_get_int_(env, argv[5]); 
+
     INT head_batch_flag = 0;
     
     if (enif_get_bool(env, argv[3], argv[4])) {
         head_batch_flag = 1;
     }
 
-    int batch_tuple_size = 2 * batch_size * (1 + entity_negative_rate + relation_negative_rate);
+    int batch_tuple_size = (2 + n_observed_triples_per_pattern_instance) * batch_size * (1 + entity_negative_rate + relation_negative_rate);
 
     ERL_NIF_TERM* batch_h = new ERL_NIF_TERM[batch_tuple_size]();
     ERL_NIF_TERM* batch_t = new ERL_NIF_TERM[batch_tuple_size]();
@@ -85,7 +87,7 @@ sample_symmetric(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     INT* batch_r_encoded = new INT[batch_tuple_size]();
     REAL* batch_y_encoded = new REAL[batch_tuple_size]();
 
-    sampling(batch_h_encoded, batch_t_encoded, batch_r_encoded, batch_y_encoded, batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag, symmetric);
+    sampling(batch_h_encoded, batch_t_encoded, batch_r_encoded, batch_y_encoded, batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag, symmetric, n_observed_triples_per_pattern_instance);
 
     enif_encode_array_of_long(env, batch_h_encoded, batch_h, batch_tuple_size);
     enif_encode_array_of_long(env, batch_t_encoded, batch_t, batch_tuple_size);
@@ -150,7 +152,7 @@ static ErlNifFunc meager_nif_funcs[] = {
     //
 
     {"sample", 5, sample},
-    {"sample_symmetric", 5, sample_symmetric},
+    {"sample_symmetric", 6, sample_symmetric},
 
     //
     //  Testing
