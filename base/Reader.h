@@ -8,6 +8,8 @@
 #include <iostream>
 #include <vector>
 
+#include "TripleIndex.h"
+
 extern
 INT *freqRel, *freqEnt;
 extern
@@ -57,9 +59,7 @@ void importTypeFiles();
 // Pattern-specific constructs
 
 extern
-std::vector<std::vector<Triple>> symmetricTriples;
-extern
-int nSymmetricTriples;
+TripleIndex* trainTripleIndex;
 
 #endif
 

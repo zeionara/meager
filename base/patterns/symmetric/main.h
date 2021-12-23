@@ -5,6 +5,8 @@
 
 #include "../main.h"
 
+#include "../../Reader.h"
+
 void* getSymmetricBatch(void* con);
 
 struct SymmetricPatternInstance: PatternInstance {
@@ -14,7 +16,19 @@ struct SymmetricPatternInstance: PatternInstance {
     
     SymmetricPatternInstance(Triple forward, Triple backward, bool isForwardObserved = true) {
         triples = {forward, backward};
-        observedTripleIndices = {isForwardObserved ? 0 : 1};
+        if (isForwardObserved) {
+            observedTripleIndices = {0};
+
+            if (trainTripleIndex->contains(backward)) {
+                observedTripleIndices.insert(1);
+            }
+        } else {
+            observedTripleIndices = {1};
+
+            if (trainTripleIndex->contains(forward)) {
+                observedTripleIndices.insert(0);
+            }
+        }
     }
 
     void print(string label = "symmetric") {

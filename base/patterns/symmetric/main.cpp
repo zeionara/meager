@@ -7,6 +7,9 @@
 // #include <cstdlib>
 // #include <pthread.h>
 #include "../../main.h"
+#include "../main.h"
+
+#include "reader.h"
 
 void* getSymmetricBatch(void* con) {
 	Parameter *para = (Parameter *)(con);
@@ -34,11 +37,12 @@ void* getSymmetricBatch(void* con) {
 
 	for (INT current_triple_index = first_triple_index; current_triple_index < last_triple_index; current_triple_index++) {
         // Sample a positive triple randomly
-		INT sampled_triple_index = rand_max(thread_index, nSymmetricTriples);
-        std::vector<Triple> sampledPatternOccurrence = symmetricTriples[sampled_triple_index];
+		INT sampled_triple_index = rand_max(thread_index, symmetricTriples.size());
+        // std::vector<Triple> sampledPatternOccurrence = symmetricTriples[sampled_triple_index];
+        PatternInstance sampledPatternInstance = symmetricTriples[sampled_triple_index];
         INT sampledTripleIndex = 0;
 
-        for (Triple sampledTriple: sampledPatternOccurrence) {
+        for (Triple sampledTriple: sampledPatternInstance.triples) {
             batch_h[patternComponentOffset * sampledTripleIndex + current_triple_index] = sampledTriple.h;
             batch_t[patternComponentOffset * sampledTripleIndex + current_triple_index] = sampledTriple.t;
             batch_r[patternComponentOffset * sampledTripleIndex + current_triple_index] = sampledTriple.r;

@@ -6,6 +6,7 @@
 #include <fstream>
 #include <vector>
 
+#include "TripleIndex.h"
 #include "patterns/symmetric/reader.h"
 
 INT *freqRel, *freqEnt;
@@ -33,6 +34,8 @@ void print_triples(std::string header, Triple* triples, int nTriples) {
 // struct PatternOccurrence {
 //     Triple* triple;
 // }
+
+TripleIndex* trainTripleIndex = new TripleIndex;
 
 extern "C"
 void importTrainFiles(bool verbose = false) {
@@ -90,11 +93,26 @@ void importTrainFiles(bool verbose = false) {
 	freqRel = (INT *)calloc(relationTotal, sizeof(INT));
 	freqEnt = (INT *)calloc(entityTotal, sizeof(INT));
     // std::cout << trainList << " | " << trainHead;
+
 	for (INT i = 0; i < trainTotal; i++) { // Reading train samples
-		tmp = fscanf(input_file, "%ld", &trainList[i].h);
-		tmp = fscanf(input_file, "%ld", &trainList[i].t);
-		tmp = fscanf(input_file, "%ld", &trainList[i].r);
+        INT h, r, t;
+
+		tmp = fscanf(input_file, "%ld", &h);
+		tmp = fscanf(input_file, "%ld", &t);
+		tmp = fscanf(input_file, "%ld", &r);
+
+        trainList[i].h = h;
+        trainList[i].t = t;
+        trainList[i].r = r;
+
+        trainTripleIndex->add(trainList[i]);
 	}
+
+    // cout << trainTripleIndex->contains(Triple(999, 1, 8)) << endl;
+
+    // for (int i = 0; i < trainTotal; i++) {
+    //     trainList[i].print();
+    // }
 
     separateSymmetricTriples(true);
 

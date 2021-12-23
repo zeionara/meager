@@ -7,8 +7,11 @@
 
 using namespace std;
 
-vector<vector<Triple>> symmetricTriples;
-int nSymmetricTriples = 0;
+const int nTriplesPerPattern = 2;
+
+vector<PatternInstance> symmetricTriples;
+vector<PatternInstance> symmetricTriplePatternInstances[nTriplesPerPattern + 1];
+// int nSymmetricTriples = 0;
 
 void separateSymmetricTriples(bool verbose = false) {
     if (verbose) {
@@ -18,77 +21,78 @@ void separateSymmetricTriples(bool verbose = false) {
     ifstream in_file(inPath + "patterns/symmetric.txt");
 
     int relation;
-    // int nSymmetricRelations = 0;
-
-    // vector<int> symmetricRelations;
     unordered_set<int> symmetricRelations;
 
     while (in_file >> relation) {
-        printf("Read relation %d.\n", relation);
+        if (verbose) {
+            printf("Read relation %d.\n", relation);
+        }
 
         symmetricRelations.insert(relation);
-        // nSymmetricRelations += 1;
     }
     
-    printf("Number of symmetric relations = %d.\n", (int)symmetricRelations.size());
-
-    // in_file.clear();
-    // in_file.seekg(0);
-
-    // int* symmetricRelations = (int*)calloc(nSymmetricRelations, sizeof(int));
-    // int currentRelationIndex = 0;
-
-    // while (in_file >> symmetricRelations[currentRelationIndex++]);
+    if (verbose) {
+        printf("Number of symmetric relations = %d.\n", (int)symmetricRelations.size());
+    }
 
     in_file.close();
 
-    std::cout << "Symmetric triples" << std::endl;
-
-    // Triple** symmetricTriples
+    if (verbose) {
+        cout << "Symmetric triples" << endl;
+    }
 
 	for (INT i = 0; i < trainTotal; i++) { // Reading train samples
         Triple triple = trainList[i];
 
-        // for (int j = 0; j < nSymmetricRelations; j++) {
-        // for(int symmetricRelation: symmetricRelations) {
-            // if (symmetricRelations[j] == triple.r) {
-        // if (symmetricRelation == triple.r) {
         if (symmetricRelations.find(triple.r) != symmetricRelations.end()) {
-            // std::vector<Triple> pair = {triple};
+            // SymmetricPatternInstance* patternInstance = new SymmetricPatternInstance(triple, Triple(triple.t, triple.r, triple.h));
+            // (new SymmetricPatternInstance(Triple(triple.t, triple.r, triple.h), triple, false))->print();
 
-            // SymmetricPatternInstance* patternInstance = new SymmetricPatternInstance;
+            // patternInstance->print();
 
-            // patternInstance->triples.push_back(triple);
-            // patternInstance->observedTripleIndices.insert(0);
+            // symmetricTriples.push_back(patternInstance->triples);
 
-            // Triple* mirroredTriple = (Triple*)malloc(sizeof(Triple));
+            auto direct_pattern_instance = SymmetricPatternInstance(
+                    triple,
+                    Triple(triple.t, triple.r, triple.h)
+            );
+            symmetricTriples.push_back(
+                    direct_pattern_instance
+            );
 
-            // mirroredTriple->r = triple.r;
-            // mirroredTriple->h = triple.t;
-            // mirroredTriple->t = triple.h;
+            auto inverse_pattern_instance = SymmetricPatternInstance(
+                Triple(triple.t, triple.r, triple.h),
+                triple,
+                false
+            );
+            symmetricTriples.push_back(
+                    inverse_pattern_instance
+            );
 
-            // patternInstance->triples.push_back(*mirroredTriple);
-            
-            SymmetricPatternInstance* patternInstance = new SymmetricPatternInstance(triple, Triple(triple.t, triple.r, triple.h));
-            (new SymmetricPatternInstance(Triple(triple.t, triple.r, triple.h), triple, false))->print();
+            for (int j = 0; j <= nTriplesPerPattern; j++) {
+                if (j <= direct_pattern_instance.observedTripleIndices.size()) {
+                   symmetricTriplePatternInstances[j].push_back(direct_pattern_instance); 
+                }
+                if (j <= inverse_pattern_instance.observedTripleIndices.size()) {
+                   symmetricTriplePatternInstances[j].push_back(inverse_pattern_instance); 
+                }
+            }
 
-            // patternInstance->triples[0].print();
-            // patternInstance->triples[1].print();
-
-            patternInstance->print();
-
-            symmetricTriples.push_back(patternInstance->triples);
-            nSymmetricTriples++;
+            // nSymmetricTriples++;
         }
-        // }
 	}
+
+    for (int i = 0; i <= nTriplesPerPattern; i++) {
+        cout << "Collected " << symmetricTriplePatternInstances[i].size() << " pattern instances in which there are " << i << " or more observed patterns" << endl;
+    }
 
     std::cout << std::endl << std::endl;
     
-    for (std::vector<Triple> pair: symmetricTriples) {
-        for (Triple triple: pair) {
-            triple.print();
-        }
+    for (PatternInstance patternInstance: symmetricTriples) {
+        ((SymmetricPatternInstance*)&patternInstance)->print();
+        // for (Triple triple: pair) {
+        //     triple.print();
+        // }
     }
 }
 
