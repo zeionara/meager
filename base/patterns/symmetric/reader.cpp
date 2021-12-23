@@ -13,7 +13,7 @@ vector<PatternInstance> symmetricTriples;
 vector<PatternInstance> symmetricTriplePatternInstances[nTriplesPerPattern + 1];
 // int nSymmetricTriples = 0;
 
-void separateSymmetricTriples(bool verbose = false) {
+void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true) {
     if (verbose) {
 		cout << "Separating symmetric triples..." << endl;
     }
@@ -41,6 +41,34 @@ void separateSymmetricTriples(bool verbose = false) {
         cout << "Symmetric triples" << endl;
     }
 
+    unordered_set<string> seenInstances;
+
+    auto pushPatternInstance = [drop_duplicates, &seenInstances](PatternInstance patternInstance) {
+        if (drop_duplicates) {
+            string direct_pattern_instance_concise_description = patternInstance.getConciseDescription();
+            if (seenInstances.find(direct_pattern_instance_concise_description) == seenInstances.end()) {
+                symmetricTriples.push_back(
+                        patternInstance
+                );
+                for (int j = 0; j <= nTriplesPerPattern; j++) {
+                    if (j <= patternInstance.observedTripleIndices.size()) {
+                       symmetricTriplePatternInstances[j].push_back(patternInstance); 
+                    }
+                }
+                seenInstances.insert(direct_pattern_instance_concise_description);
+            }
+        } else {
+                symmetricTriples.push_back(
+                        patternInstance
+                );
+                for (int j = 0; j <= nTriplesPerPattern; j++) {
+                    if (j <= patternInstance.observedTripleIndices.size()) {
+                       symmetricTriplePatternInstances[j].push_back(patternInstance); 
+                    }
+                }
+        }
+    };
+
 	for (INT i = 0; i < trainTotal; i++) { // Reading train samples
         Triple triple = trainList[i];
 
@@ -56,27 +84,40 @@ void separateSymmetricTriples(bool verbose = false) {
                     triple,
                     Triple(triple.t, triple.r, triple.h)
             );
-            symmetricTriples.push_back(
-                    direct_pattern_instance
-            );
+            pushPatternInstance(direct_pattern_instance);
+
+            // if (drop_duplicates) {
+            //     string direct_pattern_instance_concise_description = direct_pattern_instance.getConciseDescription();
+            //     if (seenInstances.find(direct_pattern_instance_concise_description) == seenInstances.end()) {
+            //         symmetricTriples.push_back(
+            //                 direct_pattern_instance
+            //         );
+            //         seenInstances.insert(direct_pattern_instance_concise_description);
+            //     }
+            // } else {
+            //         symmetricTriples.push_back(
+            //                 direct_pattern_instance
+            //         );
+            // }
 
             auto inverse_pattern_instance = SymmetricPatternInstance(
                 Triple(triple.t, triple.r, triple.h),
                 triple,
                 false
             );
-            symmetricTriples.push_back(
-                    inverse_pattern_instance
-            );
+            pushPatternInstance(inverse_pattern_instance);
+            // symmetricTriples.push_back(
+            //         inverse_pattern_instance
+            // );
 
-            for (int j = 0; j <= nTriplesPerPattern; j++) {
-                if (j <= direct_pattern_instance.observedTripleIndices.size()) {
-                   symmetricTriplePatternInstances[j].push_back(direct_pattern_instance); 
-                }
-                if (j <= inverse_pattern_instance.observedTripleIndices.size()) {
-                   symmetricTriplePatternInstances[j].push_back(inverse_pattern_instance); 
-                }
-            }
+            // for (int j = 0; j <= nTriplesPerPattern; j++) {
+            //     if (j <= direct_pattern_instance.observedTripleIndices.size()) {
+            //        symmetricTriplePatternInstances[j].push_back(direct_pattern_instance); 
+            //     }
+            //     if (j <= inverse_pattern_instance.observedTripleIndices.size()) {
+            //        symmetricTriplePatternInstances[j].push_back(inverse_pattern_instance); 
+            //     }
+            // }
 
             // nSymmetricTriples++;
         }

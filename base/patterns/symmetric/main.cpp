@@ -23,6 +23,7 @@ void* getSymmetricBatch(void* con) {
 	INT n_negative_triples_with_corrupted_relation_per_positive = para -> negRelRate;
 	INT headBatchFlag = para -> headBatchFlag;
 	INT first_triple_index, last_triple_index;
+    int nObservedTriplesPerPatternInstance = para -> nObservedTriplesPerPatternInstance;
 
 	if (batchSize % workThreads == 0) {
 		first_triple_index = thread_index * (batchSize / workThreads);
@@ -37,9 +38,15 @@ void* getSymmetricBatch(void* con) {
 
 	for (INT current_triple_index = first_triple_index; current_triple_index < last_triple_index; current_triple_index++) {
         // Sample a positive triple randomly
-		INT sampled_triple_index = rand_max(thread_index, symmetricTriples.size());
+		// INT sampled_triple_index = rand_max(thread_index, symmetricTriples.size());
+        cout << "Samling triple index (max value = " << symmetricTriplePatternInstances[nObservedTriplesPerPatternInstance].size() << ")..." << endl;
+		INT sampled_triple_index = rand_max(thread_index, symmetricTriplePatternInstances[nObservedTriplesPerPatternInstance].size());
+        cout << "Samled triple index" << endl;
         // std::vector<Triple> sampledPatternOccurrence = symmetricTriples[sampled_triple_index];
-        PatternInstance sampledPatternInstance = symmetricTriples[sampled_triple_index];
+        // PatternInstance sampledPatternInstance = symmetricTriples[sampled_triple_index];
+        cout << "Getting sampled pattern instance (with index " << sampled_triple_index << ")..." << endl;
+        PatternInstance sampledPatternInstance = symmetricTriplePatternInstances[nObservedTriplesPerPatternInstance][sampled_triple_index];
+        cout << "Got sampled pattern instance" << endl;
         INT sampledTripleIndex = 0;
 
         for (Triple sampledTriple: sampledPatternInstance.triples) {
@@ -87,6 +94,30 @@ void* getSymmetricBatch(void* con) {
                 last += batchSize;
             }
             sampledTripleIndex += 1;
+        }
+
+        // for (int observedTripleIndex = 0; observedTripleIndex < nObservedTriplesPerPatternInstance; observedTripleIndex++) {
+        INT observedTripleIndexCounter = 0;
+        for (INT observedTripleIndex: sampledPatternInstance.observedTripleIndices) {
+            if (observedTripleIndexCounter >= nObservedTriplesPerPatternInstance) {
+                break;
+            }
+
+            batch_h[patternComponentOffset * (sampledTripleIndex + observedTripleIndexCounter) + current_triple_index] = batch_h[observedTripleIndex * sampledTripleIndex + current_triple_index];
+            batch_t[patternComponentOffset * (sampledTripleIndex + observedTripleIndexCounter) + current_triple_index] = batch_t[observedTripleIndex * sampledTripleIndex + current_triple_index];
+            batch_r[patternComponentOffset * (sampledTripleIndex + observedTripleIndexCounter) + current_triple_index] = batch_r[observedTripleIndex * sampledTripleIndex + current_triple_index];
+            batch_y[patternComponentOffset * (sampledTripleIndex + observedTripleIndexCounter) + current_triple_index] = batch_y[observedTripleIndex * sampledTripleIndex + current_triple_index];
+            INT last = batchSize;
+
+            for (INT negative_triple_index = 0; negative_triple_index < n_negative_triples_per_positive + n_negative_triples_with_corrupted_relation_per_positive; negative_triple_index++) {
+                batch_h[patternComponentOffset * (sampledTripleIndex + observedTripleIndexCounter) + current_triple_index + last] = batch_h[patternComponentOffset * sampledTripleIndex + current_triple_index + last];
+                batch_t[patternComponentOffset * (sampledTripleIndex + observedTripleIndexCounter) + current_triple_index + last] = batch_t[patternComponentOffset * sampledTripleIndex + current_triple_index + last];
+                batch_r[patternComponentOffset * (sampledTripleIndex + observedTripleIndexCounter) + current_triple_index + last] = batch_r[patternComponentOffset * sampledTripleIndex + current_triple_index + last];
+                batch_y[patternComponentOffset * (sampledTripleIndex + observedTripleIndexCounter) + current_triple_index + last] = -1;
+                last += batchSize;
+            }
+
+            observedTripleIndexCounter++;
         }
 	} // end loop for each positive triple in the batch which should be processed by the thread
 	pthread_exit(NULL);

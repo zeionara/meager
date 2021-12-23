@@ -132,10 +132,12 @@ void* getBatch(void* con) {
 
 
 extern // "C"
-void sampling(INT *batch_h, INT *batch_t, INT *batch_r, REAL *batch_y, INT batchSize, INT negRate, INT negRelRate, INT headBatchFlag, Pattern pattern) {
+void sampling(INT *batch_h, INT *batch_t, INT *batch_r, REAL *batch_y, INT batchSize, INT negRate, INT negRelRate, INT headBatchFlag, Pattern pattern, int nObservedTriplesPerPatternInstance) {
     // std::cout << "Started sampling";
 	pthread_t *pt = (pthread_t *)malloc(workThreads * sizeof(pthread_t));
 	Parameter *para = (Parameter *)malloc(workThreads * sizeof(Parameter));
+
+    cout << "N observed triples per pattern instance = " << nObservedTriplesPerPatternInstance << endl;
 
     for (INT thread_index = 0; thread_index < workThreads; thread_index++) {
         para[thread_index].id = thread_index;
@@ -147,6 +149,7 @@ void sampling(INT *batch_h, INT *batch_t, INT *batch_r, REAL *batch_y, INT batch
         para[thread_index].negRate = negRate;
         para[thread_index].negRelRate = negRelRate;
         para[thread_index].headBatchFlag = headBatchFlag;
+        para[thread_index].nObservedTriplesPerPatternInstance = nObservedTriplesPerPatternInstance;
         // std::cout << "Creating thread...\n\r";
         switch(pattern) {
             case none:
@@ -165,10 +168,11 @@ void sampling(INT *batch_h, INT *batch_t, INT *batch_r, REAL *batch_y, INT batch
 
 extern // "C"
 void sampling(INT *batch_h, INT *batch_t, INT *batch_r, REAL *batch_y, INT batchSize, INT negRate, INT negRelRate, INT headBatchFlag) {
-    sampling(batch_h, batch_t, batch_r, batch_y, batchSize, negRate, negRelRate, headBatchFlag, symmetric);
+    sampling(batch_h, batch_t, batch_r, batch_y, batchSize, negRate, negRelRate, headBatchFlag, none, 0);
 }
 
 int main() {
 	importTrainFiles();
 	return 0;
 }
+

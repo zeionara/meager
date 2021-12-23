@@ -5,10 +5,13 @@
 
 #include "../main.h"
 
-void separateSymmetricTriples(bool verbose = false);
+void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true);
 
 extern
 std::vector<PatternInstance> symmetricTriples;
+
+extern
+std::vector<PatternInstance> symmetricTriplePatternInstances[3];
 // extern
 // int nSymmetricTriples;
 

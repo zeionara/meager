@@ -16,6 +16,15 @@ struct PatternInstance {
         return observedTripleIndices.find(i) == observedTripleIndices.end() ? " - " : " + ";
     }
 
+    string getConciseDescription() {
+        string result = "";
+        int i = 0;
+        for (Triple triple: triples) {
+            result += to_string(triple.h) + "|" + to_string(triple.r) + "|" + to_string(triple.h) + "\n";
+        }
+        return result;
+    }
+
     void print(string label) {
         cout << "--- " << label << " triples pattern instance"  << endl;
         int i = 0;
