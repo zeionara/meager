@@ -11,7 +11,7 @@ extern
 std::vector<PatternInstance> symmetricTriples;
 
 extern
-std::vector<PatternInstance> symmetricTriplePatternInstances[3];
+std::vector<PatternInstance>** symmetricTriplePatternInstances;
 // extern
 // int nSymmetricTriples;
 

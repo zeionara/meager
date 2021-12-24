@@ -8,7 +8,10 @@
 #include <pthread.h>
 #include "main.h"
 
+#include "patterns/main.h"
+
 #include "patterns/symmetric/main.h"
+#include "patterns/symmetric/reader.h"
 
 extern "C"
 void setInPath(char *path, bool as_tsv);
@@ -131,8 +134,11 @@ void* getBatch(void* con) {
 }
 
 
+// const unsigned int nPatternInstanceSets = 3;
 extern // "C"
+// template<unsigned int nPatternInstanceSets>
 void sampling(INT *batch_h, INT *batch_t, INT *batch_r, REAL *batch_y, INT batchSize, INT negRate, INT negRelRate, INT headBatchFlag, Pattern pattern, int nObservedTriplesPerPatternInstance) {
+    // const unsigned int nPatternInstanceSets = 3;
     // std::cout << "Started sampling";
 	pthread_t *pt = (pthread_t *)malloc(workThreads * sizeof(pthread_t));
 	Parameter *para = (Parameter *)malloc(workThreads * sizeof(Parameter));
@@ -156,7 +162,8 @@ void sampling(INT *batch_h, INT *batch_t, INT *batch_r, REAL *batch_y, INT batch
                 pthread_create(&pt[thread_index], NULL, getBatch, (void*)(para+thread_index));
                 break;
             case symmetric:
-                pthread_create(&pt[thread_index], NULL, getSymmetricBatch, (void*)(para+thread_index));
+                para[thread_index].patternInstanceSets = symmetricTriplePatternInstances; // (std::vector<PatternInstance>**)
+                pthread_create(&pt[thread_index], NULL, getPatternBatch, (void*)(para+thread_index));
                 break;
         }
     }

@@ -8,6 +8,8 @@
 
 using namespace std;
 
+void* getPatternBatch(void* con);
+
 struct PatternInstance {
     vector<Triple> triples;
     unordered_set<int> observedTripleIndices;

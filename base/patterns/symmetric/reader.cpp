@@ -10,7 +10,8 @@ using namespace std;
 const int nTriplesPerPattern = 2;
 
 vector<PatternInstance> symmetricTriples;
-vector<PatternInstance> symmetricTriplePatternInstances[nTriplesPerPattern + 1];
+vector<PatternInstance>** symmetricTriplePatternInstances = (vector<PatternInstance>**)malloc(sizeof(vector<PatternInstance>*) * (nTriplesPerPattern + 1)); // [nTriplesPerPattern + 1];
+
 // int nSymmetricTriples = 0;
 
 void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true) {
@@ -43,6 +44,10 @@ void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true)
 
     unordered_set<string> seenInstances;
 
+    for (int i = 0; i <= nTriplesPerPattern; i++) {
+        symmetricTriplePatternInstances[i] = new vector<PatternInstance>;
+    }
+
     auto pushPatternInstance = [drop_duplicates, &seenInstances](PatternInstance patternInstance) {
         if (drop_duplicates) {
             string direct_pattern_instance_concise_description = patternInstance.getConciseDescription();
@@ -52,7 +57,7 @@ void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true)
                 );
                 for (int j = 0; j <= nTriplesPerPattern; j++) {
                     if (j <= patternInstance.observedTripleIndices.size()) {
-                       symmetricTriplePatternInstances[j].push_back(patternInstance); 
+                       symmetricTriplePatternInstances[j]->push_back(patternInstance); 
                     }
                 }
                 seenInstances.insert(direct_pattern_instance_concise_description);
@@ -63,7 +68,7 @@ void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true)
                 );
                 for (int j = 0; j <= nTriplesPerPattern; j++) {
                     if (j <= patternInstance.observedTripleIndices.size()) {
-                       symmetricTriplePatternInstances[j].push_back(patternInstance); 
+                       symmetricTriplePatternInstances[j]->push_back(patternInstance); 
                     }
                 }
         }
@@ -124,7 +129,7 @@ void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true)
 	}
 
     for (int i = 0; i <= nTriplesPerPattern; i++) {
-        cout << "Collected " << symmetricTriplePatternInstances[i].size() << " pattern instances in which there are " << i << " or more observed patterns" << endl;
+        cout << "Collected " << symmetricTriplePatternInstances[i]->size() << " pattern instances in which there are " << i << " or more observed patterns" << endl;
     }
 
     std::cout << std::endl << std::endl;
