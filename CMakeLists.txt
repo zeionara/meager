@@ -11,7 +11,7 @@ set(
     base/main.cpp base/Setting.cpp base/Random.cpp base/Reader.cpp base/Test.cpp base/Corrupt.cpp
     # patterns
     base/patterns/main.cpp
-    base/patterns/symmetric/main.cpp base/patterns/symmetric/reader.cpp 
+    base/patterns/symmetric/reader.cpp base/patterns/symmetric/main.cpp 
 )
 set(
     ERLANG_SOURCES

@@ -11,6 +11,9 @@ extern
 char* enif_get_atom_(ErlNifEnv *env, ERL_NIF_TERM atom, ERL_NIF_TERM length);
 
 extern
+char* enif_get_atom_(ErlNifEnv *env, ERL_NIF_TERM atom);
+
+extern
 bool enif_get_bool(ErlNifEnv *env, ERL_NIF_TERM atom, ERL_NIF_TERM length);
 
 extern

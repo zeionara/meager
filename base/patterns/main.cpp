@@ -5,6 +5,17 @@
 #include "../main.h"
 #include "main.h"
 
+unordered_map<string, PatternDescription> patternDescriptions = {
+    {
+        "nil",
+        PatternDescription(none, 1)
+    },
+    {
+        "symmetric",
+        PatternDescription(symmetric, 2)
+    }
+};
+
 void* getPatternBatch(void* con) {
 	Parameter *para = (Parameter *)(con);
 	INT thread_index = para -> id;

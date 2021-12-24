@@ -8,6 +8,7 @@
 #include "../../Reader.h"
 
 // void* getSymmetricBatch(void* con);
+// void initSymmetricPattern();
 
 struct SymmetricPatternInstance: PatternInstance {
     // void print() {

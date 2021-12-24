@@ -28,6 +28,19 @@ char* enif_get_atom_(ErlNifEnv *env, ERL_NIF_TERM atom, ERL_NIF_TERM length) {
     return decoded_atom;
 }
 
+char* enif_get_atom_(ErlNifEnv *env, ERL_NIF_TERM atom) {
+    unsigned int decoded_length;
+
+    enif_get_atom_length(env, atom, &decoded_length, ERL_NIF_LATIN1);
+    decoded_length += 1;
+    
+    char* decoded_atom = new char[decoded_length]();
+
+    enif_get_atom(env, atom, decoded_atom, decoded_length, ERL_NIF_LATIN1);
+
+    return decoded_atom;
+}
+
 bool enif_get_bool(ErlNifEnv *env, ERL_NIF_TERM atom, ERL_NIF_TERM length) {
     char* decoded_atom = enif_get_atom_(env, atom, length);
     

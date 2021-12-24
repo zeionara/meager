@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const int nTriplesPerPattern = 2;
+const int nTriplesPerPattern = patternDescriptions["symmetric"].nTriplesPerInstance;
 
 vector<PatternInstance> symmetricTriples;
 vector<PatternInstance>** symmetricTriplePatternInstances = (vector<PatternInstance>**)malloc(sizeof(vector<PatternInstance>*) * (nTriplesPerPattern + 1)); // [nTriplesPerPattern + 1];
@@ -15,6 +15,8 @@ vector<PatternInstance>** symmetricTriplePatternInstances = (vector<PatternInsta
 // int nSymmetricTriples = 0;
 
 void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true) {
+    // initSymmetricPattern();
+
     if (verbose) {
 		cout << "Separating symmetric triples..." << endl;
     }

@@ -7,10 +7,6 @@
 #include <vector>
 
 void* getBatch(void* con);
-enum Pattern {
-    none = 0,
-    symmetric = 1
-};
 
 // template<unsigned int nPatternInstanceSets>
 struct Parameter {
