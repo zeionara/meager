@@ -1,14 +1,14 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include "Setting.h"
-#include "patterns/main.h"
-
 #include <vector>
 
-void* getBatch(void* con);
+#include "Setting.h"
+#include "patterns/main.h"
+#include "patterns/none/main.h"
 
-// template<unsigned int nPatternInstanceSets>
+// void* getBatch(void* con);
+
 struct Parameter {
 	INT id;
 	INT *batch_h;
@@ -20,12 +20,10 @@ struct Parameter {
 	INT negRelRate;
 	INT headBatchFlag;
     int nObservedTriplesPerPatternInstance;
-    // std::vector<PatternInstance> (*patternInstanceSets)[3];
-    std::vector<PatternInstance>** patternInstanceSets; // [nPatternInstanceSets];
+    std::vector<PatternInstance>** patternInstanceSets;
 };
 
-// void sampling(INT *batch_h, INT *batch_t, INT *batch_r, REAL *batch_y, INT batchSize, INT negRate = 1, INT negRelRate = 0, INT headBatchFlag = 0);
-void sampling(INT *batch_h, INT *batch_t, INT *batch_r, REAL *batch_y, INT batchSize, INT negRate = 1, INT negRelRate = 0, INT headBatchFlag = 0, enum Pattern pattern = none, int nObservedTriplesPerPatternInstance = 0);
+void sampling(INT *batch_h, INT *batch_t, INT *batch_r, REAL *batch_y, INT batchSize, INT negRate = 1, INT negRelRate = 0, INT headBatchFlag = 0, string pattern = nonePatternName, int nObservedTriplesPerPatternInstance = 0);
 
 #endif
 

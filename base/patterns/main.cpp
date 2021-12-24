@@ -5,16 +5,22 @@
 #include "../main.h"
 #include "main.h"
 
-unordered_map<string, PatternDescription> patternDescriptions = {
-    {
-        "nil",
-        PatternDescription(none, 1)
-    },
-    {
-        "symmetric",
-        PatternDescription(symmetric, 2)
-    }
-};
+#include "none/main.h"
+#include "none/reader.h"
+
+#include "symmetric/reader.h"
+#include "symmetric/main.h"
+
+unordered_map<string, PatternDescription> patternDescriptions; //  = {
+    // {
+    //     nonePatternName,
+    //     PatternDescription(none, 1, noneTriplePatternInstances)
+    // }// ,
+    // {
+    //     symmetricPatternName,
+    //     PatternDescription(symmetric, 2, symmetricTriplePatternInstances)
+    // }
+// };
 
 void* getPatternBatch(void* con) {
 	Parameter *para = (Parameter *)(con);
@@ -43,6 +49,7 @@ void* getPatternBatch(void* con) {
     INT patternComponentOffset = batchSize * (1 + n_negative_triples_per_positive + n_negative_triples_with_corrupted_relation_per_positive);
 
 	for (INT current_triple_index = first_triple_index; current_triple_index < last_triple_index; current_triple_index++) {
+        // cout << "foo" << (*(patternInstanceSets[nObservedTriplesPerPatternInstance])).size() << endl;
 		INT sampled_triple_index = rand_max(thread_index, (*(patternInstanceSets[nObservedTriplesPerPatternInstance])).size());
         PatternInstance sampledPatternInstance = (*(patternInstanceSets[nObservedTriplesPerPatternInstance]))[sampled_triple_index];
         INT sampledTripleIndex = 0;
@@ -94,8 +101,7 @@ void* getPatternBatch(void* con) {
             sampledTripleIndex += 1;
         }
 
-        // for (int observedTripleIndex = 0; observedTripleIndex < nObservedTriplesPerPatternInstance; observedTripleIndex++) {
-        INT observedTripleIndexCounter = 0;
+        INT observedTripleIndexCounter = 0; // For tracking observed triples in their duplicating locations
         for (INT observedTripleIndex: sampledPatternInstance.observedTripleIndices) {
             if (observedTripleIndexCounter >= nObservedTriplesPerPatternInstance) {
                 break;

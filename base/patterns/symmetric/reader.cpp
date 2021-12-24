@@ -7,16 +7,12 @@
 
 using namespace std;
 
-const int nTriplesPerPattern = patternDescriptions["symmetric"].nTriplesPerInstance;
+const int nTriplesPerPattern = 2;
 
-vector<PatternInstance> symmetricTriples;
-vector<PatternInstance>** symmetricTriplePatternInstances = (vector<PatternInstance>**)malloc(sizeof(vector<PatternInstance>*) * (nTriplesPerPattern + 1)); // [nTriplesPerPattern + 1];
-
-// int nSymmetricTriples = 0;
+// vector<PatternInstance> symmetricTriples;
+vector<PatternInstance>** symmetricTriplePatternInstances = (vector<PatternInstance>**)malloc(sizeof(vector<PatternInstance>*) * (nTriplesPerPattern + 1));
 
 void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true) {
-    // initSymmetricPattern();
-
     if (verbose) {
 		cout << "Separating symmetric triples..." << endl;
     }
@@ -54,9 +50,9 @@ void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true)
         if (drop_duplicates) {
             string direct_pattern_instance_concise_description = patternInstance.getConciseDescription();
             if (seenInstances.find(direct_pattern_instance_concise_description) == seenInstances.end()) {
-                symmetricTriples.push_back(
-                        patternInstance
-                );
+                // symmetricTriples.push_back(
+                //         patternInstance
+                // );
                 for (int j = 0; j <= nTriplesPerPattern; j++) {
                     if (j <= patternInstance.observedTripleIndices.size()) {
                        symmetricTriplePatternInstances[j]->push_back(patternInstance); 
@@ -65,9 +61,9 @@ void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true)
                 seenInstances.insert(direct_pattern_instance_concise_description);
             }
         } else {
-                symmetricTriples.push_back(
-                        patternInstance
-                );
+                // symmetricTriples.push_back(
+                //         patternInstance
+                // );
                 for (int j = 0; j <= nTriplesPerPattern; j++) {
                     if (j <= patternInstance.observedTripleIndices.size()) {
                        symmetricTriplePatternInstances[j]->push_back(patternInstance); 
@@ -80,32 +76,11 @@ void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true)
         Triple triple = trainList[i];
 
         if (symmetricRelations.find(triple.r) != symmetricRelations.end()) {
-            // SymmetricPatternInstance* patternInstance = new SymmetricPatternInstance(triple, Triple(triple.t, triple.r, triple.h));
-            // (new SymmetricPatternInstance(Triple(triple.t, triple.r, triple.h), triple, false))->print();
-
-            // patternInstance->print();
-
-            // symmetricTriples.push_back(patternInstance->triples);
-
             auto direct_pattern_instance = SymmetricPatternInstance(
                     triple,
                     Triple(triple.t, triple.r, triple.h)
             );
             pushPatternInstance(direct_pattern_instance);
-
-            // if (drop_duplicates) {
-            //     string direct_pattern_instance_concise_description = direct_pattern_instance.getConciseDescription();
-            //     if (seenInstances.find(direct_pattern_instance_concise_description) == seenInstances.end()) {
-            //         symmetricTriples.push_back(
-            //                 direct_pattern_instance
-            //         );
-            //         seenInstances.insert(direct_pattern_instance_concise_description);
-            //     }
-            // } else {
-            //         symmetricTriples.push_back(
-            //                 direct_pattern_instance
-            //         );
-            // }
 
             auto inverse_pattern_instance = SymmetricPatternInstance(
                 Triple(triple.t, triple.r, triple.h),
@@ -113,20 +88,6 @@ void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true)
                 false
             );
             pushPatternInstance(inverse_pattern_instance);
-            // symmetricTriples.push_back(
-            //         inverse_pattern_instance
-            // );
-
-            // for (int j = 0; j <= nTriplesPerPattern; j++) {
-            //     if (j <= direct_pattern_instance.observedTripleIndices.size()) {
-            //        symmetricTriplePatternInstances[j].push_back(direct_pattern_instance); 
-            //     }
-            //     if (j <= inverse_pattern_instance.observedTripleIndices.size()) {
-            //        symmetricTriplePatternInstances[j].push_back(inverse_pattern_instance); 
-            //     }
-            // }
-
-            // nSymmetricTriples++;
         }
 	}
 
@@ -136,11 +97,11 @@ void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true)
 
     std::cout << std::endl << std::endl;
     
-    for (PatternInstance patternInstance: symmetricTriples) {
+    for (PatternInstance patternInstance: **symmetricTriplePatternInstances) {
         ((SymmetricPatternInstance*)&patternInstance)->print();
-        // for (Triple triple: pair) {
-        //     triple.print();
-        // }
     }
+
+    // patternDescriptions[symmetricPatternName].instanceSets = symmetricTriplePatternInstances;
+    patternDescriptions[symmetricPatternName] = PatternDescription(symmetric, nTriplesPerPattern, symmetricTriplePatternInstances);
 }
 

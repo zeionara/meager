@@ -1,6 +1,4 @@
-// #include "../main.h"
-// 
-// void initSymmetricPattern() {
-//     patternDescriptions["symmetric"] = PatternDescription(symmetric, 2);
-// }
+#include <string>
+
+std::string symmetricPatternName = "symmetric";
 

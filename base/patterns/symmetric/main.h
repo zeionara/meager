@@ -7,14 +7,10 @@
 
 #include "../../Reader.h"
 
-// void* getSymmetricBatch(void* con);
-// void initSymmetricPattern();
+extern
+const string symmetricPatternName;
 
 struct SymmetricPatternInstance: PatternInstance {
-    // void print() {
-    //     PatternInstance::print("symmetric");
-    // }
-    
     SymmetricPatternInstance(Triple forward, Triple backward, bool isForwardObserved = true) {
         triples = {forward, backward};
         if (isForwardObserved) {
@@ -32,14 +28,12 @@ struct SymmetricPatternInstance: PatternInstance {
         }
     }
 
-    void print(string label = "symmetric") {
+    void print(string label = symmetricPatternName) {
         cout << "--- " << label << " triples pattern instance"  << endl;
-        // for (Triple triple: triples) {
         Triple triple = triples[0];
         cout << "| forward : head = " << triple.h << ", rel = " << triple.r << ", tail = " << triple.t << getObservanceMark(0) << endl;
         triple = triples[1];
         cout << "| backward: head = " << triple.h << ", rel = " << triple.r << ", tail = " << triple.t << getObservanceMark(1) << endl;
-        // }
         cout << "---" << endl;
     }
 };

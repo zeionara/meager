@@ -9,26 +9,12 @@
 
 using namespace std;
 
-
 void* getPatternBatch(void* con);
 
 enum Pattern {
     none = 0,
     symmetric = 1
 };
-
-struct PatternDescription {
-    Pattern id;
-    int nTriplesPerInstance;
-
-    PatternDescription(Pattern id_ = none, int nTriplesPerInstance_ = 0) {
-        id = id_;
-        nTriplesPerInstance = nTriplesPerInstance_; 
-    }
-};
- 
-extern
-unordered_map<string, PatternDescription> patternDescriptions;
 
 struct PatternInstance {
     vector<Triple> triples;
@@ -56,6 +42,21 @@ struct PatternInstance {
         cout << "---" << endl;
     }
 };
+
+struct PatternDescription {
+    Pattern id;
+    int nTriplesPerInstance;
+    vector<PatternInstance>** instanceSets;
+
+    PatternDescription(Pattern id_ = none, int nTriplesPerInstance_ = 0, vector<PatternInstance>** instanceSets_ = 0) {
+        id = id_;
+        nTriplesPerInstance = nTriplesPerInstance_; 
+        instanceSets = instanceSets_;
+    }
+};
+
+extern
+unordered_map<string, PatternDescription> patternDescriptions;
 
 #endif
 

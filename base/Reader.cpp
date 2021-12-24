@@ -8,6 +8,7 @@
 
 #include "TripleIndex.h"
 #include "patterns/symmetric/reader.h"
+#include "patterns/none/reader.h"
 
 INT *freqRel, *freqEnt;
 INT *lefHead, *rigHead;
@@ -114,6 +115,7 @@ void importTrainFiles(bool verbose = false) {
     //     trainList[i].print();
     // }
 
+    separateNoneTriples(true);
     separateSymmetricTriples(true);
 
     // print_triples("Train triples", trainList, trainTotal);

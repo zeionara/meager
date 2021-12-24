@@ -12,6 +12,7 @@ set(
     # patterns
     base/patterns/main.cpp
     base/patterns/symmetric/reader.cpp base/patterns/symmetric/main.cpp 
+    base/patterns/none/reader.cpp base/patterns/none/main.cpp
 )
 set(
     ERLANG_SOURCES
