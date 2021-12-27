@@ -146,7 +146,7 @@ void sampling(INT *batch_h, INT *batch_t, INT *batch_r, REAL *batch_y, INT batch
 	pthread_t *pt = (pthread_t *)malloc(workThreads * sizeof(pthread_t));
 	Parameter *para = (Parameter *)malloc(workThreads * sizeof(Parameter));
 
-    cout << "N observed triples per pattern instance = " << nObservedTriplesPerPatternInstance << endl;
+    // cout << "N observed triples per pattern instance = " << nObservedTriplesPerPatternInstance << endl;
 
     for (INT thread_index = 0; thread_index < workThreads; thread_index++) {
         para[thread_index].id = thread_index;

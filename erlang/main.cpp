@@ -45,7 +45,7 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     int batch_tuple_size = (nTriplesPerPatternInstance + n_observed_triples_per_pattern_instance) * batch_size * (1 + entity_negative_rate + relation_negative_rate);
 
-    cout << "batch tuple size = " << batch_tuple_size << endl;
+    //symmetric cout << "batch tuple size = " << batch_tuple_size << endl;
 
     ERL_NIF_TERM* batch_h = new ERL_NIF_TERM[batch_tuple_size]();
     ERL_NIF_TERM* batch_t = new ERL_NIF_TERM[batch_tuple_size]();
