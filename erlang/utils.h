@@ -17,6 +17,9 @@ extern
 bool enif_get_bool(ErlNifEnv *env, ERL_NIF_TERM atom, ERL_NIF_TERM length);
 
 extern
+bool enif_get_bool(ErlNifEnv *env, ERL_NIF_TERM atom);
+
+extern
 int enif_get_int_(ErlNifEnv *env, ERL_NIF_TERM value);
 
 extern

@@ -15,11 +15,11 @@ void getTailBatch(INT *ph, INT *pt, INT *pr);
 
 void getValidTailBatch(INT *ph, INT *pt, INT *pr);
 
-void testHead(REAL *probabilities);
+void testHead(REAL *probabilities, bool reverse = false);
 
-void validHead(REAL *probabilities);
+void validHead(REAL *probabilities, bool reverse = false);
 
-void testTail(REAL *probabilities);
+void testTail(REAL *probabilities, bool reverse = false);
 
 void validTail(REAL *probabilities); 
 

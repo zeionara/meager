@@ -2,6 +2,8 @@
 #include <iostream>
 #include <string.h>
 
+using namespace std;
+
 char* enif_get_string_(ErlNifEnv *env, ERL_NIF_TERM string, ERL_NIF_TERM length) {
     int decoded_length;
 
@@ -43,6 +45,29 @@ char* enif_get_atom_(ErlNifEnv *env, ERL_NIF_TERM atom) {
 
 bool enif_get_bool(ErlNifEnv *env, ERL_NIF_TERM atom, ERL_NIF_TERM length) {
     char* decoded_atom = enif_get_atom_(env, atom, length);
+    
+    if (strcmp(decoded_atom, "true") == 0) {
+        return true;
+    } else if (strcmp(decoded_atom, "false") == 0) {
+        return false;
+    } else {
+        printf("cannot recognize binary value of an atom %s\n\r", decoded_atom);
+        throw std::invalid_argument(strcat((char *)"cannot recognize binary value of an atom ", decoded_atom));
+    }
+}
+
+bool enif_get_bool(ErlNifEnv *env, ERL_NIF_TERM atom) {
+    // unsigned int decoded_length;
+
+    // cout << "getting atom length..." << endl;
+    // enif_get_atom_length(env, atom, &decoded_length, ERL_NIF_LATIN1);
+    // cout << "got atom length" << endl;
+    // decoded_length += 1;
+
+    // cout << "getting atom..." << endl;
+    // cout << decoded_length << endl;
+    char* decoded_atom = enif_get_atom_(env, atom);
+    // cout << "got atom" << endl;
     
     if (strcmp(decoded_atom, "true") == 0) {
         return true;

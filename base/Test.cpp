@@ -62,7 +62,7 @@ void getValidTailBatch(INT *ph, INT *pt, INT *pr) {
 }
 
 // extern "C"
-void testHead(REAL *probabilities) {
+void testHead(REAL *probabilities, bool reverse) {
     INT reference_head = testList[lastHead].h;
     INT reference_tail = testList[lastHead].t;
     INT reference_rel = testList[lastHead].r;
@@ -78,16 +78,16 @@ void testHead(REAL *probabilities) {
     for (INT hypothesis_head = 0; hypothesis_head < entityTotal; hypothesis_head++) {
         if (hypothesis_head != reference_head) { 
             REAL hypothesis_distance = probabilities[hypothesis_head];
-            if (hypothesis_distance < reference_distance) { // If model thinks that the reference triple is more probable (for transe that means less distance between h + r and t)
+            if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) { // If model thinks that the reference triple is more probable (for transe that means less distance between h + r and t)
                 l_s += 1; // Count incorrectly classified triples
                 if (not _find(hypothesis_head, reference_tail, reference_rel)) // If less probable triple is not present in the dataset
                     l_filter_s += 1; // Count incorrectly classified triples which are not present in the dataset (filtered score must be better than unfiltered concerning rank)
             }
 
             // printf("Initial head type at %ld = %ld", lef, head_type[lef]);
-            while (lef < rig && head_type[lef] < hypothesis_head) lef ++;
-            if (lef < rig && hypothesis_head == head_type[lef]) {
-                if (hypothesis_distance < reference_distance) {
+            while (lef < rig && head_type[lef] < hypothesis_head) lef ++; // find head entity in the list of allowed heads for current relation
+            if (lef < rig && hypothesis_head == head_type[lef]) { // if current head entity is indeed allowed for the observed relation
+                if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) {
                     l_s_constrain += 1; // Count incorrectly classified triples the head of which is presented in type constraint list for heads (constrained score must be better than unconstrained)
                     if (not _find(hypothesis_head, reference_tail, reference_rel)) {
                         l_filter_s_constrain += 1; // Count incorrectly classified triples the head of which is presented in type constraint list for heads but triple does not exist
@@ -128,7 +128,7 @@ void testHead(REAL *probabilities) {
 }
 
 // extern "C"
-void validHead(REAL *probabilities) {
+void validHead(REAL *probabilities, bool reverse) {
     INT reference_head = validList[lastHead].h;
     INT reference_tail = validList[lastHead].t;
     INT reference_rel = validList[lastHead].r;
@@ -144,7 +144,8 @@ void validHead(REAL *probabilities) {
     for (INT hypothesis_head = 0; hypothesis_head < entityTotal; hypothesis_head++) {
         if (hypothesis_head != reference_head) { 
             REAL hypothesis_distance = probabilities[hypothesis_head];
-            if (hypothesis_distance < reference_distance) { // If model thinks that the reference triple is more probable (for transe that means less distance between h + r and t)
+            if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) { // If model thinks that the reference triple is more probable (for transe that means less distance between h + r and t)
+            // if (hypothesis_distance <= reference_distance) { // If model thinks that the reference triple is more probable (for transe that means less distance between h + r and t)
                 l_s += 1; // Count incorrectly classified triples
                 if (not _find(hypothesis_head, reference_tail, reference_rel)) // If less probable triple is not present in the dataset
                     l_filter_s += 1; // Count incorrectly classified triples which are not present in the dataset (filtered score must be better than unfiltered concerning rank)
@@ -153,7 +154,8 @@ void validHead(REAL *probabilities) {
             // printf("Initial head type at %ld = %ld", lef, head_type[lef]);
             while (lef < rig && head_type[lef] < hypothesis_head) lef ++;
             if (lef < rig && hypothesis_head == head_type[lef]) {
-                if (hypothesis_distance < reference_distance) {
+                // if (hypothesis_distance <= reference_distance) {
+                if ((!reverse && (hypothesis_distance <= reference_distance)) && (reverse && (hypothesis_distance >= reference_distance))) {
                     l_s_constrain += 1; // Count incorrectly classified triples the head of which is presented in type constraint list for heads (constrained score must be better than unconstrained)
                     if (not _find(hypothesis_head, reference_tail, reference_rel)) {
                         l_filter_s_constrain += 1; // Count incorrectly classified triples the head of which is presented in type constraint list for heads but triple does not exist
@@ -194,7 +196,7 @@ void validHead(REAL *probabilities) {
 }
 
 // extern "C"
-void testTail(REAL *probabilities) {
+void testTail(REAL *probabilities, bool reverse) {
     INT h = testList[lastTail].h;
     INT t = testList[lastTail].t;
     INT r = testList[lastTail].r;
@@ -207,19 +209,21 @@ void testTail(REAL *probabilities) {
     for (INT j = 0; j < entityTotal; j++) {
         if (j != t) {
             REAL hypothesis_distance = probabilities[j];
-            if (hypothesis_distance < reference_distance) {
+            if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) {
+                // if (hypothesis_distance <= reference_distance) {
                 r_s += 1;
                 if (not _find(h, j, r))
                     r_filter_s += 1;
             }
             while (lef < rig && tail_type[lef] < j) lef ++;
             if (lef < rig && j == tail_type[lef]) {
-                    if (hypothesis_distance < reference_distance) {
-                        r_s_constrain += 1;
-                        if (not _find(h, j ,r)) {
-                            r_filter_s_constrain += 1;
-                        }
+                if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) {
+                    // if (hypothesis_distance <= reference_distance) {
+                    r_s_constrain += 1;
+                    if (not _find(h, j ,r)) {
+                        r_filter_s_constrain += 1;
                     }
+                }
             }
         }
         
