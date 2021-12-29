@@ -115,8 +115,8 @@ void importTrainFiles(bool verbose = false) {
     //     trainList[i].print();
     // }
 
-    separateNoneTriples(true);
-    separateSymmetricTriples(true);
+    separateNoneTriples(verbose);
+    separateSymmetricTriples(verbose);
 
     // print_triples("Train triples", trainList, trainTotal);
     // print_triples("Train triples (head)", trainHead, trainTotal);
