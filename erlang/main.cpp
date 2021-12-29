@@ -152,9 +152,9 @@ static ErlNifFunc meager_nif_funcs[] = {
     //
 
     {"get_valid_head_batch", 0, get_valid_head_batch},
-    {"valid_head", 1, valid_head},
+    {"valid_head", 2, valid_head},
     {"get_valid_tail_batch", 0, get_valid_tail_batch},
-    {"valid_tail", 1, valid_tail},
+    {"valid_tail", 2, valid_tail},
 
     {"test_link_prediction", 2, test_link_prediction_}
 };

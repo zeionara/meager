@@ -163,7 +163,7 @@ valid_head(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     encode_array_of_float(env, argv[0], predictions_encoded, batch_tuple_size);
     
-    validHead(predictions_encoded);
+    validHead(predictions_encoded, enif_get_bool(env, argv[1]));
 
     return enif_make_int(env, 0);
 }
@@ -215,7 +215,7 @@ valid_tail(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     encode_array_of_float(env, argv[0], predictions_encoded, batch_tuple_size);
 
-    validTail(predictions_encoded);
+    validTail(predictions_encoded, enif_get_bool(env, argv[1]));
 
     return enif_make_int(env, 0);
 }

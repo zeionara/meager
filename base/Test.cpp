@@ -155,7 +155,7 @@ void validHead(REAL *probabilities, bool reverse) {
             while (lef < rig && head_type[lef] < hypothesis_head) lef ++;
             if (lef < rig && hypothesis_head == head_type[lef]) {
                 // if (hypothesis_distance <= reference_distance) {
-                if ((!reverse && (hypothesis_distance <= reference_distance)) && (reverse && (hypothesis_distance >= reference_distance))) {
+                if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) {
                     l_s_constrain += 1; // Count incorrectly classified triples the head of which is presented in type constraint list for heads (constrained score must be better than unconstrained)
                     if (not _find(hypothesis_head, reference_tail, reference_rel)) {
                         l_filter_s_constrain += 1; // Count incorrectly classified triples the head of which is presented in type constraint list for heads but triple does not exist
@@ -257,7 +257,7 @@ void testTail(REAL *probabilities, bool reverse) {
 }
 
 // extern "C"
-void validTail(REAL *probabilities) {
+void validTail(REAL *probabilities, bool reverse) {
     INT h = validList[lastTail].h;
     INT t = validList[lastTail].t;
     INT r = validList[lastTail].r;
@@ -270,19 +270,21 @@ void validTail(REAL *probabilities) {
     for (INT j = 0; j < entityTotal; j++) {
         if (j != t) {
             REAL hypothesis_distance = probabilities[j];
-            if (hypothesis_distance < reference_distance) {
+            // if (hypothesis_distance < reference_distance) {
+            if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) {
                 r_s += 1;
                 if (not _find(h, j, r))
                     r_filter_s += 1;
             }
             while (lef < rig && tail_type[lef] < j) lef ++;
             if (lef < rig && j == tail_type[lef]) {
-                    if (hypothesis_distance < reference_distance) {
-                        r_s_constrain += 1;
-                        if (not _find(h, j ,r)) {
-                            r_filter_s_constrain += 1;
-                        }
+                if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) {
+                    // if (hypothesis_distance < reference_distance) {
+                    r_s_constrain += 1;
+                    if (not _find(h, j ,r)) {
+                        r_filter_s_constrain += 1;
                     }
+                }
             }
         }
         

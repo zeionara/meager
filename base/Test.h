@@ -21,7 +21,7 @@ void validHead(REAL *probabilities, bool reverse = false);
 
 void testTail(REAL *probabilities, bool reverse = false);
 
-void validTail(REAL *probabilities); 
+void validTail(REAL *probabilities, bool reverse = false); 
 
 void test_link_prediction(bool as_tsv = false); 
 
