@@ -8,6 +8,10 @@
 #include <iostream>
 #include "test.h"
 
+#include <string>
+#include <iostream>
+#include <sstream>
+
 using namespace std;
 
 extern ERL_NIF_TERM
@@ -28,13 +32,17 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     unordered_map<string, PatternDescription>::const_iterator patternDescriptionIterator = patternDescriptions.find(pattern_name);
 
+
     if (patternDescriptionIterator != patternDescriptions.end()) {
         nTriplesPerPatternInstance = patternDescriptionIterator->second.nTriplesPerInstance;
     }
 
     if (n_observed_triples_per_pattern_instance > nTriplesPerPatternInstance) {
+        // stringstream message;
         cout << "Requested number of observed triples exceeds number of triples per instance of the selected pattern (" << n_observed_triples_per_pattern_instance <<
             " > " << nTriplesPerPatternInstance << "); using the highest available value (" << nTriplesPerPatternInstance << ")" << endl;
+        // cout << message.str();
+        // return completed_with_error(env, &message);
         n_observed_triples_per_pattern_instance = nTriplesPerPatternInstance;
     }
 
@@ -57,19 +65,27 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     INT* batch_r_encoded = new INT[batch_tuple_size]();
     REAL* batch_y_encoded = new REAL[batch_tuple_size]();
     
-    if (patternDescriptionIterator != patternDescriptions.end()) {
-        sampling(batch_h_encoded, batch_t_encoded, batch_r_encoded, batch_y_encoded, batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag, patternDescriptionIterator->first, n_observed_triples_per_pattern_instance);
-    } else {
-        cout << "Selected and unknown pattern '" << pattern_name << "'. All resulting values will be equal to zero. Available patterns: ";
+    if (patternDescriptionIterator == patternDescriptions.end()) {
+        stringstream message;
+        message << "Selected an unknown pattern '" << pattern_name << "'. Available patterns: ";
         int counter = 0;
         for (auto patternDescriptionEntry: patternDescriptions) {
             if (counter++ > 0) {
-                cout << ", "; 
+                message << ", "; 
             }
-            cout << patternDescriptionEntry.first;
+            message << patternDescriptionEntry.first;
         }
-        cout << endl;
+        // message << endl;
+        return completed_with_error(env, &message);
     }
+
+    if (patternDescriptions[pattern_name].instanceSets[n_observed_triples_per_pattern_instance]->size() < 1) {
+        stringstream message;
+        message << "Cannot sample " << pattern_name << " pattern instances in which there are at least " << n_observed_triples_per_pattern_instance << " observed triples since there are no observed sets of triples that satisfy these conditions";
+        return completed_with_error(env, &message);
+    }
+
+    sampling(batch_h_encoded, batch_t_encoded, batch_r_encoded, batch_y_encoded, batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag, patternDescriptionIterator->first, n_observed_triples_per_pattern_instance);
 
     enif_encode_array_of_long(env, batch_h_encoded, batch_h, batch_tuple_size);
     enif_encode_array_of_long(env, batch_t_encoded, batch_t, batch_tuple_size);
@@ -97,7 +113,10 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     delete [] batch;
 
-    return result;
+    return completed_with_success(
+        env,
+        result
+    );
 }
 
 static ErlNifFunc meager_nif_funcs[] = {

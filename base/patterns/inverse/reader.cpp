@@ -100,14 +100,15 @@ void separateInverseTriples(bool verbose = false, bool drop_duplicates = true) {
 
     if (verbose) {
         for (int i = 0; i <= nTriplesPerPattern; i++) {
-            cout << "Collected " << inverseTriplePatternInstances[i]->size() << " pattern instances in which there are " << i << " or more observed patterns" << endl;
+            cout << "Collected " << inverseTriplePatternInstances[i]->size() << " inverse pattern instances in which there are " << i << " or more observed patterns" << endl;
         }
 
-        std::cout << std::endl << std::endl;
-        
-        for (PatternInstance patternInstance: **inverseTriplePatternInstances) {
-            ((InversePatternInstance*)&patternInstance)->print();
-        }
+        std::cout << std::endl;
+        // std::cout << std::endl << std::endl;
+        // 
+        // for (PatternInstance patternInstance: **inverseTriplePatternInstances) {
+        //     ((InversePatternInstance*)&patternInstance)->print();
+        // }
     }
 
     patternDescriptions[inversePatternName] = PatternDescription(inverse, nTriplesPerPattern, inverseTriplePatternInstances);

@@ -2,6 +2,10 @@
 #include <iostream>
 #include <string.h>
 
+#include <string>
+#include <iostream>
+#include <sstream>
+
 using namespace std;
 
 char* enif_get_string_(ErlNifEnv *env, ERL_NIF_TERM string, ERL_NIF_TERM length) {
@@ -118,5 +122,29 @@ void encode_array_of_float(ErlNifEnv *env, ERL_NIF_TERM source, float* destinati
         enif_get_double(env, head, &current_value);
         destination[i] = current_value;
     }
+}
+
+ERL_NIF_TERM enif_make_string(ErlNifEnv *env, const char* string) {
+    return enif_make_string(env, string, ERL_NIF_LATIN1);
+}
+
+ERL_NIF_TERM make_result(ErlNifEnv *env, ERL_NIF_TERM result, char* status) {
+    return enif_make_tuple2(
+        env,
+        enif_make_atom(env, status),
+        result
+    );
+}
+
+ERL_NIF_TERM completed_with_success(ErlNifEnv *env, ERL_NIF_TERM result) {
+    return make_result(env, result, (char*)"ok");
+}
+
+ERL_NIF_TERM completed_with_error(ErlNifEnv *env, const char* result) {
+    return make_result(env, enif_make_string(env, result), (char*)"error");
+}
+
+ERL_NIF_TERM completed_with_error(ErlNifEnv *env, stringstream* result) {
+    return completed_with_error(env, result->str().c_str());
 }
 

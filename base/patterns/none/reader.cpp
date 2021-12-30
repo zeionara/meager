@@ -48,14 +48,15 @@ void separateNoneTriples(bool verbose = false, bool drop_duplicates = true) {
 
     if (verbose) {
         for (int i = 0; i <= nTriplesPerPattern; i++) {
-            cout << "Collected " << noneTriplePatternInstances[i]->size() << " pattern instances in which there are " << i << " or more observed patterns" << endl;
+            cout << "Collected " << noneTriplePatternInstances[i]->size() << " none pattern instances in which there are " << i << " or more observed patterns" << endl;
         }
 
-        std::cout << std::endl << std::endl;
+        std::cout << std::endl;
+        // std::cout << std::endl << std::endl;
         
-        for (PatternInstance patternInstance: **noneTriplePatternInstances) {
-            ((NonePatternInstance*)&patternInstance)->print();
-        }
+        // for (PatternInstance patternInstance: **noneTriplePatternInstances) {
+        //     ((NonePatternInstance*)&patternInstance)->print();
+        // }
     }
 
     // patternDescriptions[nonePatternName].instanceSets = noneTriplePatternInstances;

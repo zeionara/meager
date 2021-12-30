@@ -4,6 +4,10 @@
 #include "erl_nif.h"
 #include <stdbool.h>
 
+#include <string>
+#include <iostream>
+#include <sstream>
+
 extern
 char* enif_get_string_(ErlNifEnv *env, ERL_NIF_TERM string, ERL_NIF_TERM length);
 
@@ -33,6 +37,14 @@ void enif_encode_array_of_float(ErlNifEnv *env, float* source, ERL_NIF_TERM* des
 
 extern
 void encode_array_of_float(ErlNifEnv *env, ERL_NIF_TERM source, float* destination, int length);
+
+ERL_NIF_TERM completed_with_success(ErlNifEnv *env, ERL_NIF_TERM result);
+
+ERL_NIF_TERM completed_with_error(ErlNifEnv *env, const char* result);
+
+ERL_NIF_TERM completed_with_error(ErlNifEnv *env, std::stringstream* result);
+
+ERL_NIF_TERM enif_make_string(ErlNifEnv *env, const char* result);
 
 #endif
 
