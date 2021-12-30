@@ -13,7 +13,8 @@ void* getPatternBatch(void* con);
 
 enum Pattern {
     none = 0,
-    symmetric = 1
+    symmetric = 1,
+    inverse = 2
 };
 
 struct PatternInstance {
