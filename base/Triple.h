@@ -8,6 +8,12 @@ struct Triple {
 
 	INT h, r, t;
 
+    Triple(INT h_ = 0, INT r_ = 0, INT t_ = 0) {
+       h = h_;
+       r = r_;
+       t = t_;
+    }
+
 	static INT minimal(INT a,INT b) {
 		if (a > b) return b;
 		return a;

@@ -1,3 +1,16 @@
 **/*.swp
 tags
 
+CMakeFiles/
+Makefile
+cmake_install.cmake
+
+release/
+CMakeCache.txt
+.clangd
+compile_flags.txt
+install_manifest.txt
+
+base/utils.cpp
+base/utils.h
+
