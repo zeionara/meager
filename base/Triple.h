@@ -1,8 +1,10 @@
 #ifndef TRIPLE_H
 #define TRIPLE_H
 #include "Setting.h"
-#include <iostream>
 
+#include <string>
+#include <iostream>
+#include <sstream>
 
 struct Triple {
 
@@ -41,6 +43,12 @@ struct Triple {
 
     void print() {
         std::cout << "head = " << h << ", rel = " << r << ", tail = " << t << "\n";
+    }
+
+    std::string as_filterable_string() {
+        std::stringstream message;
+        message << h << "\t" << r << "\t" << t;
+        return message.str();
     }
 };
 

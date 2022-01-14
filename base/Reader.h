@@ -48,6 +48,9 @@ INT *tail_type;
 void print_triples(std::string header, Triple* triples, int nTriples);
 
 extern "C"
+void importFilterPatterns(bool verbose = false, bool drop_duplicates = true);
+
+extern "C"
 void importTrainFiles(bool verbose = false); 
 
 extern "C"

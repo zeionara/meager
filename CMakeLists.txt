@@ -14,6 +14,8 @@ set(
     base/patterns/symmetric/reader.cpp base/patterns/symmetric/main.cpp 
     base/patterns/none/reader.cpp base/patterns/none/main.cpp
     base/patterns/inverse/reader.cpp base/patterns/inverse/main.cpp
+
+    base/filters/reader.cpp base/filters/main.cpp
 )
 set(
     ERLANG_SOURCES

@@ -5,11 +5,15 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <regex>
 
 #include "TripleIndex.h"
 #include "patterns/symmetric/reader.h"
 #include "patterns/none/reader.h"
 #include "patterns/inverse/reader.h"
+
+// #include "filters/reader.h"
+#include "filters/main.h"
 
 INT *freqRel, *freqEnt;
 INT *lefHead, *rigHead;
@@ -25,6 +29,8 @@ Triple *trainRel;
 INT *testLef, *testRig;
 INT *validLef, *validRig;
 
+FilterPatternsCollection* exclusionFilterPatterns;
+FilterPatternsCollection* inclusionFilterPatterns;
 
 void print_triples(std::string header, Triple* triples, int nTriples) {
     std::cout << header << "\n";
@@ -40,11 +46,30 @@ void print_triples(std::string header, Triple* triples, int nTriples) {
 TripleIndex* trainTripleIndex = new TripleIndex;
 
 extern "C"
+void importFilterPatterns(bool verbose, bool drop_duplicates) {
+    exclusionFilterPatterns = new FilterPatternsCollection("excluding", verbose, drop_duplicates); // readFilterPatterns("excluding");
+    inclusionFilterPatterns = new FilterPatternsCollection("including", verbose, drop_duplicates); // readFilterPatterns("excluding");
+}
+
+bool isAcceptableTriple(INT h, INT r, INT t) {
+    Triple triple = Triple(h, r, t);
+    
+    return (
+            (!inclusionFilterPatterns->found || doesMatchSomeFilterPatterns(*inclusionFilterPatterns, triple)) && 
+            (!exclusionFilterPatterns->found || !doesMatchSomeFilterPatterns(*exclusionFilterPatterns, triple))
+           );
+}
+
+extern "C"
 void importTrainFiles(bool verbose = false) {
 
     if (verbose) {
         printf("The toolkit is importing datasets.\n");
-    }
+    } 
+
+
+    cout << "Read " << exclusionFilterPatterns->items.size() << " exclusion filter patterns" << endl;
+    cout << "Read " << inclusionFilterPatterns->items.size() << " inclusion filter patterns" << endl;
 
 	FILE *input_file;
 	int tmp;
@@ -96,6 +121,8 @@ void importTrainFiles(bool verbose = false) {
 	freqEnt = (INT *)calloc(entityTotal, sizeof(INT));
     // std::cout << trainList << " | " << trainHead;
 
+    INT j = 0;
+
 	for (INT i = 0; i < trainTotal; i++) { // Reading train samples
         INT h, r, t;
 
@@ -103,12 +130,24 @@ void importTrainFiles(bool verbose = false) {
 		tmp = fscanf(input_file, "%ld", &t);
 		tmp = fscanf(input_file, "%ld", &r);
 
-        trainList[i].h = h;
-        trainList[i].t = t;
-        trainList[i].r = r;
+        // Triple triple = Triple(h, r, t);
 
-        trainTripleIndex->add(trainList[i]);
+        if (isAcceptableTriple(h, r, t)) {
+            trainList[j].h = h;
+            trainList[j].t = t;
+            trainList[j].r = r;
+
+            trainTripleIndex->add(trainList[j]);
+
+            j++;
+        }
+
+        // std::cout << "Current train triple: " << trainList[i].as_filterable_string() << "; matches an exclusion pattern: " << doesMatchSomeFilterPatterns(exclusionFilterPatterns, trainList[i]) << endl;
 	}
+
+    trainTotal = j;
+
+    cout << "TRAIN TOTAL (1) = " << trainTotal;
 
     // cout << trainTripleIndex->contains(Triple(999, 1, 8)) << endl;
 
@@ -258,23 +297,72 @@ void importTestFiles(bool verbose = false) {
 	testList = (Triple *)calloc(testTotal, sizeof(Triple));
 	validList = (Triple *)calloc(validTotal, sizeof(Triple));
 	tripleList = (Triple *)calloc(tripleTotal, sizeof(Triple));
+
+
+    INT j = 0;
 	for (INT i = 0; i < testTotal; i++) { // Read test triples, copy each triple into the begging of the tripleList array
-		tmp = fscanf(f_kb1, "%ld", &testList[i].h);
-		tmp = fscanf(f_kb1, "%ld", &testList[i].t);
-		tmp = fscanf(f_kb1, "%ld", &testList[i].r);
-		tripleList[i] = testList[i];
+        INT h, t, r;
+
+		tmp = fscanf(f_kb1, "%ld", &h);
+		tmp = fscanf(f_kb1, "%ld", &t);
+		tmp = fscanf(f_kb1, "%ld", &r);
+
+        if (isAcceptableTriple(h, r, t)) {
+            testList[j].h = h;
+            testList[j].t = t;
+            testList[j].r = r;
+
+            tripleList[j] = testList[j];
+
+            j++;
+        }
 	}
+
+    testTotal = j;
+    j = 0;
+
 	for (INT i = 0; i < trainTotal; i++) { // Read train triples into the middle of the tripleList array
-		tmp = fscanf(f_kb2, "%ld", &tripleList[i + testTotal].h);
-		tmp = fscanf(f_kb2, "%ld", &tripleList[i + testTotal].t);
-		tmp = fscanf(f_kb2, "%ld", &tripleList[i + testTotal].r);
+        INT h, t, r;
+
+		tmp = fscanf(f_kb2, "%ld", &h);
+		tmp = fscanf(f_kb2, "%ld", &t);
+		tmp = fscanf(f_kb2, "%ld", &r);
+
+        if (isAcceptableTriple(h, r, t)) {
+            tripleList[j + testTotal].h = h;
+            tripleList[j + testTotal].t = t;
+            tripleList[j + testTotal].r = r;
+
+            testList[j] = tripleList[j + testTotal];
+
+            j++;
+        }
 	}
+
+    trainTotal = j;
+    j = 0;
+
 	for (INT i = 0; i < validTotal; i++) { // Read valid triples into the end of the tripleList array, copy each triple to a separate array
-		tmp = fscanf(f_kb3, "%ld", &tripleList[i + testTotal + trainTotal].h);
-		tmp = fscanf(f_kb3, "%ld", &tripleList[i + testTotal + trainTotal].t);
-		tmp = fscanf(f_kb3, "%ld", &tripleList[i + testTotal + trainTotal].r);
-		validList[i] = tripleList[i + testTotal + trainTotal];
+        INT h, t, r;
+
+		tmp = fscanf(f_kb3, "%ld", &h);
+		tmp = fscanf(f_kb3, "%ld", &t);
+		tmp = fscanf(f_kb3, "%ld", &r);
+
+        if (isAcceptableTriple(h, r, t)) {
+            tripleList[j + testTotal + trainTotal].h = h;
+            tripleList[j + testTotal + trainTotal].t = t;
+            tripleList[j + testTotal + trainTotal].r = r;
+
+            validList[j] = tripleList[j + testTotal + trainTotal];
+
+            j++;
+        }
 	}
+
+    validTotal = j;
+    j = 0;
+
 	fclose(f_kb1);
 	fclose(f_kb2);
 	fclose(f_kb3);
@@ -297,9 +385,14 @@ void importTestFiles(bool verbose = false) {
 			testLef[testList[i].r] = i;
 		}
 	}
-	testLef[testList[0].r] = 0;
-	testRig[testList[testTotal - 1].r] = testTotal - 1;
+    if (testTotal > 0) {
+        testLef[testList[0].r] = 0;
+    }
+    if (testTotal > 1) {
+        testRig[testList[testTotal - 1].r] = testTotal - 1;
+    }
 
+    cout << "foo" << endl;
 	validLef = (INT *)calloc(relationTotal, sizeof(INT));
 	validRig = (INT *)calloc(relationTotal, sizeof(INT));
 	memset(validLef, -1, sizeof(INT) * relationTotal);
