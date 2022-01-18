@@ -298,7 +298,6 @@ void importTestFiles(bool verbose = false) {
 	validList = (Triple *)calloc(validTotal, sizeof(Triple));
 	tripleList = (Triple *)calloc(tripleTotal, sizeof(Triple));
 
-
     INT j = 0;
 	for (INT i = 0; i < testTotal; i++) { // Read test triples, copy each triple into the begging of the tripleList array
         INT h, t, r;
@@ -333,7 +332,8 @@ void importTestFiles(bool verbose = false) {
             tripleList[j + testTotal].t = t;
             tripleList[j + testTotal].r = r;
 
-            testList[j] = tripleList[j + testTotal];
+            // cout << " j = " << j << " and test total = " << testTotal << endl;
+            trainList[j] = tripleList[j + testTotal];
 
             j++;
         }
