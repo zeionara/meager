@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
 #include "TripleIndex.h"
 
@@ -69,5 +70,9 @@ std::vector<INT> internal_to_external_entity_id;
 extern
 std::vector<INT> internal_to_external_relation_id;
 
+extern
+std::unordered_map<INT, INT> external_to_internal_entity_id;
+extern
+std::unordered_map<INT, INT> external_to_internal_relation_id;
 #endif
 

@@ -84,7 +84,7 @@ void separateInverseTriples(bool verbose = false, bool drop_duplicates = true, b
         if (forwardRelationIterator != inverseForwardRelationToBackward.end()) {
             auto direct_pattern_instance = InversePatternInstance(
                     triple,
-                    Triple(triple.t, forwardRelationIterator->second, triple.h)
+                    Triple(triple.t, enable_filters ? external_to_internal_relation_id.find(forwardRelationIterator->second)->second : forwardRelationIterator->second, triple.h)
             );
             pushPatternInstance(direct_pattern_instance);
         } else {
