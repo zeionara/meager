@@ -147,10 +147,10 @@ static ErlNifFunc meager_nif_funcs[] = {
     //  Reader
     //  
 
-    {"import_filter_patterns", 2, import_filter_patterns},
+    {"import_filter_patterns", 3, import_filter_patterns},
 
-    {"import_train_files", 2, import_train_files},
-    {"import_test_files", 2, import_test_files},
+    {"import_train_files", 3, import_train_files},
+    {"import_test_files", 3, import_test_files},
     {"import_type_files", 0, import_type_files},
 
     //

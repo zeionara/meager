@@ -12,7 +12,7 @@ const int nTriplesPerPattern = 2;
 // vector<PatternInstance> symmetricTriples;
 vector<PatternInstance>** inverseTriplePatternInstances = (vector<PatternInstance>**)malloc(sizeof(vector<PatternInstance>*) * (nTriplesPerPattern + 1));
 
-void separateInverseTriples(bool verbose = false, bool drop_duplicates = true) {
+void separateInverseTriples(bool verbose = false, bool drop_duplicates = true, bool enable_filters = false) {
     if (verbose) {
 		cout << "Separating inverse triples..." << endl;
     }
@@ -77,7 +77,9 @@ void separateInverseTriples(bool verbose = false, bool drop_duplicates = true) {
 	for (INT i = 0; i < trainTotal; i++) { // Reading train samples
         Triple triple = trainList[i];
 
-        auto forwardRelationIterator = inverseForwardRelationToBackward.find(triple.r); // unordered_map<INT, unordered_set<INT>>
+        auto forwardRelationIterator = inverseForwardRelationToBackward.find(
+                enable_filters ? internal_to_external_relation_id.at(triple.r) : triple.r
+        ); // unordered_map<INT, unordered_set<INT>>
         
         if (forwardRelationIterator != inverseForwardRelationToBackward.end()) {
             auto direct_pattern_instance = InversePatternInstance(

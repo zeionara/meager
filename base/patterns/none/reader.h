@@ -5,7 +5,7 @@
 
 #include "../main.h"
 
-void separateNoneTriples(bool verbose = false, bool drop_duplicates = true);
+void separateNoneTriples(bool verbose = false, bool drop_duplicates = true, bool enable_filters = false);
 
 extern
 std::vector<PatternInstance>** noneTriplePatternInstances;

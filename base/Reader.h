@@ -48,13 +48,13 @@ INT *tail_type;
 void print_triples(std::string header, Triple* triples, int nTriples);
 
 extern "C"
-void importFilterPatterns(bool verbose = false, bool drop_duplicates = true);
+void importFilterPatterns(bool verbose = false, bool drop_duplicates = true, bool enable_filters = false);
 
 extern "C"
-void importTrainFiles(bool verbose = false); 
+void importTrainFiles(bool verbose = false, bool enable_filters = false); 
 
 extern "C"
-void importTestFiles(bool verbose = false);
+void importTestFiles(bool verbose = false, bool enable_filters = false);
 
 extern "C"
 void importTypeFiles();
@@ -63,6 +63,11 @@ void importTypeFiles();
 
 extern
 TripleIndex* trainTripleIndex;
+
+extern
+std::vector<INT> internal_to_external_entity_id;
+extern
+std::vector<INT> internal_to_external_relation_id;
 
 #endif
 

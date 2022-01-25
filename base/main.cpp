@@ -59,7 +59,7 @@ extern "C"
 void randReset();
 
 extern "C"
-void importTrainFiles(bool);
+void importTrainFiles(bool, bool);
 
 // void* getBatch(void* con) {
 // 	Parameter *para = (Parameter *)(con);

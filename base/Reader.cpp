@@ -32,6 +32,15 @@ INT *validLef, *validRig;
 FilterPatternsCollection* exclusionFilterPatterns;
 FilterPatternsCollection* inclusionFilterPatterns;
 
+unordered_map<INT, INT> external_to_internal_entity_id;
+unordered_map<INT, INT> external_to_internal_relation_id;
+
+vector<INT> internal_to_external_entity_id;
+vector<INT> internal_to_external_relation_id;
+
+INT current_internal_entity_id = 0;
+INT current_internal_relation_id = 0;
+
 void print_triples(std::string header, Triple* triples, int nTriples) {
     std::cout << header << "\n";
     for (int i = 0; i < nTriples; i++) {
@@ -46,9 +55,11 @@ void print_triples(std::string header, Triple* triples, int nTriples) {
 TripleIndex* trainTripleIndex = new TripleIndex;
 
 extern "C"
-void importFilterPatterns(bool verbose, bool drop_duplicates) {
-    exclusionFilterPatterns = new FilterPatternsCollection("excluding", verbose, drop_duplicates); // readFilterPatterns("excluding");
-    inclusionFilterPatterns = new FilterPatternsCollection("including", verbose, drop_duplicates); // readFilterPatterns("excluding");
+void importFilterPatterns(bool verbose, bool drop_duplicates, bool enable_filters = false) {
+    if (enable_filters) {
+        exclusionFilterPatterns = new FilterPatternsCollection("excluding", verbose, drop_duplicates); // readFilterPatterns("excluding");
+        inclusionFilterPatterns = new FilterPatternsCollection("including", verbose, drop_duplicates); // readFilterPatterns("excluding");
+    }
 }
 
 bool isAcceptableTriple(INT h, INT r, INT t) {
@@ -60,16 +71,32 @@ bool isAcceptableTriple(INT h, INT r, INT t) {
            );
 }
 
+INT external_to_internal_id(INT external_id, INT* internal_id, unordered_map<INT, INT>* external_to_internal, vector<INT>* internal_to_external) {
+    auto iterator = external_to_internal->find(external_id);
+
+    if (iterator == external_to_internal->end()) {
+        (*external_to_internal)[external_id] = *internal_id;
+        internal_to_external->push_back(external_id);
+        
+        (*internal_id)++;
+
+        return (*internal_id) - 1;
+    }
+
+    return iterator->second;
+}
+
 extern "C"
-void importTrainFiles(bool verbose = false) {
+void importTrainFiles(bool verbose = false, bool enable_filters = false) {
 
     if (verbose) {
         printf("The toolkit is importing datasets.\n");
+
+        if (enable_filters) {
+            cout << "Read " << exclusionFilterPatterns->items.size() << " exclusion filter patterns" << endl;
+            cout << "Read " << inclusionFilterPatterns->items.size() << " inclusion filter patterns" << endl;
+        }
     } 
-
-
-    cout << "Read " << exclusionFilterPatterns->items.size() << " exclusion filter patterns" << endl;
-    cout << "Read " << inclusionFilterPatterns->items.size() << " inclusion filter patterns" << endl;
 
 	FILE *input_file;
 	int tmp;
@@ -117,8 +144,6 @@ void importTrainFiles(bool verbose = false) {
 	trainHead = (Triple *)calloc(trainTotal, sizeof(Triple));
 	trainTail = (Triple *)calloc(trainTotal, sizeof(Triple));
 	trainRel = (Triple *)calloc(trainTotal, sizeof(Triple));
-	freqRel = (INT *)calloc(relationTotal, sizeof(INT));
-	freqEnt = (INT *)calloc(entityTotal, sizeof(INT));
     // std::cout << trainList << " | " << trainHead;
 
     INT j = 0;
@@ -132,10 +157,18 @@ void importTrainFiles(bool verbose = false) {
 
         // Triple triple = Triple(h, r, t);
 
-        if (isAcceptableTriple(h, r, t)) {
-            trainList[j].h = h;
-            trainList[j].t = t;
-            trainList[j].r = r;
+        if (!enable_filters || isAcceptableTriple(h, r, t)) {
+            if (enable_filters) {
+                trainList[j].h = external_to_internal_id(h, &current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+                trainList[j].t = external_to_internal_id(t, &current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+                trainList[j].r = external_to_internal_id(r, &current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
+
+                // trainList[j].print();
+            } else {
+                trainList[j].h = h;
+                trainList[j].t = t;
+                trainList[j].r = r;
+            }
 
             trainTripleIndex->add(trainList[j]);
 
@@ -145,9 +178,17 @@ void importTrainFiles(bool verbose = false) {
         // std::cout << "Current train triple: " << trainList[i].as_filterable_string() << "; matches an exclusion pattern: " << doesMatchSomeFilterPatterns(exclusionFilterPatterns, trainList[i]) << endl;
 	}
 
+    if (enable_filters) {
+        relationTotal = current_internal_relation_id;
+        entityTotal = current_internal_entity_id;
+    }
+
+	freqRel = (INT *)calloc(relationTotal, sizeof(INT));
+	freqEnt = (INT *)calloc(entityTotal, sizeof(INT));
+
     trainTotal = j;
 
-    cout << "TRAIN TOTAL (1) = " << trainTotal;
+    cout << "TRAIN TOTAL (1) = " << trainTotal << endl;
 
     // cout << trainTripleIndex->contains(Triple(999, 1, 8)) << endl;
 
@@ -155,9 +196,11 @@ void importTrainFiles(bool verbose = false) {
     //     trainList[i].print();
     // }
 
-    separateNoneTriples(verbose);
+    separateNoneTriples(verbose, true, enable_filters);
     separateSymmetricTriples(verbose);
-    separateInverseTriples(verbose);
+    separateInverseTriples(verbose, true, enable_filters);
+
+    cout << "TRAIN TOTAL (2) = " << trainTotal << endl;
 
     // print_triples("Train triples", trainList, trainTotal);
     // print_triples("Train triples (head)", trainHead, trainTotal);
@@ -244,7 +287,7 @@ Triple *validList;
 Triple *tripleList;
 
 extern "C"
-void importTestFiles(bool verbose = false) {
+void importTestFiles(bool verbose = false, bool enable_filters = false) {
 	FILE *fin;
 	INT tmp;
 
@@ -306,10 +349,16 @@ void importTestFiles(bool verbose = false) {
 		tmp = fscanf(f_kb1, "%ld", &t);
 		tmp = fscanf(f_kb1, "%ld", &r);
 
-        if (isAcceptableTriple(h, r, t)) {
-            testList[j].h = h;
-            testList[j].t = t;
-            testList[j].r = r;
+        if (!enable_filters || isAcceptableTriple(h, r, t)) {
+            if (enable_filters) {
+                trainList[j].h = external_to_internal_id(h, &current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+                trainList[j].t = external_to_internal_id(t, &current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+                trainList[j].r = external_to_internal_id(r, &current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
+            } else {
+                trainList[j].h = h;
+                trainList[j].t = t;
+                trainList[j].r = r;
+            }
 
             tripleList[j] = testList[j];
 
@@ -327,10 +376,16 @@ void importTestFiles(bool verbose = false) {
 		tmp = fscanf(f_kb2, "%ld", &t);
 		tmp = fscanf(f_kb2, "%ld", &r);
 
-        if (isAcceptableTriple(h, r, t)) {
-            tripleList[j + testTotal].h = h;
-            tripleList[j + testTotal].t = t;
-            tripleList[j + testTotal].r = r;
+        if (!enable_filters || isAcceptableTriple(h, r, t)) {
+            if (enable_filters) {
+                trainList[j + testTotal].h = external_to_internal_id(h, &current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+                trainList[j + testTotal].t = external_to_internal_id(t, &current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+                trainList[j + testTotal].r = external_to_internal_id(r, &current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
+            } else {
+                trainList[j + testTotal].h = h;
+                trainList[j + testTotal].t = t;
+                trainList[j + testTotal].r = r;
+            }
 
             // cout << " j = " << j << " and test total = " << testTotal << endl;
             trainList[j] = tripleList[j + testTotal];
@@ -349,16 +404,27 @@ void importTestFiles(bool verbose = false) {
 		tmp = fscanf(f_kb3, "%ld", &t);
 		tmp = fscanf(f_kb3, "%ld", &r);
 
-        if (isAcceptableTriple(h, r, t)) {
-            tripleList[j + testTotal + trainTotal].h = h;
-            tripleList[j + testTotal + trainTotal].t = t;
-            tripleList[j + testTotal + trainTotal].r = r;
+        if (!enable_filters || isAcceptableTriple(h, r, t)) {
+            if (enable_filters) {
+                trainList[j + testTotal + trainTotal].h = external_to_internal_id(h, &current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+                trainList[j + testTotal + trainTotal].t = external_to_internal_id(t, &current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+                trainList[j + testTotal + trainTotal].r = external_to_internal_id(r, &current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
+            } else {
+                trainList[j + testTotal + trainTotal].h = h;
+                trainList[j + testTotal + trainTotal].t = t;
+                trainList[j + testTotal + trainTotal].r = r;
+            }
 
             validList[j] = tripleList[j + testTotal + trainTotal];
 
             j++;
         }
 	}
+
+    if (enable_filters) {
+        relationTotal = current_internal_relation_id;
+        entityTotal = current_internal_entity_id;
+    }
 
     validTotal = j;
     j = 0;
