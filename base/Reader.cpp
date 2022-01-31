@@ -38,8 +38,8 @@ unordered_map<INT, INT> external_to_internal_relation_id;
 vector<INT> internal_to_external_entity_id;
 vector<INT> internal_to_external_relation_id;
 
-INT current_internal_entity_id = 0;
-INT current_internal_relation_id = 0;
+INT* current_internal_entity_id = new INT(0);
+INT* current_internal_relation_id = new INT(0);
 
 void print_triples(std::string header, Triple* triples, int nTriples) {
     std::cout << header << "\n";
@@ -74,14 +74,20 @@ bool isAcceptableTriple(INT h, INT r, INT t) {
 INT external_to_internal_id(INT external_id, INT* internal_id, unordered_map<INT, INT>* external_to_internal, vector<INT>* internal_to_external) {
     auto iterator = external_to_internal->find(external_id);
 
+    // cout << "Translating external id " << external_id << " ..." << endl;
+
     if (iterator == external_to_internal->end()) {
         (*external_to_internal)[external_id] = *internal_id;
         internal_to_external->push_back(external_id);
         
         (*internal_id)++;
 
+        // cout << "Cannot find mapping for external id " << external_id << " - it will be " << (*internal_id) - 1 << endl;
+
         return (*internal_id) - 1;
     }
+
+    // cout << "Found mapping for external id " << external_id << " - it is " << iterator->second << endl;
 
     return iterator->second;
 }
@@ -148,6 +154,7 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
 
     INT j = 0;
 
+
 	for (INT i = 0; i < trainTotal; i++) { // Reading train samples
         INT h, r, t;
 
@@ -158,10 +165,11 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
         // Triple triple = Triple(h, r, t);
 
         if (!enable_filters || isAcceptableTriple(h, r, t)) {
+            // cout << h << " -" << r << "-> " << t << endl;
             if (enable_filters) {
-                trainList[j].h = external_to_internal_id(h, &current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
-                trainList[j].t = external_to_internal_id(t, &current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
-                trainList[j].r = external_to_internal_id(r, &current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
+                trainList[j].h = external_to_internal_id(h, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+                trainList[j].t = external_to_internal_id(t, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+                trainList[j].r = external_to_internal_id(r, current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
 
                 // trainList[j].print();
             } else {
@@ -179,8 +187,8 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
 	}
 
     if (enable_filters) {
-        relationTotal = current_internal_relation_id;
-        entityTotal = current_internal_entity_id;
+        relationTotal = *current_internal_relation_id;
+        entityTotal = *current_internal_entity_id;
     }
 
 	freqRel = (INT *)calloc(relationTotal, sizeof(INT));
@@ -188,7 +196,7 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
 
     trainTotal = j;
 
-    cout << "TRAIN TOTAL (1) = " << trainTotal << endl;
+    // cout << "TRAIN TOTAL (1) = " << trainTotal << endl;
 
     // cout << trainTripleIndex->contains(Triple(999, 1, 8)) << endl;
 
@@ -200,7 +208,7 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
     separateSymmetricTriples(verbose);
     separateInverseTriples(verbose, true, enable_filters);
 
-    cout << "TRAIN TOTAL (2) = " << trainTotal << endl;
+    // cout << "TRAIN TOTAL (2) = " << trainTotal << endl;
 
     // print_triples("Train triples", trainList, trainTotal);
     // print_triples("Train triples (head)", trainHead, trainTotal);
@@ -351,13 +359,13 @@ void importTestFiles(bool verbose = false, bool enable_filters = false) {
 
         if (!enable_filters || isAcceptableTriple(h, r, t)) {
             if (enable_filters) {
-                trainList[j].h = external_to_internal_id(h, &current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
-                trainList[j].t = external_to_internal_id(t, &current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
-                trainList[j].r = external_to_internal_id(r, &current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
+                testList[j].h = external_to_internal_id(h, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+                testList[j].t = external_to_internal_id(t, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+                testList[j].r = external_to_internal_id(r, current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
             } else {
-                trainList[j].h = h;
-                trainList[j].t = t;
-                trainList[j].r = r;
+                testList[j].h = h;
+                testList[j].t = t;
+                testList[j].r = r;
             }
 
             tripleList[j] = testList[j];
@@ -378,13 +386,15 @@ void importTestFiles(bool verbose = false, bool enable_filters = false) {
 
         if (!enable_filters || isAcceptableTriple(h, r, t)) {
             if (enable_filters) {
-                trainList[j + testTotal].h = external_to_internal_id(h, &current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
-                trainList[j + testTotal].t = external_to_internal_id(t, &current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
-                trainList[j + testTotal].r = external_to_internal_id(r, &current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
+                // cout << "F2" << endl;
+                tripleList[j + testTotal].h = external_to_internal_id(h, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+                tripleList[j + testTotal].t = external_to_internal_id(t, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+                tripleList[j + testTotal].r = external_to_internal_id(r, current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
+                // cout << "F3" << endl;
             } else {
-                trainList[j + testTotal].h = h;
-                trainList[j + testTotal].t = t;
-                trainList[j + testTotal].r = r;
+                tripleList[j + testTotal].h = h;
+                tripleList[j + testTotal].t = t;
+                tripleList[j + testTotal].r = r;
             }
 
             // cout << " j = " << j << " and test total = " << testTotal << endl;
@@ -406,13 +416,13 @@ void importTestFiles(bool verbose = false, bool enable_filters = false) {
 
         if (!enable_filters || isAcceptableTriple(h, r, t)) {
             if (enable_filters) {
-                trainList[j + testTotal + trainTotal].h = external_to_internal_id(h, &current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
-                trainList[j + testTotal + trainTotal].t = external_to_internal_id(t, &current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
-                trainList[j + testTotal + trainTotal].r = external_to_internal_id(r, &current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
+                tripleList[j + testTotal + trainTotal].h = external_to_internal_id(h, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+                tripleList[j + testTotal + trainTotal].t = external_to_internal_id(t, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+                tripleList[j + testTotal + trainTotal].r = external_to_internal_id(r, current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
             } else {
-                trainList[j + testTotal + trainTotal].h = h;
-                trainList[j + testTotal + trainTotal].t = t;
-                trainList[j + testTotal + trainTotal].r = r;
+                tripleList[j + testTotal + trainTotal].h = h;
+                tripleList[j + testTotal + trainTotal].t = t;
+                tripleList[j + testTotal + trainTotal].r = r;
             }
 
             validList[j] = tripleList[j + testTotal + trainTotal];
@@ -422,8 +432,8 @@ void importTestFiles(bool verbose = false, bool enable_filters = false) {
 	}
 
     if (enable_filters) {
-        relationTotal = current_internal_relation_id;
-        entityTotal = current_internal_entity_id;
+        relationTotal = *current_internal_relation_id;
+        entityTotal = *current_internal_entity_id;
     }
 
     validTotal = j;
@@ -458,7 +468,6 @@ void importTestFiles(bool verbose = false, bool enable_filters = false) {
         testRig[testList[testTotal - 1].r] = testTotal - 1;
     }
 
-    cout << "foo" << endl;
 	validLef = (INT *)calloc(relationTotal, sizeof(INT));
 	validRig = (INT *)calloc(relationTotal, sizeof(INT));
 	memset(validLef, -1, sizeof(INT) * relationTotal);

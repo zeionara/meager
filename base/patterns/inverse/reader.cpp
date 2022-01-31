@@ -26,6 +26,9 @@ void separateInverseTriples(bool verbose = false, bool drop_duplicates = true, b
     unordered_map<int, int> inverseForwardRelationToBackward;
     unordered_map<int, int> inverseBackwardRelationToForward;
 
+    // cout << forwardRelation << endl;
+    // cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << endl;
+
     while (in_file >> forwardRelation >> backwardRelation) {
         if (verbose) {
             printf("Read relations %d and %d.\n", forwardRelation, backwardRelation);
@@ -77,9 +80,12 @@ void separateInverseTriples(bool verbose = false, bool drop_duplicates = true, b
 	for (INT i = 0; i < trainTotal; i++) { // Reading train samples
         Triple triple = trainList[i];
 
-        auto forwardRelationIterator = inverseForwardRelationToBackward.find(
-                enable_filters ? internal_to_external_relation_id.at(triple.r) : triple.r
-        ); // unordered_map<INT, unordered_set<INT>>
+        INT relation = enable_filters ? internal_to_external_relation_id.at(triple.r) : triple.r;
+        // INT relation = triple.r;
+
+        // cout << "Relation: " << relation << endl;
+
+        auto forwardRelationIterator = inverseForwardRelationToBackward.find(relation); // unordered_map<INT, unordered_set<INT>>
         
         if (forwardRelationIterator != inverseForwardRelationToBackward.end()) {
             auto direct_pattern_instance = InversePatternInstance(
