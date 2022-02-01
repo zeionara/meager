@@ -99,6 +99,7 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
         printf("The toolkit is importing datasets.\n");
 
         if (enable_filters) {
+            cout << "Filters are enabled" << endl;
             cout << "Read " << exclusionFilterPatterns->items.size() << " exclusion filter patterns" << endl;
             cout << "Read " << inclusionFilterPatterns->items.size() << " inclusion filter patterns" << endl;
         }
@@ -146,6 +147,10 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
 	}
 
 	tmp = fscanf(input_file, "%ld", &trainTotal); // Reading number of train samples
+
+    // if (verbose) {
+    //     printf("The total of train triples (read) is %ld.\n", trainTotal);
+    // }
 	trainList = (Triple *)calloc(trainTotal, sizeof(Triple));
 	trainHead = (Triple *)calloc(trainTotal, sizeof(Triple));
 	trainTail = (Triple *)calloc(trainTotal, sizeof(Triple));
@@ -186,6 +191,8 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
         // std::cout << "Current train triple: " << trainList[i].as_filterable_string() << "; matches an exclusion pattern: " << doesMatchSomeFilterPatterns(exclusionFilterPatterns, trainList[i]) << endl;
 	}
 
+    // cout << trainTotal << " VS " << j << endl;
+
     if (enable_filters) {
         relationTotal = *current_internal_relation_id;
         entityTotal = *current_internal_entity_id;
@@ -195,6 +202,8 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
 	freqEnt = (INT *)calloc(entityTotal, sizeof(INT));
 
     trainTotal = j;
+
+    // cout << trainTotal << " ===== " << j << endl;
 
     // cout << "TRAIN TOTAL (1) = " << trainTotal << endl;
 
@@ -327,12 +336,12 @@ void importTestFiles(bool verbose = false, bool enable_filters = false) {
 		return;
 	}
 
-	FILE *f_kb2 = fopen((inPath + "train2id.txt").c_str(), "r");
-	if (f_kb2 == nullptr) {
-		std::cout << '`' << inPath << "train2id.txt" << '`' << " does not exist"
-		          << std::endl;
-		return;
-	}
+	// FILE *f_kb2 = fopen((inPath + "train2id.txt").c_str(), "r");
+	// if (f_kb2 == nullptr) {
+	// 	std::cout << '`' << inPath << "train2id.txt" << '`' << " does not exist"
+	// 	          << std::endl;
+	// 	return;
+	// }
 
 	FILE *f_kb3 = fopen((inPath + "valid2id.txt").c_str(), "r");
 	if (f_kb3 == nullptr) {
@@ -342,13 +351,16 @@ void importTestFiles(bool verbose = false, bool enable_filters = false) {
 	}
 
 	tmp = fscanf(f_kb1, "%ld", &testTotal);
-	tmp = fscanf(f_kb2, "%ld", &trainTotal);
+    // tmp = fscanf(f_kb2, "%ld", &trainTotal);
 	tmp = fscanf(f_kb3, "%ld", &validTotal);
 	tripleTotal = testTotal + trainTotal + validTotal;
 	testList = (Triple *)calloc(testTotal, sizeof(Triple));
 	validList = (Triple *)calloc(validTotal, sizeof(Triple));
 	tripleList = (Triple *)calloc(tripleTotal, sizeof(Triple));
 
+    // if (verbose) {
+    //     printf("The total of train triples (read) is %ld.\n", trainTotal);
+    // }
     INT j = 0;
 	for (INT i = 0; i < testTotal; i++) { // Read test triples, copy each triple into the begging of the tripleList array
         INT h, t, r;
@@ -372,40 +384,43 @@ void importTestFiles(bool verbose = false, bool enable_filters = false) {
 
             j++;
         }
+        tripleList[j] = testList[j];
 	}
 
     testTotal = j;
     j = 0;
 
 	for (INT i = 0; i < trainTotal; i++) { // Read train triples into the middle of the tripleList array
-        INT h, t, r;
+        // INT h, t, r;
 
-		tmp = fscanf(f_kb2, "%ld", &h);
-		tmp = fscanf(f_kb2, "%ld", &t);
-		tmp = fscanf(f_kb2, "%ld", &r);
+		// tmp = fscanf(f_kb2, "%ld", &h);
+		// tmp = fscanf(f_kb2, "%ld", &t);
+		// tmp = fscanf(f_kb2, "%ld", &r);
 
-        if (!enable_filters || isAcceptableTriple(h, r, t)) {
-            if (enable_filters) {
-                // cout << "F2" << endl;
-                tripleList[j + testTotal].h = external_to_internal_id(h, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
-                tripleList[j + testTotal].t = external_to_internal_id(t, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
-                tripleList[j + testTotal].r = external_to_internal_id(r, current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
-                // cout << "F3" << endl;
-            } else {
-                tripleList[j + testTotal].h = h;
-                tripleList[j + testTotal].t = t;
-                tripleList[j + testTotal].r = r;
-            }
+        // if (!enable_filters || isAcceptableTriple(h, r, t)) {
+        //     if (enable_filters) {
+        //         // cout << "F2" << endl;
+        //         tripleList[j + testTotal].h = external_to_internal_id(h, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+        //         tripleList[j + testTotal].t = external_to_internal_id(t, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+        //         tripleList[j + testTotal].r = external_to_internal_id(r, current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
+        //         // cout << "F3" << endl;
+        //     } else {
+        //         tripleList[j + testTotal].h = h;
+        //         tripleList[j + testTotal].t = t;
+        //         tripleList[j + testTotal].r = r;
+        //     }
 
-            // cout << " j = " << j << " and test total = " << testTotal << endl;
-            trainList[j] = tripleList[j + testTotal];
+        //     // cout << " j = " << j << " and test total = " << testTotal << endl;
+        //     trainList[j] = tripleList[j + testTotal];
 
-            j++;
-        }
+        //     j++;
+        // }
+        tripleList[i + testTotal] = trainList[i];
 	}
 
-    trainTotal = j;
-    j = 0;
+    // cout << trainTotal << " VS " << j << endl;
+    // trainTotal = j;
+    // j = 0;
 
 	for (INT i = 0; i < validTotal; i++) { // Read valid triples into the end of the tripleList array, copy each triple to a separate array
         INT h, t, r;
@@ -440,7 +455,7 @@ void importTestFiles(bool verbose = false, bool enable_filters = false) {
     j = 0;
 
 	fclose(f_kb1);
-	fclose(f_kb2);
+	// fclose(f_kb2);
 	fclose(f_kb3);
 
 	std::sort(tripleList, tripleList + tripleTotal, Triple::cmp_head);
@@ -480,6 +495,10 @@ void importTestFiles(bool verbose = false, bool enable_filters = false) {
 	}
 	validLef[validList[0].r] = 0;
 	validRig[validList[validTotal - 1].r] = validTotal - 1;
+
+    // if (verbose) {
+    //     printf("The total of train triples is %ld.\n", trainTotal);
+    // }
 }
 
 INT *head_lef;
