@@ -66,10 +66,12 @@ void* getPatternBatch(void* con) {
                     if (bernFlag) // flag for considering a portion of triples with unique head/tail for those of which there is a given relationship
                         head_corruption_threshold = 1000 * right_mean[sampledTriple.r] / (right_mean[sampledTriple.r] + left_mean[sampledTriple.r]);
                     if (randd(thread_index) % 1000 < head_corruption_threshold) { // Corrupt TAIL by generating a random number
+                        // cout << "corrupting tail" << endl;
                         batch_h[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = sampledTriple.h;
                         batch_t[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = corrupt_head(thread_index, sampledTriple.h, sampledTriple.r);
                         batch_r[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = sampledTriple.r;
                     } else { // Corrupt HEAD
+                        // cout << "corrupting head" << endl;
                         batch_h[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = corrupt_tail(thread_index, sampledTriple.t, sampledTriple.r);
                         batch_t[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = sampledTriple.t;
                         batch_r[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = sampledTriple.r;

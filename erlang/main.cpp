@@ -31,6 +31,8 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         head_batch_flag = 1;
     }
 
+    // cout << "HEAD BATCH FLAG = " << head_batch_flag << endl;
+
     int nTriplesPerPatternInstance = 1;
 
     unordered_map<string, PatternDescription>::const_iterator patternDescriptionIterator = patternDescriptions.find(pattern_name);
@@ -129,6 +131,7 @@ static ErlNifFunc meager_nif_funcs[] = {
 
     {"set_in_path", 4, set_in_path},
     {"set_bern", 1, set_bern},
+    {"set_head_tail_cross_sampling", 1, set_head_tail_cross_sampling},
     {"set_work_threads", 1, set_work_threads},
 
     {"get_relation_total", 0, get_relation_total},
