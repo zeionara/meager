@@ -106,53 +106,21 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
         }
     } 
     
-    // if (verbose) {
     readNumberOfElements(TripleComponent::relation, verbose);
     readNumberOfElements(TripleComponent::entity, verbose);
-    // }
 
-    FILE *input_file;
+    FILE *input_file = readNumberOfTriples(train, verbose);
 	int tmp;
 
-	// input_file = fopen((inPath + "relation2id.txt").c_str(), "r");
+    // input_file = fopen((inPath + "train2id.txt").c_str(), "r");
 
 	// if (input_file == nullptr) {
-	// 	std::cout << '`' << inPath << "relation2id.txt" << '`' << " does not exist"
+	// 	std::cout << '`' << inPath << "train2id.txt" << '`' << " does not exist"
 	// 	          << std::endl;
 	// 	return;
 	// }
 
-	// tmp = fscanf(input_file, "%ld", &relationTotal);
-    // if (verbose) {
-    //     printf("The total of relations is %ld.\n", relationTotal);
-    // }
-
-	// fclose(input_file);
-
-	// input_file = fopen((inPath + "entity2id.txt").c_str(), "r");
-
-	// if (input_file == nullptr) {
-	// 	std::cout << '`' << inPath << "entity2id.txt" << '`' << " does not exist"
-	// 	          << std::endl;
-	// 	return;
-	// }
-
-	// tmp = fscanf(input_file, "%ld", &entityTotal);
-    // if (verbose) {
-    //     printf("The total of entities is %ld.\n", entityTotal);
-    // }
-
-	// fclose(input_file);
-
-	input_file = fopen((inPath + "train2id.txt").c_str(), "r");
-
-	if (input_file == nullptr) {
-		std::cout << '`' << inPath << "train2id.txt" << '`' << " does not exist"
-		          << std::endl;
-		return;
-	}
-
-	tmp = fscanf(input_file, "%ld", &trainTotal); // Reading number of train samples
+	// tmp = fscanf(input_file, "%ld", &trainTotal); // Reading number of train samples
 
     // if (verbose) {
     //     printf("The total of train triples (read) is %ld.\n", trainTotal);

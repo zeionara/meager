@@ -8,6 +8,8 @@ std::string getPluralTripleComponentName(TripleComponent component) {
             return "entities";
         case relation:
             return "relations";
+        default:
+            return "unknown";
     }
 }
 
