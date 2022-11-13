@@ -106,9 +106,10 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
         }
     } 
     
-    if (verbose) {
-        printNumberOfElements(TripleComponent::relation);
-    }
+    // if (verbose) {
+    readNumberOfElements(TripleComponent::relation, verbose);
+    readNumberOfElements(TripleComponent::entity, verbose);
+    // }
 
     FILE *input_file;
 	int tmp;
@@ -128,20 +129,20 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
 
 	// fclose(input_file);
 
-	input_file = fopen((inPath + "entity2id.txt").c_str(), "r");
+	// input_file = fopen((inPath + "entity2id.txt").c_str(), "r");
 
-	if (input_file == nullptr) {
-		std::cout << '`' << inPath << "entity2id.txt" << '`' << " does not exist"
-		          << std::endl;
-		return;
-	}
+	// if (input_file == nullptr) {
+	// 	std::cout << '`' << inPath << "entity2id.txt" << '`' << " does not exist"
+	// 	          << std::endl;
+	// 	return;
+	// }
 
-	tmp = fscanf(input_file, "%ld", &entityTotal);
-    if (verbose) {
-        printf("The total of entities is %ld.\n", entityTotal);
-    }
+	// tmp = fscanf(input_file, "%ld", &entityTotal);
+    // if (verbose) {
+    //     printf("The total of entities is %ld.\n", entityTotal);
+    // }
 
-	fclose(input_file);
+	// fclose(input_file);
 
 	input_file = fopen((inPath + "train2id.txt").c_str(), "r");
 

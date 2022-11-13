@@ -8,7 +8,7 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/release)
 
 set(
     SOURCES
-    base/main.cpp base/Setting.cpp base/Random.cpp base/Reader.cpp base/Test.cpp base/Corrupt.cpp base/Utils.cpp
+    base/main.cpp base/Setting.cpp base/Random.cpp base/Reader.cpp base/Test.cpp base/Corrupt.cpp base/Utils.cpp base/Triple.cpp
     # patterns
     base/patterns/main.cpp
     base/patterns/symmetric/reader.cpp base/patterns/symmetric/main.cpp 
