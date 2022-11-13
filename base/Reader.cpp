@@ -14,6 +14,7 @@
 
 // #include "filters/reader.h"
 #include "filters/main.h"
+#include "Utils.h"
 
 INT *freqRel, *freqEnt;
 INT *lefHead, *rigHead;
@@ -104,24 +105,28 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
             cout << "Read " << inclusionFilterPatterns->items.size() << " inclusion filter patterns" << endl;
         }
     } 
-
-	FILE *input_file;
-	int tmp;
-
-	input_file = fopen((inPath + "relation2id.txt").c_str(), "r");
-
-	if (input_file == nullptr) {
-		std::cout << '`' << inPath << "relation2id.txt" << '`' << " does not exist"
-		          << std::endl;
-		return;
-	}
-
-	tmp = fscanf(input_file, "%ld", &relationTotal);
+    
     if (verbose) {
-        printf("The total of relations is %ld.\n", relationTotal);
+        printNumberOfElements(TripleComponent::relation);
     }
 
-	fclose(input_file);
+    FILE *input_file;
+	int tmp;
+
+	// input_file = fopen((inPath + "relation2id.txt").c_str(), "r");
+
+	// if (input_file == nullptr) {
+	// 	std::cout << '`' << inPath << "relation2id.txt" << '`' << " does not exist"
+	// 	          << std::endl;
+	// 	return;
+	// }
+
+	// tmp = fscanf(input_file, "%ld", &relationTotal);
+    // if (verbose) {
+    //     printf("The total of relations is %ld.\n", relationTotal);
+    // }
+
+	// fclose(input_file);
 
 	input_file = fopen((inPath + "entity2id.txt").c_str(), "r");
 

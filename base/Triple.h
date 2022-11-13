@@ -6,6 +6,10 @@
 #include <iostream>
 #include <sstream>
 
+enum TripleComponent { entity, relation };
+
+std::string getPluralTripleComponentName(TripleComponent component);
+
 struct Triple {
 
 	INT h, r, t;
