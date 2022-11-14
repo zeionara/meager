@@ -1,5 +1,5 @@
 #include "Setting.h"
-#include "Triple.h"
+#include "triple/main.h"
 #include <cstdlib>
 #include <algorithm>
 #include <iostream>
@@ -14,7 +14,7 @@
 
 // #include "filters/reader.h"
 #include "filters/main.h"
-#include "Utils.h"
+#include "utils/main.h"
 
 INT *freqRel, *freqEnt;
 INT *lefHead, *rigHead;
@@ -112,24 +112,10 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
     FILE *input_file = readNumberOfTriples(train, verbose);
 	int tmp;
 
-    // input_file = fopen((inPath + "train2id.txt").c_str(), "r");
-
-	// if (input_file == nullptr) {
-	// 	std::cout << '`' << inPath << "train2id.txt" << '`' << " does not exist"
-	// 	          << std::endl;
-	// 	return;
-	// }
-
-	// tmp = fscanf(input_file, "%ld", &trainTotal); // Reading number of train samples
-
-    // if (verbose) {
-    //     printf("The total of train triples (read) is %ld.\n", trainTotal);
-    // }
 	trainList = (Triple *)calloc(trainTotal, sizeof(Triple));
 	trainHead = (Triple *)calloc(trainTotal, sizeof(Triple));
 	trainTail = (Triple *)calloc(trainTotal, sizeof(Triple));
 	trainRel = (Triple *)calloc(trainTotal, sizeof(Triple));
-    // std::cout << trainList << " | " << trainHead;
 
     INT j = 0;
 

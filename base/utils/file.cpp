@@ -1,5 +1,5 @@
-#include "Triple.h"
-#include "Utils.h"
+#include "../triple/main.h"
+#include "main.h"
 
 // enum InputFileType { idMapping, train, test, valid, typeConstraint };
 

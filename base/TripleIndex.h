@@ -2,7 +2,7 @@
 #define TRIPLE_INDEX_H
 
 #include "Setting.h"
-#include "Triple.h"
+#include "triple/main.h"
 
 #include <unordered_set>
 #include <unordered_map>

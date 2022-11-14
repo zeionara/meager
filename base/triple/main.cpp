@@ -1,5 +1,5 @@
 #include <string>
-#include "Triple.h"
+#include "main.h"
 
 
 std::string getPluralTripleComponentName(TripleComponent component) {

@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 
-#include "../Triple.h"
+#include "../triple/main.h"
 #include "reader.h"
 
 using namespace std;

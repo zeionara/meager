@@ -1,7 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "Triple.h"
+#include "../triple/main.h"
 
 enum InputFileType { idMapping, triples, typeConstraint };
 enum SubsetType { train, test, valid };

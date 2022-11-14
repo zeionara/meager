@@ -1,6 +1,6 @@
 #ifndef TRIPLE_H
 #define TRIPLE_H
-#include "Setting.h"
+#include "../Setting.h"
 
 #include <string>
 #include <iostream>

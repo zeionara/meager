@@ -5,7 +5,7 @@
 #include <unordered_set>
 #include <unordered_map>
 
-#include "../Triple.h"
+#include "../triple/main.h"
 
 using namespace std;
 

@@ -6,24 +6,27 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -pthread -march=native")
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/release)
 
+file(
+    GLOB_RECURSE SOURCES_FILES "base/*.cpp"
+)
+file(
+    GLOB_RECURSE ERLANG_SOURCES_FILES "erlang/*.cpp"
+)
+file(
+    GLOB_RECURSE PYTHON_SOURCES_FILES "python/*.cpp"
+)
+
 set(
     SOURCES
-    base/main.cpp base/Setting.cpp base/Random.cpp base/Reader.cpp base/Test.cpp base/Corrupt.cpp base/Utils.cpp base/Triple.cpp
-    # patterns
-    base/patterns/main.cpp
-    base/patterns/symmetric/reader.cpp base/patterns/symmetric/main.cpp 
-    base/patterns/none/reader.cpp base/patterns/none/main.cpp
-    base/patterns/inverse/reader.cpp base/patterns/inverse/main.cpp
-
-    base/filters/reader.cpp base/filters/main.cpp
+    ${SOURCES_FILES}
 )
 set(
     ERLANG_SOURCES
-    erlang/utils.cpp erlang/setting.cpp erlang/main.cpp erlang/random.cpp erlang/reader.cpp erlang/test.cpp
+    ${ERLANG_SOURCES_FILES}
 )
 set(
     PYTHON_SOURCES
-    python/main.cpp python/setting.cpp python/random.cpp python/reader.cpp python/test.cpp
+    ${PYTHON_SOURCES_FILES}
 )
 
 include_directories(/usr/lib/erlang/usr/include)

@@ -1,5 +1,5 @@
 #include "Random.h"
-#include "Triple.h"
+#include "triple/main.h"
 #include "Reader.h"
 
 INT corrupt_head(INT id, INT h, INT r) { // Sample an incorrect tail given head, relationship and thread id (thread id is used for randomization)

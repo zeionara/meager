@@ -2,7 +2,7 @@
 #define READER_H
 
 #include "Setting.h"
-#include "Triple.h"
+#include "triple/main.h"
 #include <cstdlib>
 #include <algorithm>
 #include <iostream>
