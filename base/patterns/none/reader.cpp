@@ -43,6 +43,9 @@ void separateNoneTriples(Triple* triples, INT nTriples, bool verbose = false, bo
                 }
                 seenInstances.insert(direct_pattern_instance_concise_description);
             }
+            // } else {
+            //     cout << direct_pattern_instance_concise_description << endl;
+            // }
         } else {
                 for (int j = 0; j <= nTriplesPerPattern; j++) {
                     if (j <= patternInstance.observedTripleIndices.size()) {
