@@ -11,7 +11,7 @@ const int nTriplesPerPattern = 1; // patternDescriptions[nonePatternName].nTripl
 
 vector<PatternInstance>** noneTriplePatternInstances = (vector<PatternInstance>**)malloc(sizeof(vector<PatternInstance>*) * (nTriplesPerPattern + 1));
 
-void separateNoneTriples(bool verbose = false, bool drop_duplicates = true, bool enable_filters = false) {
+void separateNoneTriples(Triple* triples, INT nTriples, bool verbose = false, bool drop_duplicates = true, bool enable_filters = false) {
     if (verbose) {
 		cout << "Writing triples as none pattern instances..." << endl;
     }
@@ -22,10 +22,16 @@ void separateNoneTriples(bool verbose = false, bool drop_duplicates = true, bool
         noneTriplePatternInstances[i] = new vector<PatternInstance>;
     }
 
-	for (INT i = 0; i < trainTotal; i++) { // Reading train samples
+    // cout << "none triples handling checkpoint #1" << endl;
+
+	for (INT i = 0; i < nTriples; i++) { // Reading train samples
+        // cout << "none triples handling checkpoint #2" << endl;
+
         NonePatternInstance patternInstance = NonePatternInstance(
-                trainList[i]
+            triples[i]
         );
+
+        // cout << "none triples handling checkpoint #3" << endl;
 
         if (drop_duplicates) {
             string direct_pattern_instance_concise_description = patternInstance.getConciseDescription();

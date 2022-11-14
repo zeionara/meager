@@ -9,7 +9,7 @@
 #include <vector>
 #include <unordered_map>
 
-#include "TripleIndex.h"
+#include "triple/TripleIndex.h"
 
 extern
 INT *freqRel, *freqEnt;
@@ -48,8 +48,8 @@ INT *tail_type;
 
 void print_triples(std::string header, Triple* triples, int nTriples);
 
-extern "C"
-void importFilterPatterns(bool verbose = false, bool drop_duplicates = true, bool enable_filters = false);
+// extern "C"
+// void importFilterPatterns(bool verbose = false, bool drop_duplicates = true, bool enable_filters = false);
 
 extern "C"
 void importTrainFiles(bool verbose = false, bool enable_filters = false); 

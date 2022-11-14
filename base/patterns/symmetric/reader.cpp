@@ -12,7 +12,7 @@ const int nTriplesPerPattern = 2;
 // vector<PatternInstance> symmetricTriples;
 vector<PatternInstance>** symmetricTriplePatternInstances = (vector<PatternInstance>**)malloc(sizeof(vector<PatternInstance>*) * (nTriplesPerPattern + 1));
 
-void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true) {
+void separateSymmetricTriples(Triple* triples, INT nTriples, bool verbose = false, bool drop_duplicates = true) {
     if (verbose) {
 		cout << "Separating symmetric triples..." << endl;
     }
@@ -73,8 +73,8 @@ void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true)
         }
     };
 
-	for (INT i = 0; i < trainTotal; i++) { // Reading train samples
-        Triple triple = trainList[i];
+	for (INT i = 0; i < nTriples; i++) { // Reading train samples
+        Triple triple = triples[i];
 
         if (symmetricRelations.find(triple.r) != symmetricRelations.end()) {
             // cout << triple.r << " is a symmetric relation" << endl;

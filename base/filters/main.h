@@ -7,9 +7,11 @@
 #include <string>
 
 #include "../triple/main.h"
+
 #include "reader.h"
 
 using namespace std;
+
 
 struct FilterPatternsCollection {
 
@@ -28,7 +30,15 @@ struct FilterPatternsCollection {
     }
 };
 
+extern FilterPatternsCollection* exclusionFilterPatterns;
+extern FilterPatternsCollection* inclusionFilterPatterns;
+
 bool doesMatchSomeFilterPatterns(struct FilterPatternsCollection filter_patterns, struct Triple triple);
+
+extern "C"
+void importFilterPatterns(bool verbose, bool drop_duplicates, bool enable_filters = false);
+
+bool isAcceptableTriple(INT h, INT r, INT t);
 
 #endif
 

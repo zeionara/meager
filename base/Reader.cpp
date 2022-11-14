@@ -7,7 +7,8 @@
 #include <vector>
 #include <regex>
 
-#include "TripleIndex.h"
+#include "triple/TripleIndex.h"
+#include "triple/reader.h"
 #include "patterns/symmetric/reader.h"
 #include "patterns/none/reader.h"
 #include "patterns/inverse/reader.h"
@@ -30,14 +31,11 @@ Triple *trainRel;
 INT *testLef, *testRig;
 INT *validLef, *validRig;
 
-FilterPatternsCollection* exclusionFilterPatterns;
-FilterPatternsCollection* inclusionFilterPatterns;
+// unordered_map<INT, INT> external_to_internal_entity_id;
+// unordered_map<INT, INT> external_to_internal_relation_id;
 
-unordered_map<INT, INT> external_to_internal_entity_id;
-unordered_map<INT, INT> external_to_internal_relation_id;
-
-vector<INT> internal_to_external_entity_id;
-vector<INT> internal_to_external_relation_id;
+// vector<INT> internal_to_external_entity_id;
+// vector<INT> internal_to_external_relation_id;
 
 INT* current_internal_entity_id = new INT(0);
 INT* current_internal_relation_id = new INT(0);
@@ -55,43 +53,43 @@ void print_triples(std::string header, Triple* triples, int nTriples) {
 
 TripleIndex* trainTripleIndex = new TripleIndex;
 
-extern "C"
-void importFilterPatterns(bool verbose, bool drop_duplicates, bool enable_filters = false) {
-    if (enable_filters) {
-        exclusionFilterPatterns = new FilterPatternsCollection("excluding", verbose, drop_duplicates); // readFilterPatterns("excluding");
-        inclusionFilterPatterns = new FilterPatternsCollection("including", verbose, drop_duplicates); // readFilterPatterns("excluding");
-    }
-}
+// extern "C"
+// void importFilterPatterns(bool verbose, bool drop_duplicates, bool enable_filters = false) {
+//     if (enable_filters) {
+//         exclusionFilterPatterns = new FilterPatternsCollection("excluding", verbose, drop_duplicates); // readFilterPatterns("excluding");
+//         inclusionFilterPatterns = new FilterPatternsCollection("including", verbose, drop_duplicates); // readFilterPatterns("excluding");
+//     }
+// }
 
-bool isAcceptableTriple(INT h, INT r, INT t) {
-    Triple triple = Triple(h, r, t);
-    
-    return (
-            (!inclusionFilterPatterns->found || doesMatchSomeFilterPatterns(*inclusionFilterPatterns, triple)) && 
-            (!exclusionFilterPatterns->found || !doesMatchSomeFilterPatterns(*exclusionFilterPatterns, triple))
-           );
-}
+// bool isAcceptableTriple(INT h, INT r, INT t) {
+//     Triple triple = Triple(h, r, t);
+//     
+//     return (
+//             (!inclusionFilterPatterns->found || doesMatchSomeFilterPatterns(*inclusionFilterPatterns, triple)) && 
+//             (!exclusionFilterPatterns->found || !doesMatchSomeFilterPatterns(*exclusionFilterPatterns, triple))
+//            );
+// }
 
-INT external_to_internal_id(INT external_id, INT* internal_id, unordered_map<INT, INT>* external_to_internal, vector<INT>* internal_to_external) {
-    auto iterator = external_to_internal->find(external_id);
-
-    // cout << "Translating external id " << external_id << " ..." << endl;
-
-    if (iterator == external_to_internal->end()) {
-        (*external_to_internal)[external_id] = *internal_id;
-        internal_to_external->push_back(external_id);
-        
-        (*internal_id)++;
-
-        // cout << "Cannot find mapping for external id " << external_id << " - it will be " << (*internal_id) - 1 << endl;
-
-        return (*internal_id) - 1;
-    }
-
-    // cout << "Found mapping for external id " << external_id << " - it is " << iterator->second << endl;
-
-    return iterator->second;
-}
+// INT external_to_internal_id(INT external_id, INT* internal_id, unordered_map<INT, INT>* external_to_internal, vector<INT>* internal_to_external) {
+//     auto iterator = external_to_internal->find(external_id);
+// 
+//     // cout << "Translating external id " << external_id << " ..." << endl;
+// 
+//     if (iterator == external_to_internal->end()) {
+//         (*external_to_internal)[external_id] = *internal_id;
+//         internal_to_external->push_back(external_id);
+//         
+//         (*internal_id)++;
+// 
+//         // cout << "Cannot find mapping for external id " << external_id << " - it will be " << (*internal_id) - 1 << endl;
+// 
+//         return (*internal_id) - 1;
+//     }
+// 
+//     // cout << "Found mapping for external id " << external_id << " - it is " << iterator->second << endl;
+// 
+//     return iterator->second;
+// }
 
 extern "C"
 void importTrainFiles(bool verbose = false, bool enable_filters = false) {
@@ -112,56 +110,59 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
     FILE *input_file = readNumberOfTriples(train, verbose);
 	int tmp;
 
-	trainList = (Triple *)calloc(trainTotal, sizeof(Triple));
-	trainHead = (Triple *)calloc(trainTotal, sizeof(Triple));
-	trainTail = (Triple *)calloc(trainTotal, sizeof(Triple));
-	trainRel = (Triple *)calloc(trainTotal, sizeof(Triple));
+	// trainList = (Triple *)calloc(trainTotal, sizeof(Triple));
+	// trainHead = (Triple *)calloc(trainTotal, sizeof(Triple));
+	// trainTail = (Triple *)calloc(trainTotal, sizeof(Triple));
+	// trainRel = (Triple *)calloc(trainTotal, sizeof(Triple));
 
-    INT j = 0;
+    // INT j = 0;
 
+	// for (INT i = 0; i < trainTotal; i++) { // Reading train samples
+    //     INT h, r, t;
 
-	for (INT i = 0; i < trainTotal; i++) { // Reading train samples
-        INT h, r, t;
+	// 	tmp = fscanf(input_file, "%ld", &h);
+	// 	tmp = fscanf(input_file, "%ld", &t);
+	// 	tmp = fscanf(input_file, "%ld", &r);
 
-		tmp = fscanf(input_file, "%ld", &h);
-		tmp = fscanf(input_file, "%ld", &t);
-		tmp = fscanf(input_file, "%ld", &r);
+    //     // Triple triple = Triple(h, r, t);
 
-        // Triple triple = Triple(h, r, t);
+    //     if (!enable_filters || isAcceptableTriple(h, r, t)) {
+    //         // cout << h << " -" << r << "-> " << t << endl;
+    //         if (enable_filters) {
+    //             trainList[j].h = external_to_internal_id(h, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+    //             trainList[j].t = external_to_internal_id(t, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+    //             trainList[j].r = external_to_internal_id(r, current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
 
-        if (!enable_filters || isAcceptableTriple(h, r, t)) {
-            // cout << h << " -" << r << "-> " << t << endl;
-            if (enable_filters) {
-                trainList[j].h = external_to_internal_id(h, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
-                trainList[j].t = external_to_internal_id(t, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
-                trainList[j].r = external_to_internal_id(r, current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
+    //             // trainList[j].print();
+    //         } else {
+    //             trainList[j].h = h;
+    //             trainList[j].t = t;
+    //             trainList[j].r = r;
+    //         }
 
-                // trainList[j].print();
-            } else {
-                trainList[j].h = h;
-                trainList[j].t = t;
-                trainList[j].r = r;
-            }
+    //         trainTripleIndex->add(trainList[j]);
 
-            trainTripleIndex->add(trainList[j]);
+    //         j++;
+    //     }
 
-            j++;
-        }
-
-        // std::cout << "Current train triple: " << trainList[i].as_filterable_string() << "; matches an exclusion pattern: " << doesMatchSomeFilterPatterns(exclusionFilterPatterns, trainList[i]) << endl;
-	}
+    //     // std::cout << "Current train triple: " << trainList[i].as_filterable_string() << "; matches an exclusion pattern: " << doesMatchSomeFilterPatterns(exclusionFilterPatterns, trainList[i]) << endl;
+	// }
+    //
+    
+    TripleLists* lists = new TripleLists(trainTotal);
+    // TripleIds tripleIds = readTriples(input_file, enable_filters, trainList, trainTripleIndex);
+    TripleIds tripleIds = readTriples(input_file, enable_filters, lists->main, trainTripleIndex);
 
     // cout << trainTotal << " VS " << j << endl;
 
     if (enable_filters) {
-        relationTotal = *current_internal_relation_id;
-        entityTotal = *current_internal_entity_id;
+        relationTotal = tripleIds.last_relation;
+        entityTotal = tripleIds.last_entity;
+        trainTotal = tripleIds.last_triple;
     }
 
-	freqRel = (INT *)calloc(relationTotal, sizeof(INT));
-	freqEnt = (INT *)calloc(entityTotal, sizeof(INT));
-
-    trainTotal = j;
+	// freqRel = (INT *)calloc(relationTotal, sizeof(INT));
+	// freqEnt = (INT *)calloc(entityTotal, sizeof(INT));
 
     // cout << trainTotal << " ===== " << j << endl;
 
@@ -173,9 +174,9 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
     //     trainList[i].print();
     // }
 
-    separateNoneTriples(verbose, true, enable_filters);
-    separateSymmetricTriples(verbose);
-    separateInverseTriples(verbose, true, enable_filters);
+    separateNoneTriples(lists->main, lists->length, verbose, true, enable_filters);
+    separateSymmetricTriples(lists->main, lists->length, verbose);
+    separateInverseTriples(lists->main, lists->length, verbose, true, enable_filters);
 
     // cout << "TRAIN TOTAL (2) = " << trainTotal << endl;
 
@@ -183,80 +184,116 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
     // print_triples("Train triples (head)", trainHead, trainTotal);
 
 	fclose(input_file);
-	std::sort(trainList, trainList + trainTotal, Triple::cmp_head);
-	tmp = trainTotal;
-	trainTotal = 1;
-	trainHead[0] = trainTail[0] = trainRel[0] = trainList[0];
-	freqEnt[trainList[0].t] += 1;
-	freqEnt[trainList[0].h] += 1;
-	freqRel[trainList[0].r] += 1;
-	for (INT i = 1; i < tmp; i++) // Remove duplicated triples
-		if (trainList[i].h != trainList[i - 1].h ||
-		    trainList[i].r != trainList[i - 1].r ||
-		    trainList[i].t != trainList[i - 1].t) {
-			trainHead[trainTotal] = trainTail[trainTotal] = trainRel[trainTotal] =
-			    trainList[trainTotal] = trainList[i];
-			trainTotal++;
-			freqEnt[trainList[i].t]++;
-			freqEnt[trainList[i].h]++;
-			freqRel[trainList[i].r]++;
-		}
 
-	std::sort(trainHead, trainHead + trainTotal, Triple::cmp_head);
-	std::sort(trainTail, trainTail + trainTotal, Triple::cmp_tail);
-	std::sort(trainRel, trainRel + trainTotal, Triple::cmp_rel);
+    Frequencies* frequencies = dropDuplicates(lists, entityTotal, relationTotal);
+
+	// std::sort(trainList, trainList + trainTotal, Triple::cmp_head);
+	// tmp = trainTotal;
+	// trainTotal = 1;
+	// trainHead[0] = trainTail[0] = trainRel[0] = trainList[0];
+	// freqEnt[trainList[0].t] += 1;
+	// freqEnt[trainList[0].h] += 1;
+	// freqRel[trainList[0].r] += 1;
+
+	// for (INT i = 1; i < trainTotal; i++) // Remove duplicated triples
+	// 	if (
+    //         trainList[i].h != trainList[i - 1].h ||
+	// 	    trainList[i].r != trainList[i - 1].r ||
+	// 	    trainList[i].t != trainList[i - 1].t
+    //     ) {
+	// 		trainHead[trainTotal] = trainTail[trainTotal] = trainRel[trainTotal] = trainList[trainTotal] = trainList[i];
+	// 		trainTotal++;
+	// 		freqEnt[trainList[i].t]++;
+	// 		freqEnt[trainList[i].h]++;
+	// 		freqRel[trainList[i].r]++;
+	// 	}
+
+	// std::sort(trainHead, trainHead + trainTotal, Triple::cmp_head);
+	// std::sort(trainTail, trainTail + trainTotal, Triple::cmp_tail);
+	// std::sort(trainRel, trainRel + trainTotal, Triple::cmp_rel);
+
     if (verbose) {
+        // printf("The total of train triples is %ld.\n", trainTotal);
         printf("The total of train triples is %ld.\n", trainTotal);
+        printf("The total of (UNIQUE) train triples is %ld.\n", lists->length);
     }
 
-	lefHead = (INT *)calloc(entityTotal, sizeof(INT));
-	rigHead = (INT *)calloc(entityTotal, sizeof(INT));
-	lefTail = (INT *)calloc(entityTotal, sizeof(INT));
-	rigTail = (INT *)calloc(entityTotal, sizeof(INT));
-	lefRel = (INT *)calloc(entityTotal, sizeof(INT));
-	rigRel = (INT *)calloc(entityTotal, sizeof(INT));
-	memset(rigHead, -1, sizeof(INT) * entityTotal);
-	memset(rigTail, -1, sizeof(INT) * entityTotal);
-	memset(rigRel, -1, sizeof(INT) * entityTotal);
-	for (INT i = 1; i < trainTotal; i++) { // For each element in any triple position found a (closed) interval in the list of sorted triples in which entries with this element occur
-		if (trainTail[i].t != trainTail[i - 1].t) { // lef - left boundary of such an interval, rig - right boundary
-			rigTail[trainTail[i - 1].t] = i - 1;
-			lefTail[trainTail[i].t] = i;
-		}
-		if (trainHead[i].h != trainHead[i - 1].h) {
-			rigHead[trainHead[i - 1].h] = i - 1;
-			lefHead[trainHead[i].h] = i;
-		}
-		if (trainRel[i].h != trainRel[i - 1].h) {
-			rigRel[trainRel[i - 1].h] = i - 1;
-			lefRel[trainRel[i].h] = i;
-		}
-	}
-	lefHead[trainHead[0].h] = 0;
-	rigHead[trainHead[trainTotal - 1].h] = trainTotal - 1;
-	lefTail[trainTail[0].t] = 0;
-	rigTail[trainTail[trainTotal - 1].t] = trainTotal - 1;
-	lefRel[trainRel[0].h] = 0;
-	rigRel[trainRel[trainTotal - 1].h] = trainTotal - 1;
+	// lefHead = (INT *)calloc(entityTotal, sizeof(INT));
+	// rigHead = (INT *)calloc(entityTotal, sizeof(INT));
+	// lefTail = (INT *)calloc(entityTotal, sizeof(INT));
+	// rigTail = (INT *)calloc(entityTotal, sizeof(INT));
+	// lefRel = (INT *)calloc(entityTotal, sizeof(INT));
+	// rigRel = (INT *)calloc(entityTotal, sizeof(INT));
 
-	left_mean = (REAL *)calloc(relationTotal, sizeof(REAL));
-	right_mean = (REAL *)calloc(relationTotal, sizeof(REAL));
-	for (INT i = 0; i < entityTotal; i++) {
-		for (INT j = lefHead[i] + 1; j <= rigHead[i]; j++)
-			if (trainHead[j].r != trainHead[j - 1].r) // Count number of triples in which a given head entity is occurred skipping ones in which the relationship is repeating
-				left_mean[trainHead[j].r] += 1.0; // because since the relationship is the same and the head is the same, then the tail entity must be different, but tail entities
-		if (lefHead[i] <= rigHead[i]) // will be considered in the following loop
-			left_mean[trainHead[lefHead[i]].r] += 1.0; // Consider case of interval which consists of just one triple (in these circumstances the loop above won't execute)
-		for (INT j = lefTail[i] + 1; j <= rigTail[i]; j++)
-			if (trainTail[j].r != trainTail[j - 1].r) // The same as for the head entities in the previous loop - skip ones in which head entity is unique
-				right_mean[trainTail[j].r] += 1.0;
-		if (lefTail[i] <= rigTail[i])
-			right_mean[trainTail[lefTail[i]].r] += 1.0;
-	}
-	for (INT i = 0; i < relationTotal; i++) {
-		left_mean[i] = freqRel[i] / left_mean[i]; // Compute portion of triples in which some relationship is presented across all triples using number of triples which discards elements in which
-		right_mean[i] = freqRel[i] / right_mean[i]; // only the opposite item (for lef - tail and for rig - head) is unique.
-	}
+	// memset(rigHead, -1, sizeof(INT) * entityTotal);
+	// memset(rigTail, -1, sizeof(INT) * entityTotal);
+	// memset(rigRel, -1, sizeof(INT) * entityTotal);
+
+	// for (INT i = 1; i < trainTotal; i++) { // For each element in any triple position found a (closed) interval in the list of sorted triples in which entries with this element occur
+	// 	if (trainTail[i].t != trainTail[i - 1].t) { // lef - left boundary of such an interval, rig - right boundary
+	// 		rigTail[trainTail[i - 1].t] = i - 1;
+	// 		lefTail[trainTail[i].t] = i;
+	// 	}
+	// 	if (trainHead[i].h != trainHead[i - 1].h) {
+	// 		rigHead[trainHead[i - 1].h] = i - 1;
+	// 		lefHead[trainHead[i].h] = i;
+	// 	}
+	// 	if (trainRel[i].h != trainRel[i - 1].h) {
+	// 		rigRel[trainRel[i - 1].h] = i - 1;
+	// 		lefRel[trainRel[i].h] = i;
+	// 	}
+	// }
+	// lefHead[trainHead[0].h] = 0;
+	// rigHead[trainHead[trainTotal - 1].h] = trainTotal - 1;
+	// lefTail[trainTail[0].t] = 0;
+	// rigTail[trainTail[trainTotal - 1].t] = trainTotal - 1;
+	// lefRel[trainRel[0].h] = 0;
+	// rigRel[trainRel[trainTotal - 1].h] = trainTotal - 1;
+
+    BoundaryCollection* boundaries = findBoundaries(lists, frequencies);
+    RelationScore* score = new RelationScore(boundaries, lists, frequencies);
+
+	// left_mean = (REAL *)calloc(relationTotal, sizeof(REAL));
+	// right_mean = (REAL *)calloc(relationTotal, sizeof(REAL));
+	// for (INT i = 0; i < entityTotal; i++) {
+	// 	for (INT j = lefHead[i] + 1; j <= rigHead[i]; j++)
+	// 		if (trainHead[j].r != trainHead[j - 1].r) // Count number of entities "emitting" each relation // Count (number of unique relations - 1) for triples having head "i"
+	// 			left_mean[trainHead[j].r] += 1.0;
+	// 	if (lefHead[i] <= rigHead[i])
+	// 		left_mean[trainHead[lefHead[i]].r] += 1.0;
+
+	// 	for (INT j = lefTail[i] + 1; j <= rigTail[i]; j++)
+	// 		if (trainTail[j].r != trainTail[j - 1].r) // Same as above but for triples having tail "i"
+	// 			right_mean[trainTail[j].r] += 1.0;
+	// 	if (lefTail[i] <= rigTail[i])
+	// 		right_mean[trainTail[lefTail[i]].r] += 1.0;
+	// }
+	// for (INT i = 0; i < relationTotal; i++) {
+	// 	left_mean[i] = freqRel[i] / left_mean[i]; // The greater the value the fewer unique heads connects the relation
+	// 	right_mean[i] = freqRel[i] / right_mean[i]; // The greater the value the fewer unique tails connects the relation
+	// }
+    //
+    if (verbose) {
+        score->print();
+    }
+
+    freqRel = frequencies->relation;
+    freqEnt = frequencies->entity;
+
+    lefHead = boundaries->head->left;
+    rigHead = boundaries->head->right;
+    lefTail = boundaries->tail->left;
+    rigTail = boundaries->tail->right;
+    lefRel = boundaries->relation->left;
+    rigRel = boundaries->relation->right;
+
+    left_mean = score->head;
+    right_mean = score->tail;
+
+    trainList = lists->main;
+    trainHead = lists->head;
+    trainTail = lists->tail;
+    trainRel = lists->relation;
 }
 
 Triple *testList;

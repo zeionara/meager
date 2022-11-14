@@ -1,6 +1,7 @@
 #include "erl_nif.h"
 #include "utils.h"
 #include "../base/Reader.h"
+#include "../base/filters/main.h"
 
 extern ERL_NIF_TERM
 import_filter_patterns(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
