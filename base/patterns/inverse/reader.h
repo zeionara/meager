@@ -5,7 +5,7 @@
 
 #include "../main.h"
 
-void separateInverseTriples(bool verbose = false, bool drop_duplicates = true);
+void separateInverseTriples(Triple* triples, INT nTriples, bool verbose = false, bool drop_duplicates = true, bool enable_filters = false);
 
 // extern
 // std::vector<PatternInstance> symmetricTriples;

@@ -17,6 +17,9 @@ using namespace std;
 extern ERL_NIF_TERM
 sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     INT batch_size = enif_get_long_(env, argv[0]); 
+
+    // cout << "batch size = " << batch_size << endl;
+
     INT entity_negative_rate = enif_get_long_(env, argv[1]); 
     INT relation_negative_rate = enif_get_long_(env, argv[2]); 
     int n_observed_triples_per_pattern_instance = enif_get_int_(env, argv[5]); 
@@ -28,10 +31,11 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         head_batch_flag = 1;
     }
 
+    // cout << "HEAD BATCH FLAG = " << head_batch_flag << endl;
+
     int nTriplesPerPatternInstance = 1;
 
     unordered_map<string, PatternDescription>::const_iterator patternDescriptionIterator = patternDescriptions.find(pattern_name);
-
 
     if (patternDescriptionIterator != patternDescriptions.end()) {
         nTriplesPerPatternInstance = patternDescriptionIterator->second.nTriplesPerInstance;
@@ -51,9 +55,10 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         n_observed_triples_per_pattern_instance = 0;
     }
 
+    int foo = (nTriplesPerPatternInstance + n_observed_triples_per_pattern_instance) * batch_size;
     int batch_tuple_size = (nTriplesPerPatternInstance + n_observed_triples_per_pattern_instance) * batch_size * (1 + entity_negative_rate + relation_negative_rate);
 
-    //symmetric cout << "batch tuple size = " << batch_tuple_size << endl;
+    // cout << "batch tuple size = " << foo << endl;
 
     ERL_NIF_TERM* batch_h = new ERL_NIF_TERM[batch_tuple_size]();
     ERL_NIF_TERM* batch_t = new ERL_NIF_TERM[batch_tuple_size]();
@@ -126,6 +131,7 @@ static ErlNifFunc meager_nif_funcs[] = {
 
     {"set_in_path", 4, set_in_path},
     {"set_bern", 1, set_bern},
+    {"set_head_tail_cross_sampling", 1, set_head_tail_cross_sampling},
     {"set_work_threads", 1, set_work_threads},
 
     {"get_relation_total", 0, get_relation_total},
@@ -144,8 +150,10 @@ static ErlNifFunc meager_nif_funcs[] = {
     //  Reader
     //  
 
-    {"import_train_files", 2, import_train_files},
-    {"import_test_files", 2, import_test_files},
+    {"import_filter_patterns", 3, import_filter_patterns},
+
+    {"import_train_files", 3, import_train_files},
+    {"import_test_files", 3, import_test_files},
     {"import_type_files", 0, import_type_files},
 
     //

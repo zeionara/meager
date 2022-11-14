@@ -5,7 +5,7 @@
 #include <unordered_set>
 #include <unordered_map>
 
-#include "../Triple.h"
+#include "../triple/main.h"
 
 using namespace std;
 
@@ -29,7 +29,7 @@ struct PatternInstance {
         string result = "";
         int i = 0;
         for (Triple triple: triples) {
-            result += to_string(triple.h) + "|" + to_string(triple.r) + "|" + to_string(triple.h) + "\n";
+            result += to_string(triple.h) + "|" + to_string(triple.r) + "|" + to_string(triple.t) + "\n";
         }
         return result;
     }

@@ -12,7 +12,7 @@ const int nTriplesPerPattern = 2;
 // vector<PatternInstance> symmetricTriples;
 vector<PatternInstance>** symmetricTriplePatternInstances = (vector<PatternInstance>**)malloc(sizeof(vector<PatternInstance>*) * (nTriplesPerPattern + 1));
 
-void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true) {
+void separateSymmetricTriples(Triple* triples, INT nTriples, bool verbose = false, bool drop_duplicates = true) {
     if (verbose) {
 		cout << "Separating symmetric triples..." << endl;
     }
@@ -48,6 +48,7 @@ void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true)
 
     auto pushPatternInstance = [drop_duplicates, &seenInstances](PatternInstance patternInstance) {
         if (drop_duplicates) {
+            // cout << "pushing found triple" << endl;
             string direct_pattern_instance_concise_description = patternInstance.getConciseDescription();
             if (seenInstances.find(direct_pattern_instance_concise_description) == seenInstances.end()) {
                 // symmetricTriples.push_back(
@@ -72,10 +73,11 @@ void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true)
         }
     };
 
-	for (INT i = 0; i < trainTotal; i++) { // Reading train samples
-        Triple triple = trainList[i];
+	for (INT i = 0; i < nTriples; i++) { // Reading train samples
+        Triple triple = triples[i];
 
         if (symmetricRelations.find(triple.r) != symmetricRelations.end()) {
+            // cout << triple.r << " is a symmetric relation" << endl;
             auto direct_pattern_instance = SymmetricPatternInstance(
                     triple,
                     Triple(triple.t, triple.r, triple.h)
@@ -89,6 +91,10 @@ void separateSymmetricTriples(bool verbose = false, bool drop_duplicates = true)
             );
             pushPatternInstance(inverse_pattern_instance);
         }
+        // else {
+        //     cout << triple.r << " is not a symmetric relation" << endl;
+        // }
+        // cout << "Collected " << symmetricTriplePatternInstances[1]->size() << " symmetric pattern instances in which there are " << 1 << " or more observed patterns" << endl;
 	}
 
     if (verbose) {

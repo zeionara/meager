@@ -1,11 +1,10 @@
 #ifndef TRIPLE_INDEX_H
 #define TRIPLE_INDEX_H
 
-#include "Setting.h"
-#include "Triple.h"
+#include "../Setting.h"
+#include "main.h"
 
 #include <unordered_set>
-#include <unordered_map>
 
 using namespace std;
 using triples_map = unordered_map<

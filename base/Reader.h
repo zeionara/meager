@@ -2,13 +2,14 @@
 #define READER_H
 
 #include "Setting.h"
-#include "Triple.h"
+#include "triple/main.h"
 #include <cstdlib>
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
-#include "TripleIndex.h"
+#include "triple/TripleIndex.h"
 
 extern
 INT *freqRel, *freqEnt;
@@ -47,11 +48,14 @@ INT *tail_type;
 
 void print_triples(std::string header, Triple* triples, int nTriples);
 
-extern "C"
-void importTrainFiles(bool verbose = false); 
+// extern "C"
+// void importFilterPatterns(bool verbose = false, bool drop_duplicates = true, bool enable_filters = false);
 
 extern "C"
-void importTestFiles(bool verbose = false);
+void importTrainFiles(bool verbose = false, bool enable_filters = false); 
+
+extern "C"
+void importTestFiles(bool verbose = false, bool enable_filters = false);
 
 extern "C"
 void importTypeFiles();
@@ -61,5 +65,14 @@ void importTypeFiles();
 extern
 TripleIndex* trainTripleIndex;
 
+extern
+std::vector<INT> internal_to_external_entity_id;
+extern
+std::vector<INT> internal_to_external_relation_id;
+
+extern
+std::unordered_map<INT, INT> external_to_internal_entity_id;
+extern
+std::unordered_map<INT, INT> external_to_internal_relation_id;
 #endif
 

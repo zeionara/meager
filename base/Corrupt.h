@@ -2,7 +2,7 @@
 #define CORRUPT_H
 
 #include "Random.h"
-#include "Triple.h"
+#include "triple/main.h"
 #include "Reader.h"
 
 INT corrupt_head(INT id, INT h, INT r);

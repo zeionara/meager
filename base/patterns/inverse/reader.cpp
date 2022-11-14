@@ -12,7 +12,7 @@ const int nTriplesPerPattern = 2;
 // vector<PatternInstance> symmetricTriples;
 vector<PatternInstance>** inverseTriplePatternInstances = (vector<PatternInstance>**)malloc(sizeof(vector<PatternInstance>*) * (nTriplesPerPattern + 1));
 
-void separateInverseTriples(bool verbose = false, bool drop_duplicates = true) {
+void separateInverseTriples(Triple* triples, INT nTriples, bool verbose = false, bool drop_duplicates = true, bool enable_filters = false) {
     if (verbose) {
 		cout << "Separating inverse triples..." << endl;
     }
@@ -25,6 +25,9 @@ void separateInverseTriples(bool verbose = false, bool drop_duplicates = true) {
 
     unordered_map<int, int> inverseForwardRelationToBackward;
     unordered_map<int, int> inverseBackwardRelationToForward;
+
+    // cout << forwardRelation << endl;
+    // cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << endl;
 
     while (in_file >> forwardRelation >> backwardRelation) {
         if (verbose) {
@@ -74,15 +77,20 @@ void separateInverseTriples(bool verbose = false, bool drop_duplicates = true) {
         }
     };
 
-	for (INT i = 0; i < trainTotal; i++) { // Reading train samples
-        Triple triple = trainList[i];
+	for (INT i = 0; i < nTriples; i++) { // Reading train samples
+        Triple triple = triples[i];
 
-        auto forwardRelationIterator = inverseForwardRelationToBackward.find(triple.r); // unordered_map<INT, unordered_set<INT>>
+        INT relation = enable_filters ? internal_to_external_relation_id.at(triple.r) : triple.r;
+        // INT relation = triple.r;
+
+        // cout << "Relation: " << relation << endl;
+
+        auto forwardRelationIterator = inverseForwardRelationToBackward.find(relation); // unordered_map<INT, unordered_set<INT>>
         
         if (forwardRelationIterator != inverseForwardRelationToBackward.end()) {
             auto direct_pattern_instance = InversePatternInstance(
                     triple,
-                    Triple(triple.t, forwardRelationIterator->second, triple.h)
+                    Triple(triple.t, enable_filters ? external_to_internal_relation_id.find(forwardRelationIterator->second)->second : forwardRelationIterator->second, triple.h)
             );
             pushPatternInstance(direct_pattern_instance);
         } else {
