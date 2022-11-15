@@ -58,50 +58,97 @@ std::string getSubsetTypeName(SubsetType subsetType) {
     }
 }
 
-
-void readNumberOfElements(TripleComponent component, bool verbose) {
+File* readHeader(std::string relativePath, bool verbose, std::function<void(INT)> printMessage) {
 	FILE *input_file;
-	int tmp;
-    long* total = component == entity ? &entityTotal : &relationTotal;
+	INT length;
+
+    // std::string relativePath = getInputPath(idMapping, component);
+    // std::string componentName = component == entity ? "entities" : "relations";
+
+	input_file = fopen((inPath + relativePath).c_str(), "r");
+
+	if (input_file == nullptr) {
+	 	std::cerr << '`' << inPath << relativePath << '`' << " does not exist" << std::endl;
+        throw "File does not exist";
+	 	// return new File(input_file, ;
+	}
+
+	fscanf(input_file, "%ld", &length);
+
+    if (verbose) {
+        printMessage(length);
+        // printf("The total number of %s is %ld.\n", getPluralTripleComponentName(component).c_str(), *tmp);
+    }
+
+	// fclose(input_file);
+
+    return new File(input_file, length);
+}
+
+
+File* readNumberOfElements(TripleComponent component, bool verbose) {
+	// FILE *input_file;
+	// INT* tmp;
+    // long* total = component == entity ? &entityTotal : &relationTotal;
 
     std::string relativePath = getInputPath(idMapping, component);
     std::string componentName = component == entity ? "entities" : "relations";
 
-	input_file = fopen((inPath + relativePath).c_str(), "r");
+    File* file = readHeader(
+        relativePath, verbose,
+        [&](INT result){
+            printf("The total number of %s is %ld.\n", getPluralTripleComponentName(component).c_str(), result);
+        }
+    );
 
-	if (input_file == nullptr) {
-	 	std::cout << '`' << inPath << relativePath << '`' << " does not exist" << std::endl;
-	 	return;
-	}
+    file->close();
 
-	tmp = fscanf(input_file, "%ld", total);
+    return file;
 
-    if (verbose) {
-        printf("The total number of %s is %ld.\n", getPluralTripleComponentName(component).c_str(), *total);
-    }
+	// input_file = fopen((inPath + relativePath).c_str(), "r");
 
-	fclose(input_file);
+	// if (input_file == nullptr) {
+	//  	std::cout << '`' << inPath << relativePath << '`' << " does not exist" << std::endl;
+	//  	return;
+	// }
+
+	// fscanf(input_file, "%ld", tmp);
+
+    // if (verbose) {
+    //     printf("The total number of %s is %ld.\n", getPluralTripleComponentName(component).c_str(), *tmp);
+    // }
+
+	// fclose(input_file);
+
+    // return *tmp;
 }
 
-FILE* readNumberOfTriples(SubsetType subsetType, bool verbose) {
-    FILE *input_file;
-	int tmp;
-    long* total = subsetType == train ? &trainTotal : subsetType == test ? &testTotal : &validTotal;
+File* readNumberOfTriples(SubsetType subsetType, bool verbose) {
+    // FILE *input_file;
+	// int tmp;
+    // long* total = subsetType == train ? &trainTotal : subsetType == test ? &testTotal : &validTotal;
 
     std::string relativePath = getInputPath(triples, subsetType);
 
-	input_file = fopen((inPath + relativePath).c_str(), "r");
+    return readHeader(
+        relativePath, verbose,
+        [&](INT result){
+            printf("The total number of %s triples is %ld.\n", getSubsetTypeName(subsetType).c_str(), result);
+        }
+    );
 
-	if (input_file == nullptr) {
-		std::cout << '`' << inPath << relativePath << '`' << " does not exist" << std::endl;
-		throw std::invalid_argument("File does not exist");
-	}
+	// input_file = fopen((inPath + relativePath).c_str(), "r");
 
-	fscanf(input_file, "%ld", total); // Reading number of train samples
+	// if (input_file == nullptr) {
+	// 	std::cout << '`' << inPath << relativePath << '`' << " does not exist" << std::endl;
+	// 	throw std::invalid_argument("File does not exist");
+	// }
 
-    if (verbose) {
-        printf("The total number of %s triples is %ld.\n", getSubsetTypeName(subsetType).c_str(), *total);
-    }
+	// fscanf(input_file, "%ld", total); // Reading number of train samples
 
-    return input_file;
+    // if (verbose) {
+    //     printf("The total number of %s triples is %ld.\n", getSubsetTypeName(subsetType).c_str(), *total);
+    // }
+
+    // return input_file;
 }

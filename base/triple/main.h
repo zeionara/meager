@@ -11,6 +11,7 @@
 #include <vector>
 #include <unordered_map>
 
+enum TripleElement { head, rel, tail };
 enum TripleComponent { entity, relation };
 
 std::string getPluralTripleComponentName(TripleComponent component);
@@ -59,45 +60,6 @@ struct Triple {
         std::stringstream message;
         message << h << "\t" << r << "\t" << t;
         return message.str();
-    }
-};
-
-struct TripleList {
-    Triple* items;
-    INT* left;
-    INT* right;
-
-    INT length;
-
-    TripleList(INT length) {
-        this->items = (Triple *)calloc(trainTotal, sizeof(Triple));
-        this->length = length;
-    }
-
-    void sort(INT nRelations) {
-        std::sort(this->items, this->items + this->length, Triple::cmp_rel2);
-
-        INT* left = (INT *)calloc(nRelations, sizeof(INT));
-        INT* right = (INT *)calloc(nRelations, sizeof(INT));
-
-        memset(left, -1, sizeof(INT) * relationTotal);
-        memset(right, -1, sizeof(INT) * relationTotal);
-
-        for (INT i = 1; i < this->length; i++) { // Get intervals for unique relationships in the test subset
-            if (this->items[i].r != this->items[i - 1].r) {
-                right[this->items[i - 1].r] = i - 1;
-                left[this->items[i].r] = i;
-            }
-        }
-        if (this->length > 0) {
-            left[this->items[0].r] = 0;
-        }
-        if (this->length > 1) {
-            right[this->items[this->length - 1].r] = this->length - 1;
-        }
-
-        this->left = left;
-        this->right = right;
     }
 };
 
@@ -185,66 +147,7 @@ struct BoundaryCollection {
     BoundaryCollection(Frequencies* frequencies): BoundaryCollection(frequencies->nEntities, frequencies->nRelations) {}
 };
 
-struct RelationScore {
-    REAL* head; 
-    REAL* tail;
-
-    INT length;
-
-    // REAL handleEntity(Boundaries* boundaries, Triple* triples, INT entity, void (*incrementScore)(INT relation)) {
-    REAL handleEntity(Boundaries* boundaries, Triple* triples, INT entity, std::function<void(INT)> incrementScore) {
-        REAL value = 0;
-
-        for (INT j = boundaries->left[entity] + 1; j <= boundaries->right[entity]; j++)
-            if (triples[j].r != triples[j - 1].r) // Count number of entities "emitting" each relation // Count (number of unique relations - 1) for triples having head "i"
-                incrementScore(triples[j].r);
-        if (boundaries->left[entity] <= boundaries->right[entity])
-            incrementScore(triples[boundaries->left[entity]].r);
-
-        return value;
-    }
-
-    RelationScore(BoundaryCollection* boundaries, TripleLists* lists, Frequencies* frequencies) {
-        REAL* head = (REAL *)calloc(frequencies->nRelations, sizeof(REAL));
-        REAL* tail = (REAL *)calloc(frequencies->nRelations, sizeof(REAL));
-
-
-        for (INT i = 0; i < entityTotal; i++) {
-            handleEntity(boundaries->head, lists->head, i, [&](INT relation){head[relation] += 1.0;});
-            handleEntity(boundaries->tail, lists->tail, i, [&](INT relation){tail[relation] += 1.0;});
-            // for (INT j = lefHead[i] + 1; j <= rigHead[i]; j++)
-            //     if (trainHead[j].r != trainHead[j - 1].r) // Count number of entities "emitting" each relation // Count (number of unique relations - 1) for triples having head "i"
-            //         left_mean[trainHead[j].r] += 1.0;
-            // if (lefHead[i] <= rigHead[i])
-            //     left_mean[trainHead[lefHead[i]].r] += 1.0;
-
-            // for (INT j = lefTail[i] + 1; j <= rigTail[i]; j++)
-            //     if (trainTail[j].r != trainTail[j - 1].r) // Same as above but for triples having tail "i"
-            //         right_mean[trainTail[j].r] += 1.0;
-            // if (lefTail[i] <= rigTail[i])
-            //     right_mean[trainTail[lefTail[i]].r] += 1.0;
-        }
-        for (INT i = 0; i < relationTotal; i++) {
-            head[i] = frequencies->relation[i] / head[i]; // The greater the value the fewer unique heads connects the relation
-            tail[i] = frequencies->relation[i] / tail[i]; // The greater the value the fewer unique tails connects the relation
-        }
-
-        this->head = head;
-        this->tail = tail;
-        this->length = frequencies->nRelations;
-    }
-
-    void print() {
-        std::cout << "--- " << " relation scores"  << std::endl;
-        int i = 0;
-        for (INT i = 0; i < this->length; i++) {
-            std::cout << "| relation = " << i << ", head score = " << this->head[i] << ", tail score = " << this->tail[i] << std::endl;
-        }
-        std::cout << "---" << std::endl;
-    }
-};
-
-Frequencies* dropDuplicates(TripleLists* lists, INT nEntities, INT nRelations);
+Frequencies* dropDuplicates(Triple* main, Triple* heads, Triple* tails, Triple* relations, INT length, INT nEntities, INT nRelations);
 BoundaryCollection* findBoundaries(TripleLists* lists, Frequencies* frequencies);
 
 extern std::vector<INT> internal_to_external_entity_id;

@@ -6,11 +6,25 @@
 enum InputFileType { idMapping, triples, typeConstraint };
 enum SubsetType { train, test, valid };
 
-void readNumberOfElements(TripleComponent component = entity, bool verbose = false);
-FILE* readNumberOfTriples(SubsetType subsetType = train, bool verbose = false);
-
 std::string getInputPath(InputFileType fileType, TripleComponent component);
 std::string getInputPath(InputFileType fileType, SubsetType subsetType);
 std::string getInputPath(InputFileType fileType);
+
+struct File {
+    FILE* file;
+    INT length;
+
+    File(FILE* file, INT length) {
+        this->file = file;
+        this->length = length;
+    }
+
+    void close() {
+        fclose(this->file);
+    }
+};
+
+File* readNumberOfElements(TripleComponent component = entity, bool verbose = false);
+File* readNumberOfTriples(SubsetType subsetType = train, bool verbose = false);
 
 #endif

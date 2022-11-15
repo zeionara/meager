@@ -19,9 +19,13 @@ struct TripleIndex {
     triples_map triples;
 
     void add(Triple triple) {
+        // cout << triple.h << "+" << triple.r << "+" << triple.t << endl;
+        // cout << "---+" << endl;
         triples_map::const_iterator relations_and_tails_iterator = triples.find(triple.h); // unordered_map<INT, unordered_set<INT>>
+        // cout << "---+" << endl;
 
         if (relations_and_tails_iterator == triples.end()) {
+            // cout << "---" << endl;
             triples[triple.h] = {
                 {
                     triple.t, {
@@ -30,6 +34,7 @@ struct TripleIndex {
                 }
             }; 
         } else {
+            // cout << "---*" << endl;
             unordered_map<INT, unordered_set<INT>>::const_iterator tails_iterator = relations_and_tails_iterator->second.find(triple.t); 
             if (tails_iterator == relations_and_tails_iterator->second.end()) {
                 unordered_map<INT, unordered_set<INT>> relations_and_tails_map = relations_and_tails_iterator->second;

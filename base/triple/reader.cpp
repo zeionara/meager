@@ -4,10 +4,11 @@
 #include "main.h"
 #include "reader.h"
 #include "TripleIndex.h"
+#include "../utils/main.h"
 
 // INT* current_triple_id = new INT(0);
 
-TripleIds readTriples(FILE* input_file, INT length, bool enable_filters, Triple* tripleList, TripleIndex* tripleIndex, INT start_internal_entity_id, INT start_internal_relation_id) {
+TripleIds readTriples(File* file, bool enable_filters, Triple* tripleList, TripleIndex* tripleIndex, INT start_internal_entity_id, INT start_internal_relation_id) {
     INT* current_internal_entity_id = new INT(start_internal_entity_id < 0 ? 0 : start_internal_entity_id);
     INT* current_internal_relation_id = new INT(start_internal_relation_id < 0 ? 0 : start_internal_relation_id);
 
@@ -15,12 +16,16 @@ TripleIds readTriples(FILE* input_file, INT length, bool enable_filters, Triple*
 
     INT j = 0;
 
-	for (INT i = 0; i < length; i++) { // Reading train samples
+	for (INT i = 0; i < file->length; i++) { // Reading train samples
         INT h, r, t;
 
-		fscanf(input_file, "%ld", &h);
-		fscanf(input_file, "%ld", &t);
-		fscanf(input_file, "%ld", &r);
+        // cout << "scanning" << endl;
+
+		fscanf(file->file, "%ld", &h);
+		fscanf(file->file, "%ld", &t);
+		fscanf(file->file, "%ld", &r);
+
+        // cout << "scanned" << h << "|" << t << "|" << r << endl;
 
         // Triple triple = Triple(h, r, t);
 
@@ -38,13 +43,20 @@ TripleIds readTriples(FILE* input_file, INT length, bool enable_filters, Triple*
                 tripleList[j].r = r;
             }
 
+            // cout << "saving" << endl;
+
             tripleIndex->add(tripleList[j]);
 
+            // cout << "saved" << endl;
+
             j++;
+
+            // cout << j << endl;
         }
 
         // std::cout << "Current train triple: " << trainList[i].as_filterable_string() << "; matches an exclusion pattern: " << doesMatchSomeFilterPatterns(exclusionFilterPatterns, trainList[i]) << endl;
 	}
+    // cout << "scanned all" << endl;
 
     TripleIds tripleIds;
 

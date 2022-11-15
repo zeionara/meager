@@ -4,6 +4,7 @@
 
 #include "main.h"
 #include "TripleIndex.h"
+#include "../utils/main.h"
 
 struct TripleIds {
     INT last_relation;
@@ -15,6 +16,7 @@ struct TripleIds {
 // extern INT* current_internal_relation_id;
 // extern INT* current_triple_id;
 
-TripleIds readTriples(FILE* input_file, INT length, bool enable_filters, Triple* tripleList, TripleIndex* tripleIndex, INT start_internal_entity_id = -1, INT start_internal_relation_id = -1);
+// TripleIds readTriples(FILE* input_file, INT length, bool enable_filters, Triple* tripleList, TripleIndex* tripleIndex, INT start_internal_entity_id = -1, INT start_internal_relation_id = -1);
+TripleIds readTriples(File* file, bool enable_filters, Triple* tripleList, TripleIndex* tripleIndex, INT start_internal_entity_id = -1, INT start_internal_relation_id = -1);
 
 #endif

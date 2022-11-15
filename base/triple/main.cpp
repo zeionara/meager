@@ -19,39 +19,39 @@ string getPluralTripleComponentName(TripleComponent component) {
     }
 }
 
-Frequencies* dropDuplicates(TripleLists* lists, INT nEntities, INT nRelations) {
+Frequencies* dropDuplicates(Triple* main, Triple* heads, Triple* tails, Triple* relations, INT length, INT nEntities, INT nRelations) {
     INT nUniqueTriples = 1;
 
     Frequencies* frequencies = new Frequencies(nEntities, nRelations);
 
-	std::sort(lists->main, lists->main + lists->length, Triple::cmp_head);
+	std::sort(main, main + length, Triple::cmp_head);
 
-	lists->head[0] = lists->tail[0] = lists->relation[0] = lists->main[0];
+	heads[0] = tails[0] = relations[0] = main[0];
 
-	frequencies->entity[lists->main[0].t] += 1;
-	frequencies->entity[lists->main[0].h] += 1;
-	frequencies->relation[lists->main[0].r] += 1;
+	frequencies->entity[main[0].t] += 1;
+	frequencies->entity[main[0].h] += 1;
+	frequencies->relation[main[0].r] += 1;
 
-	for (INT i = 1; i < lists->length; i++) // Remove duplicated triples
+	for (INT i = 1; i < length; i++) // Remove duplicated triples
 		if (
-            lists->main[i].h != lists->main[i - 1].h ||
-		    lists->main[i].r != lists->main[i - 1].r ||
-		    lists->main[i].t != lists->main[i - 1].t
+            main[i].h != main[i - 1].h ||
+		    main[i].r != main[i - 1].r ||
+		    main[i].t != main[i - 1].t
         ) {
-			lists->head[nUniqueTriples] = lists->tail[nUniqueTriples] = lists->relation[nUniqueTriples] = lists->main[nUniqueTriples] = lists->main[i];
+			heads[nUniqueTriples] = tails[nUniqueTriples] = relations[nUniqueTriples] = main[nUniqueTriples] = main[i];
 			nUniqueTriples++;
-			frequencies->entity[lists->main[i].t]++;
-			frequencies->entity[lists->main[i].h]++;
-			frequencies->relation[lists->main[i].r]++;
+			frequencies->entity[main[i].t]++;
+			frequencies->entity[main[i].h]++;
+			frequencies->relation[main[i].r]++;
 		}
 
-	std::sort(lists->head, lists->head + trainTotal, Triple::cmp_head);
-	std::sort(lists->tail, lists->tail + trainTotal, Triple::cmp_tail);
-	std::sort(lists->relation, lists->relation + trainTotal, Triple::cmp_rel);
+	// std::sort(head, head + trainTotal, Triple::cmp_head);
+	// std::sort(tail, tail + trainTotal, Triple::cmp_tail);
+	// std::sort(relation, relation + trainTotal, Triple::cmp_rel);
 
-    printf("The total of UNIQUE train triples is %ld.\n", nUniqueTriples);
+    // printf("The total of UNIQUE train triples is %ld.\n", nUniqueTriples);
 
-    lists->length = nUniqueTriples;
+    // lists->length = nUniqueTriples;
 
     return frequencies;
 }

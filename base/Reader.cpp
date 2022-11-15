@@ -16,6 +16,7 @@
 // #include "filters/reader.h"
 #include "filters/main.h"
 #include "utils/main.h"
+#include "triple/list.h"
 
 INT *freqRel, *freqEnt;
 INT *lefHead, *rigHead;
@@ -41,6 +42,10 @@ INT *validLef, *validRig;
 
 TripleIds tripleIds;
 
+TrainTripleLists* trainLists;
+TestTripleLists* testLists;
+TestTripleLists* validLists;
+
 void print_triples(std::string header, Triple* triples, int nTriples) {
     std::cout << header << "\n";
     for (int i = 0; i < nTriples; i++) {
@@ -65,58 +70,70 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
         }
     } 
     
-    readNumberOfElements(TripleComponent::relation, verbose);
-    readNumberOfElements(TripleComponent::entity, verbose);
+    // File* relations = readNumberOfElements(TripleComponent::relation, verbose);
+    // File* entities = readNumberOfElements(TripleComponent::entity, verbose);
 
-    FILE *input_file = readNumberOfTriples(train, verbose);
+    // File* trainFile = readNumberOfTriples(train, verbose);
 
-    TripleLists* lists = new TripleLists(trainTotal);
+    // TripleLists* lists = new TripleLists(trainTotal);
     // TripleIds tripleIds = readTriples(input_file, enable_filters, lists->main, trainTripleIndex);
-    tripleIds = readTriples(input_file, trainTotal, enable_filters, lists->main, trainTripleIndex);
+    // TrainTripleLists* lists = new TrainTripleLists(trainFile->length);
+    TrainTripleLists* lists = new TrainTripleLists(train, enable_filters, verbose);
+    // lists->read(trainFile);
 
-	fclose(input_file);
+    trainTotal = lists->length;
+    relationTotal = lists->frequencies->nRelations;
+    entityTotal = lists->frequencies->nEntities;
 
-    if (enable_filters) {
-        relationTotal = tripleIds.last_relation;
-        entityTotal = tripleIds.last_entity;
-        trainTotal = tripleIds.last_triple;
-    }
+    // tripleIds = readTriples(trainFile, enable_filters, lists->main, trainTripleIndex);
+    // tripleIds = readTriples(trainFile, enable_filters, lists->main, trainTripleIndex);
 
-    Frequencies* frequencies = dropDuplicates(lists, entityTotal, relationTotal);
+	// fclose(input_file);
 
-    separateNoneTriples(lists->main, lists->length, verbose, true, enable_filters);
-    separateSymmetricTriples(lists->main, lists->length, verbose);
-    separateInverseTriples(lists->main, lists->length, verbose, true, enable_filters);
+    // if (enable_filters) {
+    //     relationTotal = tripleIds.last_relation;
+    //     entityTotal = tripleIds.last_entity;
+    //     trainTotal = tripleIds.last_triple;
+    // }
+
+    // Frequencies* frequencies = dropDuplicates(lists, entityTotal, relationTotal);
+
+    // separateNoneTriples(lists->main, lists->length, verbose, true, enable_filters);
+    // separateSymmetricTriples(lists->main, lists->length, verbose);
+    // separateInverseTriples(lists->main, lists->length, verbose, true, enable_filters);
+
+    // if (verbose) {
+    //     printf("The total of train triples is %ld.\n", trainTotal);
+    //     printf("The total of (UNIQUE) train triples is %ld.\n", lists->length);
+    // }
+
+    // BoundaryCollection* boundaries = findBoundaries(lists, frequencies);
+    // RelationScore* score = new RelationScore(boundaries, lists, frequencies);
 
     if (verbose) {
-        printf("The total of train triples is %ld.\n", trainTotal);
-        printf("The total of (UNIQUE) train triples is %ld.\n", lists->length);
+        cout << "print relation score" << endl;
+        lists->relationScore->print();
     }
 
-    BoundaryCollection* boundaries = findBoundaries(lists, frequencies);
-    RelationScore* score = new RelationScore(boundaries, lists, frequencies);
+    trainLists = lists;
 
-    if (verbose) {
-        score->print();
-    }
+    freqRel = lists->frequencies->relation;
+    freqEnt = lists->frequencies->entity;
 
-    freqRel = frequencies->relation;
-    freqEnt = frequencies->entity;
+    lefHead = lists->head->left;
+    rigHead = lists->head->right;
+    lefTail = lists->tail->left;
+    rigTail = lists->tail->right;
+    lefRel = lists->relation->left;
+    rigRel = lists->relation->right;
 
-    lefHead = boundaries->head->left;
-    rigHead = boundaries->head->right;
-    lefTail = boundaries->tail->left;
-    rigTail = boundaries->tail->right;
-    lefRel = boundaries->relation->left;
-    rigRel = boundaries->relation->right;
+    left_mean = lists->relationScore->head;
+    right_mean = lists->relationScore->tail;
 
-    left_mean = score->head;
-    right_mean = score->tail;
-
-    trainList = lists->main;
-    trainHead = lists->head;
-    trainTail = lists->tail;
-    trainRel = lists->relation;
+    trainList = lists->main->items;
+    trainHead = lists->head->items;
+    trainTail = lists->tail->items;
+    trainRel = lists->relation->items;
 }
 
 extern "C"
@@ -144,11 +161,11 @@ void importTestFiles(bool verbose = false, bool enable_filters = false) {
 	// tmp = fscanf(fin, "%ld", &entityTotal); // Read number of entities
 	// fclose(fin);
 
-    readNumberOfElements(TripleComponent::relation, verbose);
-    readNumberOfElements(TripleComponent::entity, verbose);
+    // readNumberOfElements(TripleComponent::relation, verbose);
+    // readNumberOfElements(TripleComponent::entity, verbose);
 
-    FILE *test_input_file = readNumberOfTriples(test, verbose);
-    FILE *valid_input_file = readNumberOfTriples(valid, verbose);
+    // FILE *test_input_file = readNumberOfTriples(test, verbose);
+    // FILE *valid_input_file = readNumberOfTriples(valid, verbose);
 
 	// FILE *f_kb1 = fopen((inPath + "test2id.txt").c_str(), "r");
 
@@ -175,18 +192,34 @@ void importTestFiles(bool verbose = false, bool enable_filters = false) {
 	// tmp = fscanf(f_kb1, "%ld", &testTotal);
     // tmp = fscanf(f_kb2, "%ld", &trainTotal);
 	// tmp = fscanf(f_kb3, "%ld", &validTotal);
-	tripleTotal = testTotal + trainTotal + validTotal;
-	testList = (Triple *)calloc(testTotal, sizeof(Triple));
-	validList = (Triple *)calloc(validTotal, sizeof(Triple));
-	tripleList = (Triple *)calloc(tripleTotal, sizeof(Triple));
+
+    testLists = new TestTripleLists(test, trainLists->frequencies->nEntities, trainLists->frequencies->nRelations, enable_filters, verbose);
+    validLists = new TestTripleLists(test, testLists->nEntities, testLists->nRelations, enable_filters, verbose);
+
+    // cout << "Make test lists" << endl;
+
+	tripleTotal = trainLists->length + testLists->length + validLists->length;
+
+    testTotal = testLists->length;
+    testList = testLists->main->items;
+    testLef = testLists->main->left;
+    testRig = testLists->main->right;
+
+    validTotal = validLists->length;
+    validList = validLists->main->items;
+    validLef = validLists->main->left;
+    validRig = validLists->main->right;
+	// testList = (Triple *)calloc(testTotal, sizeof(Triple));
+	// validList = (Triple *)calloc(validTotal, sizeof(Triple));
+	// tripleList = (Triple *)calloc(tripleTotal, sizeof(Triple));
 
     // if (verbose) {
     //     printf("The total of train triples (read) is %ld.\n", trainTotal);
     // }
 
-    TripleList* testTripleList = new TripleList(testTotal);
+    // TripleList* testTripleList = new TripleList(testTotal);
     // tripleIds = readTriples(test_input_file, testTotal, enable_filters, testList, testTripleIndex, tripleIds.last_entity, tripleIds.last_relation);
-    tripleIds = readTriples(test_input_file, testTotal, enable_filters, testTripleList->items, testTripleIndex, tripleIds.last_entity, tripleIds.last_relation);
+    // tripleIds = readTriples(test_input_file, testTotal, enable_filters, testTripleList->items, testTripleIndex, tripleIds.last_entity, tripleIds.last_relation);
 
     // INT j = 0;
 	// for (INT i = 0; i < testTotal; i++) { // Read test triples, copy each triple into the begging of the tripleList array
@@ -214,121 +247,121 @@ void importTestFiles(bool verbose = false, bool enable_filters = false) {
     //     tripleList[j] = testList[j];
 	// }
 
-    testTotal = tripleIds.last_triple;
+    // testTotal = tripleIds.last_triple;
 
-    TripleList* validTripleList = new TripleList(validTotal);
-    // tripleIds = readTriples(valid_input_file, validTotal, enable_filters, validList, validTripleIndex, tripleIds.last_entity, tripleIds.last_relation);
-    tripleIds = readTriples(valid_input_file, validTotal, enable_filters, validTripleList->items, validTripleIndex, tripleIds.last_entity, tripleIds.last_relation);
+    // TripleList* validTripleList = new TripleList(validTotal);
+    // // tripleIds = readTriples(valid_input_file, validTotal, enable_filters, validList, validTripleIndex, tripleIds.last_entity, tripleIds.last_relation);
+    // tripleIds = readTriples(valid_input_file, validTotal, enable_filters, validTripleList->items, validTripleIndex, tripleIds.last_entity, tripleIds.last_relation);
 
-    validTotal = tripleIds.last_triple;
+    // validTotal = tripleIds.last_triple;
 
-	fclose(test_input_file);
-	// fclose(f_kb2);
-	fclose(valid_input_file);
-    
-    // j = 0;
+	// fclose(test_input_file);
+	// // fclose(f_kb2);
+	// fclose(valid_input_file);
+    // 
+    // // j = 0;
 
-	for (INT i = 0; i < testTotal; i++) { // Read train triples into the middle of the tripleList array
-        tripleList[i] = testList[i];
-	}
-
-	for (INT i = 0; i < trainTotal; i++) { // Read train triples into the middle of the tripleList array
-        tripleList[i + testTotal] = trainList[i];
-	}
-
-	for (INT i = 0; i < validTotal; i++) { // Read train triples into the middle of the tripleList array
-        tripleList[i + testTotal + trainTotal] = validList[i];
-	}
-
-	// for (INT i = 0; i < validTotal; i++) { // Read valid triples into the end of the tripleList array, copy each triple to a separate array
-    //     INT h, t, r;
-
-	// 	tmp = fscanf(f_kb3, "%ld", &h);
-	// 	tmp = fscanf(f_kb3, "%ld", &t);
-	// 	tmp = fscanf(f_kb3, "%ld", &r);
-
-    //     if (!enable_filters || isAcceptableTriple(h, r, t)) {
-    //         if (enable_filters) {
-    //             tripleList[j + testTotal + trainTotal].h = external_to_internal_id(h, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
-    //             tripleList[j + testTotal + trainTotal].t = external_to_internal_id(t, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
-    //             tripleList[j + testTotal + trainTotal].r = external_to_internal_id(r, current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
-    //         } else {
-    //             tripleList[j + testTotal + trainTotal].h = h;
-    //             tripleList[j + testTotal + trainTotal].t = t;
-    //             tripleList[j + testTotal + trainTotal].r = r;
-    //         }
-
-    //         validList[j] = tripleList[j + testTotal + trainTotal];
-
-    //         j++;
-    //     }
+	// for (INT i = 0; i < testTotal; i++) { // Read train triples into the middle of the tripleList array
+    //     tripleList[i] = testList[i];
 	// }
+
+	// for (INT i = 0; i < trainTotal; i++) { // Read train triples into the middle of the tripleList array
+    //     tripleList[i + testTotal] = trainList[i];
+	// }
+
+	// for (INT i = 0; i < validTotal; i++) { // Read train triples into the middle of the tripleList array
+    //     tripleList[i + testTotal + trainTotal] = validList[i];
+	// }
+
+	// // for (INT i = 0; i < validTotal; i++) { // Read valid triples into the end of the tripleList array, copy each triple to a separate array
+    // //     INT h, t, r;
+
+	// // 	tmp = fscanf(f_kb3, "%ld", &h);
+	// // 	tmp = fscanf(f_kb3, "%ld", &t);
+	// // 	tmp = fscanf(f_kb3, "%ld", &r);
+
+    // //     if (!enable_filters || isAcceptableTriple(h, r, t)) {
+    // //         if (enable_filters) {
+    // //             tripleList[j + testTotal + trainTotal].h = external_to_internal_id(h, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+    // //             tripleList[j + testTotal + trainTotal].t = external_to_internal_id(t, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+    // //             tripleList[j + testTotal + trainTotal].r = external_to_internal_id(r, current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
+    // //         } else {
+    // //             tripleList[j + testTotal + trainTotal].h = h;
+    // //             tripleList[j + testTotal + trainTotal].t = t;
+    // //             tripleList[j + testTotal + trainTotal].r = r;
+    // //         }
+
+    // //         validList[j] = tripleList[j + testTotal + trainTotal];
+
+    // //         j++;
+    // //     }
+	// // }
+
+    // // if (enable_filters) {
+    // //     relationTotal = *current_internal_relation_id;
+    // //     entityTotal = *current_internal_entity_id;
+    // // }
 
     // if (enable_filters) {
-    //     relationTotal = *current_internal_relation_id;
-    //     entityTotal = *current_internal_entity_id;
+    //     relationTotal = tripleIds.last_relation;
+    //     entityTotal = tripleIds.last_entity;
     // }
 
-    if (enable_filters) {
-        relationTotal = tripleIds.last_relation;
-        entityTotal = tripleIds.last_entity;
-    }
+    // // validTotal = j;
+    // // j = 0;
 
-    // validTotal = j;
-    // j = 0;
+    // testTripleList->sort(relationTotal);
+    // validTripleList->sort(relationTotal);
 
-    testTripleList->sort(relationTotal);
-    validTripleList->sort(relationTotal);
+    // testList = testTripleList->items;
+    // testLef = testTripleList->left;
+    // testRig = testTripleList->right;
 
-    testList = testTripleList->items;
-    testLef = testTripleList->left;
-    testRig = testTripleList->right;
+    // validList = validTripleList->items;
+    // validLef = validTripleList->left;
+    // validRig = validTripleList->right;
 
-    validList = validTripleList->items;
-    validLef = validTripleList->left;
-    validRig = validTripleList->right;
+	// // std::sort(tripleList, tripleList + tripleTotal, Triple::cmp_head);
+	// // std::sort(testList, testList + testTotal, Triple::cmp_rel2);
+	// // std::sort(validList, validList + validTotal, Triple::cmp_rel2);
+    // // if (verbose) {
+    // //     printf("The total of test triples is %ld.\n", testTotal);
+    // //     printf("The total of valid triples is %ld.\n", validTotal);
+    // // }
 
-	// std::sort(tripleList, tripleList + tripleTotal, Triple::cmp_head);
-	// std::sort(testList, testList + testTotal, Triple::cmp_rel2);
-	// std::sort(validList, validList + validTotal, Triple::cmp_rel2);
+	// // testLef = (INT *)calloc(relationTotal, sizeof(INT));
+	// // testRig = (INT *)calloc(relationTotal, sizeof(INT));
+	// // memset(testLef, -1, sizeof(INT) * relationTotal);
+	// // memset(testRig, -1, sizeof(INT) * relationTotal);
+	// // for (INT i = 1; i < testTotal; i++) { // Get intervals for unique relationships in the test subset
+	// // 	if (testList[i].r != testList[i - 1].r) {
+	// // 		testRig[testList[i - 1].r] = i - 1;
+	// // 		testLef[testList[i].r] = i;
+	// // 	}
+	// // }
+    // // if (testTotal > 0) {
+    // //     testLef[testList[0].r] = 0;
+    // // }
+    // // if (testTotal > 1) {
+    // //     testRig[testList[testTotal - 1].r] = testTotal - 1;
+    // // }
+
+	// // validLef = (INT *)calloc(relationTotal, sizeof(INT));
+	// // validRig = (INT *)calloc(relationTotal, sizeof(INT));
+	// // memset(validLef, -1, sizeof(INT) * relationTotal);
+	// // memset(validRig, -1, sizeof(INT) * relationTotal);
+	// // for (INT i = 1; i < validTotal; i++) { // Get intervals for unique relationships in the validation subset
+	// // 	if (validList[i].r != validList[i - 1].r) {
+	// // 		validRig[validList[i - 1].r] = i - 1;
+	// // 		validLef[validList[i].r] = i;
+	// // 	}
+	// // }
+	// // validLef[validList[0].r] = 0;
+	// // validRig[validList[validTotal - 1].r] = validTotal - 1;
+
     // if (verbose) {
-    //     printf("The total of test triples is %ld.\n", testTotal);
-    //     printf("The total of valid triples is %ld.\n", validTotal);
+    //     printf("The total of train triples is %ld.\n", trainTotal);
     // }
-
-	// testLef = (INT *)calloc(relationTotal, sizeof(INT));
-	// testRig = (INT *)calloc(relationTotal, sizeof(INT));
-	// memset(testLef, -1, sizeof(INT) * relationTotal);
-	// memset(testRig, -1, sizeof(INT) * relationTotal);
-	// for (INT i = 1; i < testTotal; i++) { // Get intervals for unique relationships in the test subset
-	// 	if (testList[i].r != testList[i - 1].r) {
-	// 		testRig[testList[i - 1].r] = i - 1;
-	// 		testLef[testList[i].r] = i;
-	// 	}
-	// }
-    // if (testTotal > 0) {
-    //     testLef[testList[0].r] = 0;
-    // }
-    // if (testTotal > 1) {
-    //     testRig[testList[testTotal - 1].r] = testTotal - 1;
-    // }
-
-	// validLef = (INT *)calloc(relationTotal, sizeof(INT));
-	// validRig = (INT *)calloc(relationTotal, sizeof(INT));
-	// memset(validLef, -1, sizeof(INT) * relationTotal);
-	// memset(validRig, -1, sizeof(INT) * relationTotal);
-	// for (INT i = 1; i < validTotal; i++) { // Get intervals for unique relationships in the validation subset
-	// 	if (validList[i].r != validList[i - 1].r) {
-	// 		validRig[validList[i - 1].r] = i - 1;
-	// 		validLef[validList[i].r] = i;
-	// 	}
-	// }
-	// validLef[validList[0].r] = 0;
-	// validRig[validList[validTotal - 1].r] = validTotal - 1;
-
-    if (verbose) {
-        printf("The total of train triples is %ld.\n", trainTotal);
-    }
 }
 
 INT *head_lef;
