@@ -15,6 +15,6 @@ struct TripleIds {
 // extern INT* current_internal_relation_id;
 // extern INT* current_triple_id;
 
-TripleIds readTriples(FILE* input_file, bool enable_filters, Triple* tripleList, TripleIndex* tripleIndex);
+TripleIds readTriples(FILE* input_file, INT length, bool enable_filters, Triple* tripleList, TripleIndex* tripleIndex, INT start_internal_entity_id = -1, INT start_internal_relation_id = -1);
 
 #endif

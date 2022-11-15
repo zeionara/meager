@@ -4,6 +4,7 @@
 // #include "TripleIndex.h"
 
 #include <functional>
+#include <algorithm>
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -58,6 +59,45 @@ struct Triple {
         std::stringstream message;
         message << h << "\t" << r << "\t" << t;
         return message.str();
+    }
+};
+
+struct TripleList {
+    Triple* items;
+    INT* left;
+    INT* right;
+
+    INT length;
+
+    TripleList(INT length) {
+        this->items = (Triple *)calloc(trainTotal, sizeof(Triple));
+        this->length = length;
+    }
+
+    void sort(INT nRelations) {
+        std::sort(this->items, this->items + this->length, Triple::cmp_rel2);
+
+        INT* left = (INT *)calloc(nRelations, sizeof(INT));
+        INT* right = (INT *)calloc(nRelations, sizeof(INT));
+
+        memset(left, -1, sizeof(INT) * relationTotal);
+        memset(right, -1, sizeof(INT) * relationTotal);
+
+        for (INT i = 1; i < this->length; i++) { // Get intervals for unique relationships in the test subset
+            if (this->items[i].r != this->items[i - 1].r) {
+                right[this->items[i - 1].r] = i - 1;
+                left[this->items[i].r] = i;
+            }
+        }
+        if (this->length > 0) {
+            left[this->items[0].r] = 0;
+        }
+        if (this->length > 1) {
+            right[this->items[this->length - 1].r] = this->length - 1;
+        }
+
+        this->left = left;
+        this->right = right;
     }
 };
 

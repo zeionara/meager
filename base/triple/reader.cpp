@@ -7,15 +7,15 @@
 
 // INT* current_triple_id = new INT(0);
 
-TripleIds readTriples(FILE* input_file, bool enable_filters, Triple* tripleList, TripleIndex* tripleIndex) {
-    INT* current_internal_entity_id = new INT(0);
-    INT* current_internal_relation_id = new INT(0);
+TripleIds readTriples(FILE* input_file, INT length, bool enable_filters, Triple* tripleList, TripleIndex* tripleIndex, INT start_internal_entity_id, INT start_internal_relation_id) {
+    INT* current_internal_entity_id = new INT(start_internal_entity_id < 0 ? 0 : start_internal_entity_id);
+    INT* current_internal_relation_id = new INT(start_internal_relation_id < 0 ? 0 : start_internal_relation_id);
 
 	// Triple* trainList = (Triple *)calloc(trainTotal, sizeof(Triple));
 
     INT j = 0;
 
-	for (INT i = 0; i < trainTotal; i++) { // Reading train samples
+	for (INT i = 0; i < length; i++) { // Reading train samples
         INT h, r, t;
 
 		fscanf(input_file, "%ld", &h);
