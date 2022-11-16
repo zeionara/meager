@@ -11,11 +11,12 @@ extern "C"
 void setInPath(char *path, bool as_tsv = false) { // supported by erlang adapter
 	INT len = strlen(path);
 	inPath = "";
+
 	for (INT i = 0; i < len; i++)
 		inPath = inPath + path[i];
-    if (!as_tsv) {
-        printf("Input Files Path : %s\n", inPath.c_str());
-    }
+
+    if (!as_tsv)
+        printf("corpus path : %s\n", inPath.c_str());
 }
 
 extern "C"

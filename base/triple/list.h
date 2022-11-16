@@ -39,7 +39,7 @@ struct TripleList {
             this->items, this->items + this->length,
             this->element == rel ? Triple::cmp_rel2 : this->element == ::TripleElement::head ? Triple::cmp_head : Triple::cmp_tail
         );
-        cout << this->items[0].h << "|" << this->items[0].r << "|" << this->items[0].t << endl;
+        // cout << this->items[0].h << "|" << this->items[0].r << "|" << this->items[0].t << endl;
         // cout << "Sorting..." << nItems << endl;
 
         INT* left = (INT *)calloc(nItems, sizeof(INT));
@@ -216,13 +216,13 @@ struct TrainTripleLists {
     }
 
     void sort() {
-        cout << "Sorting main" << endl;
+        // cout << "Sorting main" << endl;
         this->main->sort(this->frequencies->nEntities);
-        cout << "Sorting head" << endl;
+        // cout << "Sorting head" << endl;
         this->head->sort(this->frequencies->nEntities);
-        cout << "Sorting tail" << endl;
+        // cout << "Sorting tail" << endl;
         this->tail->sort(this->frequencies->nEntities);
-        cout << "Sorting relation" << endl;
+        // cout << "Sorting relation" << endl;
         this->relation->sort(this->frequencies->nRelations);
     }
 
@@ -265,7 +265,7 @@ struct TrainTripleLists {
         
         this->sort();
 
-        cout << "sorted" << endl;
+        // cout << "sorted" << endl;
 
         this->relationScore = new RelationScore(this->head, this->tail, this->frequencies);
     }
@@ -297,9 +297,9 @@ struct TestTripleLists {
     }
 
     void read(File* file, INT startInternalEntityId, INT startInternalRelationId, bool enable_filters = false, bool verbose = false) {
-        cout << "uuu" << endl;
+        // cout << "uuu" << endl;
         TripleIds tripleIds = readTriples(file, enable_filters, this->main->items, this->index, startInternalEntityId, startInternalRelationId);
-        cout << "uuu" << endl;
+        // cout << "uuu" << endl;
 
         file->close();
 
