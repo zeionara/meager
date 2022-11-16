@@ -152,3 +152,33 @@ File* readNumberOfTriples(SubsetType subsetType, bool verbose) {
 
     // return input_file;
 }
+
+File* readNumberOfTypeConstrainedRelations(bool verbose) {
+    // FILE *input_file;
+	// int tmp;
+    // long* total = subsetType == train ? &trainTotal : subsetType == test ? &testTotal : &validTotal;
+
+    std::string relativePath = getInputPath(typeConstraint);
+
+    return readHeader(
+        relativePath, verbose,
+        [&](INT result){
+            printf("The total number of type constrained relations is %ld.\n", result);
+        }
+    );
+
+	// input_file = fopen((inPath + relativePath).c_str(), "r");
+
+	// if (input_file == nullptr) {
+	// 	std::cout << '`' << inPath << relativePath << '`' << " does not exist" << std::endl;
+	// 	throw std::invalid_argument("File does not exist");
+	// }
+
+	// fscanf(input_file, "%ld", total); // Reading number of train samples
+
+    // if (verbose) {
+    //     printf("The total number of %s triples is %ld.\n", getSubsetTypeName(subsetType).c_str(), *total);
+    // }
+
+    // return input_file;
+}

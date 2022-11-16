@@ -26,5 +26,6 @@ struct File {
 
 File* readNumberOfElements(TripleComponent component = entity, bool verbose = false);
 File* readNumberOfTriples(SubsetType subsetType = train, bool verbose = false);
+File* readNumberOfTypeConstrainedRelations(bool verbose);
 
 #endif

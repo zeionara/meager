@@ -35,18 +35,18 @@ struct TripleList {
     }
 
     void sort(INT nItems) {
-        // cout << "Sorting..." << this->length << endl;
         std::sort(
             this->items, this->items + this->length,
             this->element == rel ? Triple::cmp_rel2 : this->element == ::TripleElement::head ? Triple::cmp_head : Triple::cmp_tail
         );
+        cout << this->items[0].h << "|" << this->items[0].r << "|" << this->items[0].t << endl;
         // cout << "Sorting..." << nItems << endl;
 
         INT* left = (INT *)calloc(nItems, sizeof(INT));
         INT* right = (INT *)calloc(nItems, sizeof(INT));
 
-        memset(left, -1, sizeof(INT) * relationTotal);
-        memset(right, -1, sizeof(INT) * relationTotal);
+        memset(left, -1, sizeof(INT) * nItems);
+        memset(right, -1, sizeof(INT) * nItems);
         // cout << "Sorting..." << endl;
 
         for (INT i = 1; i < this->length; i++) { // Get intervals for unique relationships in the test subset
@@ -216,9 +216,13 @@ struct TrainTripleLists {
     }
 
     void sort() {
+        cout << "Sorting main" << endl;
         this->main->sort(this->frequencies->nEntities);
+        cout << "Sorting head" << endl;
         this->head->sort(this->frequencies->nEntities);
+        cout << "Sorting tail" << endl;
         this->tail->sort(this->frequencies->nEntities);
+        cout << "Sorting relation" << endl;
         this->relation->sort(this->frequencies->nRelations);
     }
 
