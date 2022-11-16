@@ -12,7 +12,7 @@ const int nTriplesPerPattern = 2;
 // vector<PatternInstance> symmetricTriples;
 vector<PatternInstance>** symmetricTriplePatternInstances = (vector<PatternInstance>**)malloc(sizeof(vector<PatternInstance>*) * (nTriplesPerPattern + 1));
 
-void separateSymmetricTriples(Triple* triples, INT nTriples, bool verbose = false, bool drop_duplicates = true) {
+void separateSymmetricTriples(Triple* triples, INT nTriples, bool verbose, bool drop_duplicates) {
     if (verbose) {
 		cout << "Separating symmetric triples..." << endl;
     }

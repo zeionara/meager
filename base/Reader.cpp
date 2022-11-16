@@ -19,29 +19,29 @@
 #include "triple/list.h"
 #include "triple/type.h"
 
-INT *freqRel, *freqEnt;
-INT *lefHead, *rigHead;
-INT *lefTail, *rigTail;
-INT *lefRel, *rigRel;
-REAL *left_mean, *right_mean;
-
-Triple *trainHead;
-Triple *trainTail;
-Triple *trainRel;
-
-Triple *trainList;
-Triple *testList;
-Triple *validList;
-
-Triple *tripleList;
-
-INT *testLef, *testRig;
-INT *validLef, *validRig;
+// INT *freqRel, *freqEnt;
+// INT *lefHead, *rigHead;
+// INT *lefTail, *rigTail;
+// INT *lefRel, *rigRel;
+// REAL *left_mean, *right_mean;
+// 
+// Triple *trainHead;
+// Triple *trainTail;
+// Triple *trainRel;
+// 
+// Triple *trainList;
+// Triple *testList;
+// Triple *validList;
+// 
+// Triple *tripleList;
+// 
+// INT *testLef, *testRig;
+// INT *validLef, *validRig;
 
 // INT* current_internal_entity_id = new INT(0);
 // INT* current_internal_relation_id = new INT(0);
 
-TripleIds tripleIds;
+// TripleIds tripleIds;
 
 TrainTripleLists* trainLists;
 TestTripleLists* testLists;
@@ -54,9 +54,9 @@ void print_triples(std::string header, Triple* triples, int nTriples) {
     }
 }
 
-TripleIndex* trainTripleIndex = new TripleIndex;
-TripleIndex* testTripleIndex = new TripleIndex;
-TripleIndex* validTripleIndex = new TripleIndex;
+// TripleIndex* trainTripleIndex = new TripleIndex;
+// TripleIndex* testTripleIndex = new TripleIndex;
+// TripleIndex* validTripleIndex = new TripleIndex;
 
 extern "C"
 void importTrainFiles(bool verbose = false, bool enable_filters = false) {
@@ -78,30 +78,30 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
         lists->relationScore->print();
     }
 
-    trainTotal = lists->length;
+    // trainTotal = lists->length;
     // cout << "Train total =================== " << trainTotal;
-    relationTotal = lists->frequencies->nRelations;
-    entityTotal = lists->frequencies->nEntities;
+    // relationTotal = lists->frequencies->nRelations;
+    // entityTotal = lists->frequencies->nEntities;
 
     trainLists = lists;
 
-    freqRel = lists->frequencies->relation;
-    freqEnt = lists->frequencies->entity;
+    // freqRel = lists->frequencies->relation;
+    // freqEnt = lists->frequencies->entity;
 
-    lefHead = lists->head->left;
-    rigHead = lists->head->right;
-    lefTail = lists->tail->left;
-    rigTail = lists->tail->right;
-    lefRel = lists->relation->left;
-    rigRel = lists->relation->right;
+    // lefHead = lists->head->left;
+    // rigHead = lists->head->right;
+    // lefTail = lists->tail->left;
+    // rigTail = lists->tail->right;
+    // lefRel = lists->relation->left;
+    // rigRel = lists->relation->right;
 
-    left_mean = lists->relationScore->head;
-    right_mean = lists->relationScore->tail;
+    // left_mean = lists->relationScore->head;
+    // right_mean = lists->relationScore->tail;
 
-    trainList = lists->main->items;
-    trainHead = lists->head->items;
-    trainTail = lists->tail->items;
-    trainRel = lists->relation->items;
+    // trainList = lists->main->items;
+    // trainHead = lists->head->items;
+    // trainTail = lists->tail->items;
+    // trainRel = lists->relation->items;
 }
 
 extern "C"
@@ -109,28 +109,31 @@ void importTestFiles(bool verbose = false, bool enable_filters = false) {
 	FILE *fin;
 	INT tmp;
 
+    cout << "Starting reading test lists" << endl;
+    cout << trainLists << endl;
     testLists = new TestTripleLists(test, trainLists->frequencies->nEntities, trainLists->frequencies->nRelations, enable_filters, verbose);
+    cout << "Starting reading valid lists" << endl;
     validLists = new TestTripleLists(test, testLists->nEntities, testLists->nRelations, enable_filters, verbose);
 
-	tripleTotal = trainLists->length + testLists->length + validLists->length;
+	// tripleTotal = trainLists->length + testLists->length + validLists->length;
 
-    testTotal = testLists->length;
-    testList = testLists->main->items;
-    testLef = testLists->main->left;
-    testRig = testLists->main->right;
+    // testTotal = testLists->length;
+    // testList = testLists->main->items;
+    // testLef = testLists->main->left;
+    // testRig = testLists->main->right;
 
-    validTotal = validLists->length;
-    validList = validLists->main->items;
-    validLef = validLists->main->left;
-    validRig = validLists->main->right;
+    // validTotal = validLists->length;
+    // validList = validLists->main->items;
+    // validLef = validLists->main->left;
+    // validRig = validLists->main->right;
 }
 
-INT *head_lef;
-INT *head_rig;
-INT *tail_lef;
-INT *tail_rig;
-INT *head_type;
-INT *tail_type;
+// INT *head_lef;
+// INT *head_rig;
+// INT *tail_lef;
+// INT *tail_rig;
+// INT *head_type;
+// INT *tail_type;
 
 RelationTypes* types;
 
@@ -139,5 +142,7 @@ void importTypeFiles() {
     bool verbose = true;
 
     types = new RelationTypes(verbose);
+
+    cout << "Finished reading relation types" << endl;
 }
 

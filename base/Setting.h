@@ -31,12 +31,12 @@ INT getWorkThreads();
 ============================================================
 */
 
-extern INT relationTotal;
-extern INT entityTotal;
-extern INT tripleTotal;
-extern INT testTotal;
-extern INT trainTotal;
-extern INT validTotal;
+// extern INT relationTotal;
+// extern INT entityTotal;
+// extern INT tripleTotal;
+// extern INT testTotal;
+// extern INT trainTotal;
+// extern INT validTotal;
 
 extern "C"
 INT getEntityTotal(); 

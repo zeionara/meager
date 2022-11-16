@@ -4,6 +4,7 @@
 #include <cstdlib>
 
 #include "../main.h"
+#include "../../triple/list.h"
 
 #include "../../Reader.h"
 
@@ -11,18 +12,18 @@ extern
 const string inversePatternName;
 
 struct InversePatternInstance: PatternInstance {
-    InversePatternInstance(Triple forward, Triple backward, bool isForwardObserved = true) {
+    InversePatternInstance(Triple forward, Triple backward, TripleIndex* index, bool isForwardObserved = true) {
         triples = {forward, backward};
         if (isForwardObserved) {
             observedTripleIndices = {0};
 
-            if (trainTripleIndex->contains(backward)) {
+            if (index->contains(backward)) {
                 observedTripleIndices.insert(1);
             }
         } else {
             observedTripleIndices = {1};
 
-            if (trainTripleIndex->contains(forward)) {
+            if (index->contains(forward)) {
                 observedTripleIndices.insert(0);
             }
         }

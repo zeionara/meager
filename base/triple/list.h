@@ -261,7 +261,7 @@ struct TrainTripleLists {
 
         separateNoneTriples(this->main->items, this->length, verbose, true, enable_filters);
         separateSymmetricTriples(this->main->items, this->length, verbose);
-        separateInverseTriples(this->main->items, this->length, verbose, true, enable_filters);
+        separateInverseTriples(this->main->items, this->length, this->index, verbose, true, enable_filters);
         
         this->sort();
 
@@ -282,12 +282,14 @@ struct TestTripleLists {
     INT nRelations;
 
     TestTripleLists(SubsetType subset, INT startInternalEntityId, INT startInternalRelationId, bool enable_filters = false, bool verbose = false) {
+        cout << "Before read" << endl;
         File* file = readNumberOfTriples(subset, verbose);
 
         this->main = new TripleList(file->length, ::TripleElement::rel);
 
         this->length = file->length;
         this->index = new TripleIndex;
+        cout << "Before read" << endl;
 
         this->read(file, startInternalEntityId, startInternalRelationId, enable_filters, verbose);
     }

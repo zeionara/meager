@@ -29,6 +29,15 @@ struct AllowedTripleElements {
         this->items = items;
         this->length = length;
     }
+
+    bool contains(INT value) {
+        for (INT i = 0; i < this->length; i++) {
+            if (this->items[i] == value) {
+                return true;
+            }
+        }
+        return false;
+    }
 };
 
 struct RelationType {

@@ -63,29 +63,29 @@ struct Triple {
     }
 };
 
-struct TripleLists {
-    Triple* main;
-    Triple* head;
-    Triple* tail;
-    Triple* relation;
-    INT length;
-
-    TripleLists(INT length) {
-        this->main = (Triple *)calloc(trainTotal, sizeof(Triple));
-        this->head = (Triple *)calloc(trainTotal, sizeof(Triple));
-        this->tail = (Triple *)calloc(trainTotal, sizeof(Triple));
-        this->relation = (Triple *)calloc(trainTotal, sizeof(Triple));
-        this->length = length;
-    }
-
-    TripleLists(Triple* main, INT length) {
-        this->main = main;
-        this->head = (Triple *)calloc(trainTotal, sizeof(Triple));
-        this->tail = (Triple *)calloc(trainTotal, sizeof(Triple));
-        this->relation = (Triple *)calloc(trainTotal, sizeof(Triple));
-        this->length = length;
-    }
-};
+// struct TripleLists {
+//     Triple* main;
+//     Triple* head;
+//     Triple* tail;
+//     Triple* relation;
+//     INT length;
+// 
+//     TripleLists(INT length) {
+//         this->main = (Triple *)calloc(trainTotal, sizeof(Triple));
+//         this->head = (Triple *)calloc(trainTotal, sizeof(Triple));
+//         this->tail = (Triple *)calloc(trainTotal, sizeof(Triple));
+//         this->relation = (Triple *)calloc(trainTotal, sizeof(Triple));
+//         this->length = length;
+//     }
+// 
+//     TripleLists(Triple* main, INT length) {
+//         this->main = main;
+//         this->head = (Triple *)calloc(trainTotal, sizeof(Triple));
+//         this->tail = (Triple *)calloc(trainTotal, sizeof(Triple));
+//         this->relation = (Triple *)calloc(trainTotal, sizeof(Triple));
+//         this->length = length;
+//     }
+// };
 
 struct Frequencies {
     INT* entity;
@@ -148,7 +148,7 @@ struct BoundaryCollection {
 };
 
 Frequencies* dropDuplicates(Triple* main, Triple* heads, Triple* tails, Triple* relations, INT length, INT nEntities, INT nRelations);
-BoundaryCollection* findBoundaries(TripleLists* lists, Frequencies* frequencies);
+// BoundaryCollection* findBoundaries(TripleLists* lists, Frequencies* frequencies);
 
 extern std::vector<INT> internal_to_external_entity_id;
 extern std::vector<INT> internal_to_external_relation_id;

@@ -11,7 +11,7 @@ const int nTriplesPerPattern = 1; // patternDescriptions[nonePatternName].nTripl
 
 vector<PatternInstance>** noneTriplePatternInstances = (vector<PatternInstance>**)malloc(sizeof(vector<PatternInstance>*) * (nTriplesPerPattern + 1));
 
-void separateNoneTriples(Triple* triples, INT nTriples, bool verbose = false, bool drop_duplicates = true, bool enable_filters = false) {
+void separateNoneTriples(Triple* triples, INT nTriples, bool verbose, bool drop_duplicates, bool enable_filters) {
     if (verbose) {
 		cout << "Writing triples as none pattern instances..." << endl;
     }
