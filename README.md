@@ -1,5 +1,9 @@
 # Meager
 
+<p align="center">
+    <img src="assets/images/logo.png"/>
+</p>
+
 Graph embeddings measurer - a tool for computing metrics for testing knowledge graph embedding models.
 
 The tool borrows a significant portion of code from the [OpenKE](https://github.com/thunlp/OpenKE) repo.
