@@ -72,7 +72,7 @@ void validInit() {
 
 extern "C"
 REAL getValidHit10() {
-    return (l_valid_filter_tot / validTotal + r_valid_filter_tot / validTotal) / 2;;
+    return (l_valid_filter_tot / validLists->main->length + r_valid_filter_tot / validLists->main->length) / 2;;
 }
 
 #endif

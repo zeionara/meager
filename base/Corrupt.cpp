@@ -96,7 +96,7 @@ INT corrupt_rel(INT id, INT h, INT t) { // Sample an incorrect relationship give
 		rig = mid;
 	}
 	rr = lef;
-	INT tmp = rand_max(id, relationTotal - (rr - ll + 1));
+	INT tmp = rand_max(id, trainLists->frequencies->nRelations - (rr - ll + 1));
 	if (tmp < trainLists->relation->items[ll].r) return tmp;
 	if (tmp > trainLists->relation->items[rr].r - rr + ll - 1) return tmp + rr - ll + 1;
 	lef = ll, rig = rr + 1;
