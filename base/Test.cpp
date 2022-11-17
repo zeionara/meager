@@ -27,47 +27,47 @@ void initTest() {
 
 // extern "C"
 void getHeadBatch(INT *ph, INT *pt, INT *pr) { // Generate all possible triples for every entity which may be used as a triple head
-    for (INT i = 0; i < trainLists->frequencies->nEntities; i++) {
+    for (INT i = 0; i < trainList->frequencies->nEntities; i++) {
         ph[i] = i;
-        pt[i] = testLists->main->items[lastHead].t;
-        pr[i] = testLists->main->items[lastHead].r;
+        pt[i] = testList->content->items[lastHead].t;
+        pr[i] = testList->content->items[lastHead].r;
     }
 }
 
 // extern "C"
 void getValidHeadBatch(INT *ph, INT *pt, INT *pr) { // Generate all possible triples for every entity which may be used as a triple head
-    for (INT i = 0; i < trainLists->frequencies->nEntities; i++) {
+    for (INT i = 0; i < trainList->frequencies->nEntities; i++) {
         ph[i] = i;
-        pt[i] = validLists->main->items[lastHead].t;
-        pr[i] = validLists->main->items[lastHead].r;
+        pt[i] = validList->content->items[lastHead].t;
+        pr[i] = validList->content->items[lastHead].r;
     }
 }
 
 // extern "C"
 void getTailBatch(INT *ph, INT *pt, INT *pr) {
-    for (INT i = 0; i < trainLists->frequencies->nEntities; i++) {
-        ph[i] = testLists->main->items[lastTail].h;
+    for (INT i = 0; i < trainList->frequencies->nEntities; i++) {
+        ph[i] = testList->content->items[lastTail].h;
         pt[i] = i;
-        pr[i] = testLists->main->items[lastTail].r;
+        pr[i] = testList->content->items[lastTail].r;
     }
 }
 
 // extern "C"
 void getValidTailBatch(INT *ph, INT *pt, INT *pr) {
-    for (INT i = 0; i < trainLists->frequencies->nEntities; i++) {
-        ph[i] = validLists->main->items[lastTail].h;
+    for (INT i = 0; i < trainList->frequencies->nEntities; i++) {
+        ph[i] = validList->content->items[lastTail].h;
         pt[i] = i;
-        pr[i] = validLists->main->items[lastTail].r;
+        pr[i] = validList->content->items[lastTail].r;
     }
 }
 
 // extern "C"
 void testHead(REAL *probabilities, bool reverse) {
-    // INT reference_head = testLists->main->items[lastHead].h;
-    // INT reference_tail = testLists->main->items[lastHead].t;
-    // INT reference_rel = testLists->main->items[lastHead].r;
+    // INT reference_head = testList->content->items[lastHead].h;
+    // INT reference_tail = testList->content->items[lastHead].t;
+    // INT reference_rel = testList->content->items[lastHead].r;
 
-    Triple reference = testLists->main->items[lastHead];
+    Triple reference = testList->content->items[lastHead];
 
     // INT lef = head_lef[reference_rel], rig = head_rig[reference_rel]; // Left and right bound of sets of entity-ids in the common list of acceptable entities for relationships (see type_constraints)
     // printf("lef = %ld, rig = %ld, rel = %ld", lef, rig, reference_rel);
@@ -78,7 +78,7 @@ void testHead(REAL *probabilities, bool reverse) {
     INT l_s_constrain = 0;
     INT l_filter_s_constrain = 0;
 
-    for (INT hypothesis_head = 0; hypothesis_head < trainLists->frequencies->nEntities; hypothesis_head++) {
+    for (INT hypothesis_head = 0; hypothesis_head < trainList->frequencies->nEntities; hypothesis_head++) {
         if (hypothesis_head != reference.h) { 
             REAL hypothesis_distance = probabilities[hypothesis_head];
             if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) { // If model thinks that the reference triple is more probable (for transe that means less distance between h + r and t)
@@ -139,7 +139,7 @@ void validHead(REAL *probabilities, bool reverse) {
     // INT lef = head_lef[reference_rel], rig = head_rig[reference_rel]; // Left and right bound of sets of entity-ids in the common list of acceptable entities for relationships (see type_constraints)
     // printf("lef = %ld, rig = %ld, rel = %ld", lef, rig, reference_rel);
 
-    Triple reference = validLists->main->items[lastHead];
+    Triple reference = validList->content->items[lastHead];
 
     REAL reference_distance = probabilities[reference.h];
     INT l_s = 0;
@@ -147,7 +147,7 @@ void validHead(REAL *probabilities, bool reverse) {
     INT l_s_constrain = 0;
     INT l_filter_s_constrain = 0;
 
-    for (INT hypothesis_head = 0; hypothesis_head < trainLists->frequencies->nEntities; hypothesis_head++) {
+    for (INT hypothesis_head = 0; hypothesis_head < trainList->frequencies->nEntities; hypothesis_head++) {
         if (hypothesis_head != reference.h) { 
             REAL hypothesis_distance = probabilities[hypothesis_head];
             if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) { // If model thinks that the reference triple is more probable (for transe that means less distance between h + r and t)
@@ -209,14 +209,14 @@ void testTail(REAL *probabilities, bool reverse) {
     // INT r = testList[lastTail].r;
     // INT lef = tail_lef[r], rig = tail_rig[r];
 
-    Triple reference = testLists->main->items[lastTail];
+    Triple reference = testList->content->items[lastTail];
 
     REAL reference_distance = probabilities[reference.t];
     INT r_s = 0;
     INT r_filter_s = 0;
     INT r_s_constrain = 0;
     INT r_filter_s_constrain = 0;
-    for (INT hypothesis_tail = 0; hypothesis_tail < trainLists->frequencies->nEntities; hypothesis_tail++) {
+    for (INT hypothesis_tail = 0; hypothesis_tail < trainList->frequencies->nEntities; hypothesis_tail++) {
         if (hypothesis_tail != reference.t) {
             REAL hypothesis_distance = probabilities[hypothesis_tail];
             if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) {
@@ -274,14 +274,14 @@ void validTail(REAL *probabilities, bool reverse) {
     // INT r = validList[lastTail].r;
     // INT lef = tail_lef[r], rig = tail_rig[r];
 
-    Triple reference = testLists->main->items[lastTail];
+    Triple reference = testList->content->items[lastTail];
 
     REAL reference_distance = probabilities[reference.t];
     INT r_s = 0;
     INT r_filter_s = 0;
     INT r_s_constrain = 0;
     INT r_filter_s_constrain = 0;
-    for (INT hypothesis_tail = 0; hypothesis_tail < trainLists->frequencies->nEntities; hypothesis_tail++) {
+    for (INT hypothesis_tail = 0; hypothesis_tail < trainList->frequencies->nEntities; hypothesis_tail++) {
         if (hypothesis_tail != reference.t) {
             REAL hypothesis_distance = probabilities[hypothesis_tail];
             // if (hypothesis_distance < reference_distance) {
@@ -338,32 +338,32 @@ void test_link_prediction(bool as_tsv = false) {
     // l_* - metrics computed on batches with replacing triple heads with all possible entities
     // r_* - metrics computed on batches with replacing triple tails with all possible entities
 
-    l_rank /= testLists->main->length;
-    r_rank /= testLists->main->length;
-    l_reci_rank /= testLists->main->length;
-    r_reci_rank /= testLists->main->length;
+    l_rank /= testList->content->length;
+    r_rank /= testList->content->length;
+    l_reci_rank /= testList->content->length;
+    r_reci_rank /= testList->content->length;
  
-    l_tot /= testLists->main->length;
-    l3_tot /= testLists->main->length;
-    l1_tot /= testLists->main->length;
+    l_tot /= testList->content->length;
+    l3_tot /= testList->content->length;
+    l1_tot /= testList->content->length;
  
-    r_tot /= testLists->main->length;
-    r3_tot /= testLists->main->length;
-    r1_tot /= testLists->main->length;
+    r_tot /= testList->content->length;
+    r3_tot /= testList->content->length;
+    r1_tot /= testList->content->length;
 
     // with filter
-    l_filter_rank /= testLists->main->length;
-    r_filter_rank /= testLists->main->length;
-    l_filter_reci_rank /= testLists->main->length;
-    r_filter_reci_rank /= testLists->main->length;
+    l_filter_rank /= testList->content->length;
+    r_filter_rank /= testList->content->length;
+    l_filter_reci_rank /= testList->content->length;
+    r_filter_reci_rank /= testList->content->length;
  
-    l_filter_tot /= testLists->main->length;
-    l3_filter_tot /= testLists->main->length;
-    l1_filter_tot /= testLists->main->length;
+    l_filter_tot /= testList->content->length;
+    l3_filter_tot /= testList->content->length;
+    l1_filter_tot /= testList->content->length;
  
-    r_filter_tot /= testLists->main->length;
-    r3_filter_tot /= testLists->main->length;
-    r1_filter_tot /= testLists->main->length;
+    r_filter_tot /= testList->content->length;
+    r3_filter_tot /= testList->content->length;
+    r1_filter_tot /= testList->content->length;
 
     if (!as_tsv) {
         printf("no type constraint results:\n");
@@ -383,32 +383,32 @@ void test_link_prediction(bool as_tsv = false) {
             (l_filter_reci_rank+r_filter_reci_rank)/2, (l_filter_rank+r_filter_rank)/2, (l_filter_tot+r_filter_tot)/2, (l3_filter_tot+r3_filter_tot)/2, (l1_filter_tot+r1_filter_tot)/2);
 
     //type constrain
-    l_rank_constrain /= testLists->main->length;
-    r_rank_constrain /= testLists->main->length;
-    l_reci_rank_constrain /= testLists->main->length;
-    r_reci_rank_constrain /= testLists->main->length;
+    l_rank_constrain /= testList->content->length;
+    r_rank_constrain /= testList->content->length;
+    l_reci_rank_constrain /= testList->content->length;
+    r_reci_rank_constrain /= testList->content->length;
  
-    l_tot_constrain /= testLists->main->length;
-    l3_tot_constrain /= testLists->main->length;
-    l1_tot_constrain /= testLists->main->length;
+    l_tot_constrain /= testList->content->length;
+    l3_tot_constrain /= testList->content->length;
+    l1_tot_constrain /= testList->content->length;
  
-    r_tot_constrain /= testLists->main->length;
-    r3_tot_constrain /= testLists->main->length;
-    r1_tot_constrain /= testLists->main->length;
+    r_tot_constrain /= testList->content->length;
+    r3_tot_constrain /= testList->content->length;
+    r1_tot_constrain /= testList->content->length;
 
     // with filter
-    l_filter_rank_constrain /= testLists->main->length;
-    r_filter_rank_constrain /= testLists->main->length;
-    l_filter_reci_rank_constrain /= testLists->main->length;
-    r_filter_reci_rank_constrain /= testLists->main->length;
+    l_filter_rank_constrain /= testList->content->length;
+    r_filter_rank_constrain /= testList->content->length;
+    l_filter_reci_rank_constrain /= testList->content->length;
+    r_filter_reci_rank_constrain /= testList->content->length;
  
-    l_filter_tot_constrain /= testLists->main->length;
-    l3_filter_tot_constrain /= testLists->main->length;
-    l1_filter_tot_constrain /= testLists->main->length;
+    l_filter_tot_constrain /= testList->content->length;
+    l3_filter_tot_constrain /= testList->content->length;
+    l1_filter_tot_constrain /= testList->content->length;
  
-    r_filter_tot_constrain /= testLists->main->length;
-    r3_filter_tot_constrain /= testLists->main->length;
-    r1_filter_tot_constrain /= testLists->main->length;
+    r_filter_tot_constrain /= testList->content->length;
+    r3_filter_tot_constrain /= testList->content->length;
+    r1_filter_tot_constrain /= testList->content->length;
 
     if (!as_tsv) {
         printf("\n");
@@ -437,28 +437,28 @@ triple classification
 Triple *negTestList;
 extern "C"
 void getNegTest() {
-    negTestList = (Triple *)calloc(testLists->main->length, sizeof(Triple));
-    for (INT i = 0; i < testLists->main->length; i++) {
-        negTestList[i] = testLists->main->items[i];
-        negTestList[i].t = corrupt(testLists->main->items[i].h, testLists->main->items[i].r);
+    negTestList = (Triple *)calloc(testList->content->length, sizeof(Triple));
+    for (INT i = 0; i < testList->content->length; i++) {
+        negTestList[i] = testList->content->items[i];
+        negTestList[i].t = corrupt(testList->content->items[i].h, testList->content->items[i].r);
     }
 }
 
 Triple *negValidList;
 extern "C"
 void getNegValid() {
-    negValidList = (Triple *)calloc(validLists->main->length, sizeof(Triple));
-    for (INT i = 0; i < validLists->main->length; i++) {
-        negValidList[i] = validLists->main->items[i];
-        negValidList[i].t = corrupt(validLists->main->items[i].h, validLists->main->items[i].r);
+    negValidList = (Triple *)calloc(validList->content->length, sizeof(Triple));
+    for (INT i = 0; i < validList->content->length; i++) {
+        negValidList[i] = validList->content->items[i];
+        negValidList[i].t = corrupt(validList->content->items[i].h, validList->content->items[i].r);
     }   
 }
 
 extern // "C"
 void getTestBatch(INT *ph, INT *pt, INT *pr, INT *nh, INT *nt, INT *nr) {
     getNegTest();
-    for (INT i = 0; i < testLists->main->length; i++) {
-        Triple triple = testLists->main->items[i];
+    for (INT i = 0; i < testList->content->length; i++) {
+        Triple triple = testList->content->items[i];
         ph[i] = triple.h;
         pt[i] = triple.t;
         pr[i] = triple.r;
@@ -471,8 +471,8 @@ void getTestBatch(INT *ph, INT *pt, INT *pr, INT *nh, INT *nt, INT *nr) {
 extern // "C"
 void getValidBatch(INT *ph, INT *pt, INT *pr, INT *nh, INT *nt, INT *nr) {
     getNegValid();
-    for (INT i = 0; i < validLists->main->length; i++) {
-        Triple triple = validLists->main->items[i];
+    for (INT i = 0; i < validList->content->length; i++) {
+        Triple triple = validList->content->items[i];
         ph[i] = triple.h;
         pt[i] = triple.t;
         pr[i] = triple.r;
@@ -488,14 +488,14 @@ void getBestThreshold(REAL *relThresh, REAL *score_pos, REAL *score_neg) {
     REAL interval = 0.01;
     REAL min_score, max_score, bestThresh, tmpThresh, bestAcc, tmpAcc;
     INT n_interval, correct, total;
-    for (INT r = 0; r < trainLists->frequencies->nRelations; r++) {
-        if (validLists->main->left[r] == -1) continue;
-        total = (validLists->main->right[r] - validLists->main->left[r] + 1) * 2;
-        min_score = score_pos[validLists->main->left[r]];
-        if (score_neg[validLists->main->left[r]] < min_score) min_score = score_neg[validLists->main->left[r]];
-        max_score = score_pos[validLists->main->left[r]];
-        if (score_neg[validLists->main->left[r]] > max_score) max_score = score_neg[validLists->main->left[r]];
-        for (INT i = validLists->main->left[r]+1; i <= validLists->main->right[r]; i++) {
+    for (INT r = 0; r < trainList->frequencies->nRelations; r++) {
+        if (validList->content->left[r] == -1) continue;
+        total = (validList->content->right[r] - validList->content->left[r] + 1) * 2;
+        min_score = score_pos[validList->content->left[r]];
+        if (score_neg[validList->content->left[r]] < min_score) min_score = score_neg[validList->content->left[r]];
+        max_score = score_pos[validList->content->left[r]];
+        if (score_neg[validList->content->left[r]] > max_score) max_score = score_neg[validList->content->left[r]];
+        for (INT i = validList->content->left[r]+1; i <= validList->content->right[r]; i++) {
             if(score_pos[i] < min_score) min_score = score_pos[i];
             if(score_pos[i] > max_score) max_score = score_pos[i];
             if(score_neg[i] < min_score) min_score = score_neg[i];
@@ -505,7 +505,7 @@ void getBestThreshold(REAL *relThresh, REAL *score_pos, REAL *score_neg) {
         for (INT i = 0; i <= n_interval; i++) {
             tmpThresh = min_score + i * interval;
             correct = 0;
-            for (INT j = validLists->main->left[r]; j <= validLists->main->right[r]; j++) {
+            for (INT j = validList->content->left[r]; j <= validList->content->right[r]; j++) {
                 if (score_pos[j] <= tmpThresh) correct ++;
                 if (score_neg[j] > tmpThresh) correct ++;
             }
@@ -526,13 +526,13 @@ REAL *testAcc;
 REAL aveAcc;
 extern // "C"
 void test_triple_classification(REAL *relThresh, REAL *score_pos, REAL *score_neg) {
-    testAcc = (REAL *)calloc(trainLists->frequencies->nRelations, sizeof(REAL));
+    testAcc = (REAL *)calloc(trainList->frequencies->nRelations, sizeof(REAL));
     INT aveCorrect = 0, aveTotal = 0;
     REAL aveAcc;
-    for (INT r = 0; r < trainLists->frequencies->nRelations; r++) {
-        if (validLists->main->left[r] == -1 || testLists->main->left[r] ==-1) continue;
+    for (INT r = 0; r < trainList->frequencies->nRelations; r++) {
+        if (validList->content->left[r] == -1 || testList->content->left[r] ==-1) continue;
         INT correct = 0, total = 0;
-        for (INT i = testLists->main->left[r]; i <= testLists->main->right[r]; i++) {
+        for (INT i = testList->content->left[r]; i <= testList->content->right[r]; i++) {
             if (score_pos[i] <= relThresh[r]) correct++;
             if (score_neg[i] > relThresh[r]) correct++;
             total += 2;

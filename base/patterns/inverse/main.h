@@ -4,7 +4,7 @@
 #include <cstdlib>
 
 #include "../main.h"
-#include "../../triple/list.h"
+#include "../../triple/list/main.h"
 
 #include "../../Reader.h"
 

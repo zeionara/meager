@@ -8,15 +8,15 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
-#include "triple/list.h"
+#include "triple/list/main.h"
 #include "triple/type.h"
 
 #include "triple/TripleIndex.h"
 
 extern
-TrainTripleLists* trainLists;
+ThickTripleListWrapper* trainList;
 extern
-TestTripleLists* testLists, *validLists;
+ThinTripleListWrapper* testList, *validList;
 extern
 RelationTypes* types;
 

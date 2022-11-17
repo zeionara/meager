@@ -4,7 +4,7 @@
 #include <cstdlib>
 
 #include "../main.h"
-#include "../../triple/list.h"
+#include "../../triple/list/main.h"
 
 #include "../../Reader.h"
 
@@ -17,13 +17,13 @@ struct SymmetricPatternInstance: PatternInstance {
         if (isForwardObserved) {
             observedTripleIndices = {0};
 
-            if (trainLists->index->contains(backward)) {
+            if (trainList->index->contains(backward)) {
                 observedTripleIndices.insert(1);
             }
         } else {
             observedTripleIndices = {1};
 
-            if (trainLists->index->contains(forward)) {
+            if (trainList->index->contains(forward)) {
                 observedTripleIndices.insert(0);
             }
         }

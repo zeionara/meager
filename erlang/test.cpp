@@ -9,7 +9,7 @@
 
 extern ERL_NIF_TERM
 get_head_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    int batch_tuple_size = trainLists->frequencies->nEntities;
+    int batch_tuple_size = trainList->frequencies->nEntities;
 
     ERL_NIF_TERM* batch_h = new ERL_NIF_TERM[batch_tuple_size]();
     ERL_NIF_TERM* batch_t = new ERL_NIF_TERM[batch_tuple_size]();
@@ -48,7 +48,7 @@ get_head_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
 extern ERL_NIF_TERM
 test_head(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    int batch_tuple_size = trainLists->frequencies->nEntities;
+    int batch_tuple_size = trainList->frequencies->nEntities;
 
     REAL* predictions_encoded = new REAL[batch_tuple_size]();
 
@@ -61,7 +61,7 @@ test_head(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
 extern ERL_NIF_TERM
 get_tail_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    int batch_tuple_size = trainLists->frequencies->nEntities;
+    int batch_tuple_size = trainList->frequencies->nEntities;
 
     ERL_NIF_TERM* batch_h = new ERL_NIF_TERM[batch_tuple_size]();
     ERL_NIF_TERM* batch_t = new ERL_NIF_TERM[batch_tuple_size]();
@@ -100,7 +100,7 @@ get_tail_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
 extern ERL_NIF_TERM
 test_tail(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    int batch_tuple_size = trainLists->frequencies->nEntities;
+    int batch_tuple_size = trainList->frequencies->nEntities;
 
     REAL* predictions_encoded = new REAL[batch_tuple_size]();
 
@@ -118,7 +118,7 @@ test_tail(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
 extern ERL_NIF_TERM
 get_valid_head_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    int batch_tuple_size = trainLists->frequencies->nEntities;
+    int batch_tuple_size = trainList->frequencies->nEntities;
 
     ERL_NIF_TERM* batch_h = new ERL_NIF_TERM[batch_tuple_size]();
     ERL_NIF_TERM* batch_t = new ERL_NIF_TERM[batch_tuple_size]();
@@ -157,7 +157,7 @@ get_valid_head_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
 extern ERL_NIF_TERM
 valid_head(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    int batch_tuple_size = trainLists->frequencies->nEntities;
+    int batch_tuple_size = trainList->frequencies->nEntities;
 
     REAL* predictions_encoded = new REAL[batch_tuple_size]();
 
@@ -170,7 +170,7 @@ valid_head(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
 extern ERL_NIF_TERM
 get_valid_tail_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    int batch_tuple_size = trainLists->frequencies->nEntities;
+    int batch_tuple_size = trainList->frequencies->nEntities;
 
     ERL_NIF_TERM* batch_h = new ERL_NIF_TERM[batch_tuple_size]();
     ERL_NIF_TERM* batch_t = new ERL_NIF_TERM[batch_tuple_size]();
@@ -209,7 +209,7 @@ get_valid_tail_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
 extern ERL_NIF_TERM
 valid_tail(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    int batch_tuple_size = trainLists->frequencies->nEntities;
+    int batch_tuple_size = trainList->frequencies->nEntities;
 
     REAL* predictions_encoded = new REAL[batch_tuple_size]();
 

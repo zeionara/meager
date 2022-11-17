@@ -58,32 +58,32 @@ INT getWorkThreads() {
 
 extern "C"
 INT getEntityTotal() {
-	return trainLists->frequencies->nEntities;
+	return trainList->frequencies->nEntities;
 }
 
 extern "C"
 INT getRelationTotal() {
-	return trainLists->frequencies->nRelations;
+	return trainList->frequencies->nRelations;
 }
 
 extern "C"
 INT getTripleTotal() {
-	return trainLists->length + testLists->length + validLists->length;
+	return trainList->length + testList->length + validList->length;
 }
 
 extern "C"
 INT getTrainTotal() {
-	return trainLists->length;
+	return trainList->length;
 }
 
 extern "C"
 INT getTestTotal() {
-	return testLists->length;
+	return testList->length;
 }
 
 extern "C"
 INT getValidTotal() {
-	return validLists->length;
+	return validList->length;
 }
 /*
 ============================================================

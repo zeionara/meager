@@ -3,7 +3,7 @@
 #include "../Reader.h"
 #include "../Corrupt.h"
 #include "../main.h"
-#include "../triple/list.h"
+#include "../triple/list/main.h"
 #include "main.h"
 
 #include "none/main.h"
@@ -66,8 +66,8 @@ void* getPatternBatch(void* con) {
             for (INT negative_triple_index = 0; negative_triple_index < n_negative_triples_per_positive; negative_triple_index++) {
                 if (!crossSamplingFlag){
                     if (bernFlag) // flag for considering a portion of triples with unique head/tail for those of which there is a given relationship
-                        head_corruption_threshold = 1000 * trainLists->relationScore->head[sampledTriple.r] / (
-                            trainLists->relationScore->tail[sampledTriple.r] + trainLists->relationScore->head[sampledTriple.r]
+                        head_corruption_threshold = 1000 * trainList->relationScore->head[sampledTriple.r] / (
+                            trainList->relationScore->tail[sampledTriple.r] + trainList->relationScore->head[sampledTriple.r]
                         );
                     if (randd(thread_index) % 1000 < head_corruption_threshold) { // Corrupt TAIL by generating a random number
                         // cout << "corrupting tail" << endl;

@@ -5,35 +5,35 @@
 INT corrupt_head(INT id, INT h, INT r) { // Sample an incorrect tail given head, relationship and thread id (thread id is used for randomization)
 	INT lef, rig, mid, ll, rr;
 
-	lef = trainLists->head->left[h] - 1;
-	rig = trainLists->head->right[h];
+	lef = trainList->head->left[h] - 1;
+	rig = trainList->head->right[h];
 	while (lef + 1 < rig) { // Find location of the first triple having required relationship and save it to the rig (and subsequently - to the ll) variable
 		mid = (lef + rig) >> 1;
-		if (trainLists->head->items[mid].r >= r) rig = mid; else // If same relationship then move right boundary closer to the left (i.e. closer to the beginning of the list)
+		if (trainList->head->items[mid].r >= r) rig = mid; else // If same relationship then move right boundary closer to the left (i.e. closer to the beginning of the list)
 		lef = mid;
 	}
 	ll = rig;
 
-	lef = trainLists->head->left[h];
-	rig = trainLists->head->right[h] + 1;
+	lef = trainList->head->left[h];
+	rig = trainList->head->right[h] + 1;
 	while (lef + 1 < rig) { // Find location of the last triple having required relationship and save it to the lef (and subsequently - to the rr) variable
 		mid = (lef + rig) >> 1;
-		if (trainLists->head->items[mid].r <= r) lef = mid; else // If same relationship then move left boundary closer to the right (i.e. closer to the ending of the list)
+		if (trainList->head->items[mid].r <= r) lef = mid; else // If same relationship then move left boundary closer to the right (i.e. closer to the ending of the list)
 		rig = mid;
 	}
 	rr = lef;
 
-	INT tmp = rand_max(id, trainLists->frequencies->nEntities - (rr - ll + 2)); // Generate random entity index in the interval [0; nEntities - (nTailEntitiesForGivenHead + nHeadEntitiesForGivenHead)]
-	if (tmp < trainLists->head->items[ll].t) return tmp; // If generated entity index is less than any other tail entity index (in other case the generated triple would probably not be unique) then return this
+	INT tmp = rand_max(id, trainList->frequencies->nEntities - (rr - ll + 2)); // Generate random entity index in the interval [0; nEntities - (nTailEntitiesForGivenHead + nHeadEntitiesForGivenHead)]
+	if (tmp < trainList->head->items[ll].t) return tmp; // If generated entity index is less than any other tail entity index (in other case the generated triple would probably not be unique) then return this
 	// if (tmp + rr - ll + 1 > trainHead[rr].t) return tmp + rr - ll + 1;
-	if (tmp > trainLists->head->items[rr].t - rr + ll - 1) return tmp + rr - ll + 1; // If generated entity index + max possible offset is larger than any other tail entity index then return this
+	if (tmp > trainList->head->items[rr].t - rr + ll - 1) return tmp + rr - ll + 1; // If generated entity index + max possible offset is larger than any other tail entity index then return this
 
 	lef = ll, rig = rr + 1;
 	while (lef + 1 < rig) { // While the left and right boundaries do not overlap (they differ at least by one)
 		mid = (lef + rig) >> 1;
 		// if (trainHead[mid].t + (ll - mid) - 1 < tmp)
 		// if (trainHead[mid].t < tmp + (mid - ll) + 1)
-		if (trainLists->head->items[mid].t - mid + ll - 1 < tmp)
+		if (trainList->head->items[mid].t - mid + ll - 1 < tmp)
 			lef = mid;
 		else 
 			rig = mid;
@@ -43,31 +43,31 @@ INT corrupt_head(INT id, INT h, INT r) { // Sample an incorrect tail given head,
 
 INT corrupt_tail(INT id, INT t, INT r) { // Sample an incorrect head given tail, relationship and thread id (thread id is used for randomization)
 	INT lef, rig, mid, ll, rr;
-	lef = trainLists->tail->left[t] - 1;
-	rig = trainLists->tail->right[t];
+	lef = trainList->tail->left[t] - 1;
+	rig = trainList->tail->right[t];
 	while (lef + 1 < rig) {
 		mid = (lef + rig) >> 1;
-		if (trainLists->tail->items[mid].r >= r) rig = mid; else
+		if (trainList->tail->items[mid].r >= r) rig = mid; else
 		lef = mid;
 	}
 	ll = rig;
 
-	lef = trainLists->tail->left[t];
-	rig = trainLists->tail->right[t] + 1;
+	lef = trainList->tail->left[t];
+	rig = trainList->tail->right[t] + 1;
 	while (lef + 1 < rig) {
 		mid = (lef + rig) >> 1;
-		if (trainLists->tail->items[mid].r <= r) lef = mid; else
+		if (trainList->tail->items[mid].r <= r) lef = mid; else
 		rig = mid;
 	}
 	rr = lef;
 
-	INT tmp = rand_max(id, trainLists->frequencies->nEntities - (rr - ll + 1));
-	if (tmp < trainLists->tail->items[ll].h) return tmp;
-	if (tmp > trainLists->tail->items[rr].h - rr + ll - 1) return tmp + rr - ll + 1;
+	INT tmp = rand_max(id, trainList->frequencies->nEntities - (rr - ll + 1));
+	if (tmp < trainList->tail->items[ll].h) return tmp;
+	if (tmp > trainList->tail->items[rr].h - rr + ll - 1) return tmp + rr - ll + 1;
 	lef = ll, rig = rr + 1;
 	while (lef + 1 < rig) {
 		mid = (lef + rig) >> 1;
-		if (trainLists->tail->items[mid].h - mid + ll - 1 < tmp)
+		if (trainList->tail->items[mid].h - mid + ll - 1 < tmp)
 			lef = mid;
 		else 
 			rig = mid;
@@ -78,31 +78,31 @@ INT corrupt_tail(INT id, INT t, INT r) { // Sample an incorrect head given tail,
 
 INT corrupt_rel(INT id, INT h, INT t) { // Sample an incorrect relationship given head and tail
 	INT lef, rig, mid, ll, rr;
-	lef = trainLists->relation->left[h] - 1;
-	rig = trainLists->relation->right[h];
+	lef = trainList->relation->left[h] - 1;
+	rig = trainList->relation->right[h];
 	while (lef + 1 < rig) {
 		mid = (lef + rig) >> 1;
-		if (trainLists->relation->items[mid].t >= t) rig = mid; else
+		if (trainList->relation->items[mid].t >= t) rig = mid; else
 		lef = mid;
 	}
 	ll = rig;
 
-	lef = trainLists->relation->left[h];
-	rig = trainLists->relation->right[h] + 1;
+	lef = trainList->relation->left[h];
+	rig = trainList->relation->right[h] + 1;
 
 	while (lef + 1 < rig) {
 		mid = (lef + rig) >> 1;
-		if (trainLists->relation->items[mid].t <= t) lef = mid; else
+		if (trainList->relation->items[mid].t <= t) lef = mid; else
 		rig = mid;
 	}
 	rr = lef;
-	INT tmp = rand_max(id, trainLists->frequencies->nRelations - (rr - ll + 1));
-	if (tmp < trainLists->relation->items[ll].r) return tmp;
-	if (tmp > trainLists->relation->items[rr].r - rr + ll - 1) return tmp + rr - ll + 1;
+	INT tmp = rand_max(id, trainList->frequencies->nRelations - (rr - ll + 1));
+	if (tmp < trainList->relation->items[ll].r) return tmp;
+	if (tmp > trainList->relation->items[rr].r - rr + ll - 1) return tmp + rr - ll + 1;
 	lef = ll, rig = rr + 1;
 	while (lef + 1 < rig) {
 		mid = (lef + rig) >> 1;
-		if (trainLists->relation->items[mid].r - mid + ll - 1 < tmp)
+		if (trainList->relation->items[mid].r - mid + ll - 1 < tmp)
 			lef = mid;
 		else 
 			rig = mid;
@@ -114,7 +114,7 @@ INT corrupt_rel(INT id, INT h, INT t) { // Sample an incorrect relationship give
 bool _find(INT h, INT t, INT r) { // Check whether a triple is presented in the dataset (tripleList variables contains triples from all subsets)
     Triple triple = Triple(h, r, t);
 
-    return trainLists->index->contains(triple) || testLists->index->contains(triple) || validLists->index->contains(triple);
+    return trainList->index->contains(triple) || testList->index->contains(triple) || validList->index->contains(triple);
 
     // INT lef = 0;
     // INT rig = tripleTotal - 1;
