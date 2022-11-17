@@ -248,6 +248,13 @@ struct TrainTripleLists {
         // this->lastRelation = tripleIds.last_relation;
         // this->lastTriple = tripleIds.last_triple;
 
+        // cout << "foo" << endl;
+
+        separateNoneTriples(this->main->items, this->length, verbose, true, enable_filters);
+        separateSymmetricTriples(this->main->items, this->length, verbose);
+        separateInverseTriples(this->main->items, this->length, this->index, verbose, true, enable_filters);
+
+        // Maybe do this before sampling patterns?
         if (enable_filters) {
             this->dropDuplicates(tripleIds.last_entity, tripleIds.last_relation);
         } else {
@@ -256,12 +263,6 @@ struct TrainTripleLists {
 
             this->dropDuplicates(entities->length, relations->length);
         }
-
-        // cout << "foo" << endl;
-
-        separateNoneTriples(this->main->items, this->length, verbose, true, enable_filters);
-        separateSymmetricTriples(this->main->items, this->length, verbose);
-        separateInverseTriples(this->main->items, this->length, this->index, verbose, true, enable_filters);
         
         this->sort();
 

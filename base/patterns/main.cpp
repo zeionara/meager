@@ -52,6 +52,7 @@ void* getPatternBatch(void* con) {
 	for (INT current_triple_index = first_triple_index; current_triple_index < last_triple_index; current_triple_index++) {
         // cout << "foo" << (*(patternInstanceSets[nObservedTriplesPerPatternInstance])).size() << endl;
 		INT sampled_triple_index = rand_max(thread_index, (*(patternInstanceSets[nObservedTriplesPerPatternInstance])).size());
+        // cout << "Sampled triple index = " << sampled_triple_index << endl;
         PatternInstance sampledPatternInstance = (*(patternInstanceSets[nObservedTriplesPerPatternInstance]))[sampled_triple_index];
         INT sampledTripleIndex = 0;
 

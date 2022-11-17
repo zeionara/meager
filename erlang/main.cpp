@@ -18,7 +18,7 @@ extern ERL_NIF_TERM
 sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     INT batch_size = enif_get_long_(env, argv[0]); 
 
-    // cout << "batch size = " << batch_size << endl;
+    cout << "batch size = " << batch_size << endl;
 
     INT entity_negative_rate = enif_get_long_(env, argv[1]); 
     INT relation_negative_rate = enif_get_long_(env, argv[2]); 
