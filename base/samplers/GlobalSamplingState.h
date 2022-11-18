@@ -14,8 +14,8 @@ struct GlobalSamplingState {
     INT entityNegativeRate;
     INT relationNegativeRate;
 
-    INT headBatchFlag;
     INT nObservedTriplesPerPatternInstance;
+    INT headBatchFlag;
 
     INT headCorruptionThreshold;
     INT nTriplesToSample;
@@ -36,8 +36,8 @@ struct GlobalSamplingState {
         this->entityNegativeRate = entityNegativeRate;
         this->relationNegativeRate = relationNegativeRate;
 
-        this->headBatchFlag = headBatchFlag;
         this->nObservedTriplesPerPatternInstance = nObservedTriplesPerPatternInstance;
+        this->headBatchFlag = headBatchFlag;
 
         this->nTriplesToSample = nTriplesToSample;
 

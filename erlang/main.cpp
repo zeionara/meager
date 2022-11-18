@@ -12,7 +12,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "../base/samplers/Sampler.h"
+#include "../base/samplers/PatternSampler.h"
 
 using namespace std;
 
@@ -96,7 +96,7 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         return completed_with_error(env, &message);
     }
 
-    Sampler* sampler = new Sampler(pattern, n_observed_triples_per_pattern_instance);
+    Sampler* sampler = new PatternSampler(pattern, n_observed_triples_per_pattern_instance);
     TripleBatch* tripleBatch = sampler->sample(batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag);
 
     // sampling(batch_h_encoded, batch_t_encoded, batch_r_encoded, batch_y_encoded, batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag, patternDescriptionIterator->first, n_observed_triples_per_pattern_instance);
