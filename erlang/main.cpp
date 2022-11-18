@@ -12,6 +12,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "../base/samplers/Sampler.h"
+
 using namespace std;
 
 extern ERL_NIF_TERM
@@ -33,13 +35,16 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     // cout << "HEAD BATCH FLAG = " << head_batch_flag << endl;
 
-    int nTriplesPerPatternInstance = 1;
+    Pattern pattern = decodePatternName(pattern_name);
+    PatternDescription patternDescription = patternDescriptions[pattern];
 
-    unordered_map<string, PatternDescription>::const_iterator patternDescriptionIterator = patternDescriptions.find(pattern_name);
+    int nTriplesPerPatternInstance = patternDescription.nTriplesPerInstance;
 
-    if (patternDescriptionIterator != patternDescriptions.end()) {
-        nTriplesPerPatternInstance = patternDescriptionIterator->second.nTriplesPerInstance;
-    }
+    // unordered_map<string, PatternDescription>::const_iterator patternDescriptionIterator = patternDescriptions.find(pattern_name);
+
+    // if (patternDescriptionIterator != patternDescriptions.end()) {
+    //     nTriplesPerPatternInstance = patternDescriptionIterator->second.nTriplesPerInstance;
+    // }
 
     if (n_observed_triples_per_pattern_instance > nTriplesPerPatternInstance) {
         // stringstream message;
@@ -70,32 +75,41 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     INT* batch_r_encoded = new INT[batch_tuple_size]();
     REAL* batch_y_encoded = new REAL[batch_tuple_size]();
     
-    if (patternDescriptionIterator == patternDescriptions.end()) {
-        stringstream message;
-        message << "Selected an unknown pattern '" << pattern_name << "'. Available patterns: ";
-        int counter = 0;
-        for (auto patternDescriptionEntry: patternDescriptions) {
-            if (counter++ > 0) {
-                message << ", "; 
-            }
-            message << patternDescriptionEntry.first;
-        }
-        // message << endl;
-        return completed_with_error(env, &message);
-    }
+    // if (patternDescriptionIterator == patternDescriptions.end()) {
+    //     stringstream message;
+    //     message << "Selected an unknown pattern '" << pattern_name << "'. Available patterns: ";
+    //     int counter = 0;
+    //     for (auto patternDescriptionEntry: patternDescriptions) {
+    //         if (counter++ > 0) {
+    //             message << ", "; 
+    //         }
+    //         message << patternDescriptionEntry.first;
+    //     }
+    //     // message << endl;
+    //     return completed_with_error(env, &message);
+    // }
 
-    if (patternDescriptions[pattern_name].instanceSets[n_observed_triples_per_pattern_instance]->size() < 1) {
+    // if (patternDescriptions[pattern_name].instanceSets[n_observed_triples_per_pattern_instance]->size() < 1) {
+    if (patternDescription.instanceSets[n_observed_triples_per_pattern_instance]->size() < 1) {
         stringstream message;
         message << "Cannot sample " << pattern_name << " pattern instances in which there are at least " << n_observed_triples_per_pattern_instance << " observed triples since there are no observed sets of triples that satisfy these conditions";
         return completed_with_error(env, &message);
     }
 
-    sampling(batch_h_encoded, batch_t_encoded, batch_r_encoded, batch_y_encoded, batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag, patternDescriptionIterator->first, n_observed_triples_per_pattern_instance);
+    Sampler* sampler = new Sampler(pattern, n_observed_triples_per_pattern_instance);
+    TripleBatch* tripleBatch = sampler->sample(batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag);
 
-    enif_encode_array_of_long(env, batch_h_encoded, batch_h, batch_tuple_size);
-    enif_encode_array_of_long(env, batch_t_encoded, batch_t, batch_tuple_size);
-    enif_encode_array_of_long(env, batch_r_encoded, batch_r, batch_tuple_size);
-    enif_encode_array_of_float(env, batch_y_encoded, batch_y, batch_tuple_size);
+    // sampling(batch_h_encoded, batch_t_encoded, batch_r_encoded, batch_y_encoded, batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag, patternDescriptionIterator->first, n_observed_triples_per_pattern_instance);
+
+    // enif_encode_array_of_long(env, batch_h_encoded, batch_h, batch_tuple_size);
+    // enif_encode_array_of_long(env, batch_t_encoded, batch_t, batch_tuple_size);
+    // enif_encode_array_of_long(env, batch_r_encoded, batch_r, batch_tuple_size);
+    // enif_encode_array_of_float(env, batch_y_encoded, batch_y, batch_tuple_size);
+
+    enif_encode_array_of_long(env, tripleBatch->head, batch_h, batch_tuple_size);
+    enif_encode_array_of_long(env, tripleBatch->tail, batch_t, batch_tuple_size);
+    enif_encode_array_of_long(env, tripleBatch->relation, batch_r, batch_tuple_size);
+    enif_encode_array_of_float(env, tripleBatch->labels, batch_y, batch_tuple_size);
 
     delete [] batch_h_encoded;
     delete [] batch_t_encoded;

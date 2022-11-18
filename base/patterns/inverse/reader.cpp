@@ -130,6 +130,6 @@ void separateInverseTriples(Triple* triples, INT nTriples, TripleIndex* index, b
         // }
     }
 
-    patternDescriptions[inversePatternName] = PatternDescription(inverse, nTriplesPerPattern, inverseTriplePatternInstances);
+    patternDescriptions[inverse] = PatternDescription(inverse, nTriplesPerPattern, inverseTriplePatternInstances);
 }
 

@@ -12,7 +12,9 @@
 #include "symmetric/reader.h"
 #include "symmetric/main.h"
 
-unordered_map<string, PatternDescription> patternDescriptions; //  = {
+#include "../samplers/LocalSamplingState.h"
+
+unordered_map<Pattern, PatternDescription> patternDescriptions; //  = {
     // {
     //     nonePatternName,
     //     PatternDescription(none, 1, noneTriplePatternInstances)
@@ -24,87 +26,87 @@ unordered_map<string, PatternDescription> patternDescriptions; //  = {
 // };
 
 void* getPatternBatch(void* con) {
-	Parameter *para = (Parameter *)(con);
-	INT thread_index = para -> id;
-	INT *batch_h = para -> batch_h;
-	INT *batch_t = para -> batch_t;
-	INT *batch_r = para -> batch_r;
-	REAL *batch_y = para -> batch_y;
-	INT batchSize = para -> batchSize;
-	INT n_negative_triples_per_positive = para -> negRate;
-	INT n_negative_triples_with_corrupted_relation_per_positive = para -> negRelRate;
-	INT headBatchFlag = para -> headBatchFlag;
+	LocalSamplingState* localState = (LocalSamplingState *)(con);
+	GlobalSamplingState* state = localState->globalState;
+
+	INT threadIndex = localState->id;
+    Triple* triples = state->triples;
+    REAL* labels = state->labels;
+	INT batchSize = state->batchSize;
+	INT entityNegativeRate = state->entityNegativeRate;
+	INT relationNegativeRate = state->relationNegativeRate;
+	INT headBatchFlag = state->headBatchFlag;
+    // std::vector<PatternInstance>** patternInstanceSets = para -> patternInstanceSets;
+    vector<PatternInstance>* patternInstances = state->patternInstances;
+    INT nObservedTriplesPerPatternInstance = state->nObservedTriplesPerPatternInstance;
+	REAL headCorruptionThreshold = state->headCorruptionThreshold;
+
 	INT first_triple_index, last_triple_index;
-    std::vector<PatternInstance>** patternInstanceSets = para -> patternInstanceSets;
-    int nObservedTriplesPerPatternInstance = para -> nObservedTriplesPerPatternInstance;
 
 	if (batchSize % workThreads == 0) {
-		first_triple_index = thread_index * (batchSize / workThreads);
-		last_triple_index = (thread_index + 1) * (batchSize / workThreads);
+		first_triple_index = threadIndex * (batchSize / workThreads);
+		last_triple_index = (threadIndex + 1) * (batchSize / workThreads);
 	} else {
-		first_triple_index = thread_index * (batchSize / workThreads + 1); // round up?
-		last_triple_index = (thread_index + 1) * (batchSize / workThreads + 1);
-		if (last_triple_index > batchSize) last_triple_index = batchSize;
+		first_triple_index = threadIndex * (batchSize / workThreads + 1); // Last (incomplete) batch is distributed over all complete batches
+		last_triple_index = (threadIndex + 1) * (batchSize / workThreads + 1);
+		if (last_triple_index > batchSize) last_triple_index = batchSize;  // The last batch contains fewer elements
 	}
-	REAL head_corruption_threshold = 500;
-    INT patternComponentOffset = batchSize * (1 + n_negative_triples_per_positive + n_negative_triples_with_corrupted_relation_per_positive);
 
-	for (INT current_triple_index = first_triple_index; current_triple_index < last_triple_index; current_triple_index++) {
+    INT patternComponentOffset = batchSize * (1 + entityNegativeRate + relationNegativeRate);
+
+	for (INT batchWiseTripleIndex = first_triple_index; batchWiseTripleIndex < last_triple_index; batchWiseTripleIndex++) {
         // cout << "foo" << (*(patternInstanceSets[nObservedTriplesPerPatternInstance])).size() << endl;
-		INT sampled_triple_index = rand_max(thread_index, (*(patternInstanceSets[nObservedTriplesPerPatternInstance])).size());
+		INT sampled_triple_index = rand_max(threadIndex, (*patternInstances).size());
         // cout << "Sampled triple index = " << sampled_triple_index << endl;
-        PatternInstance sampledPatternInstance = (*(patternInstanceSets[nObservedTriplesPerPatternInstance]))[sampled_triple_index];
-        INT sampledTripleIndex = 0;
+        PatternInstance sampledPatternInstance = (*patternInstances)[sampled_triple_index];
+        INT patternComponentIndex = 0;
 
         for (Triple sampledTriple: sampledPatternInstance.triples) {
-            batch_h[patternComponentOffset * sampledTripleIndex + current_triple_index] = sampledTriple.h;
-            batch_t[patternComponentOffset * sampledTripleIndex + current_triple_index] = sampledTriple.t;
-            batch_r[patternComponentOffset * sampledTripleIndex + current_triple_index] = sampledTriple.r;
-            batch_y[patternComponentOffset * sampledTripleIndex + current_triple_index] = 1;
-            INT last = batchSize;
+            triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex] = sampledTriple;
+            labels[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex] = 1;
+            // INT last = batchSize;
             // Sample negative triples
-            for (INT negative_triple_index = 0; negative_triple_index < n_negative_triples_per_positive; negative_triple_index++) {
+            for (INT negativeTripleOffset = 1; negativeTripleOffset <= entityNegativeRate; negativeTripleOffset++) {
                 if (!crossSamplingFlag){
                     if (bernFlag) // flag for considering a portion of triples with unique head/tail for those of which there is a given relationship
-                        head_corruption_threshold = 1000 * trainList->relationScore->head[sampledTriple.r] / (
+                        headCorruptionThreshold = 1000 * trainList->relationScore->head[sampledTriple.r] / (
                             trainList->relationScore->tail[sampledTriple.r] + trainList->relationScore->head[sampledTriple.r]
                         );
-                    if (randd(thread_index) % 1000 < head_corruption_threshold) { // Corrupt TAIL by generating a random number
+                    if (randd(threadIndex) % 1000 < headCorruptionThreshold) { // Corrupt TAIL by generating a random number
                         // cout << "corrupting tail" << endl;
-                        batch_h[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = sampledTriple.h;
-                        batch_t[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = corrupt_head(thread_index, sampledTriple.h, sampledTriple.r);
-                        batch_r[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = sampledTriple.r;
+                        triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = Triple(
+                            sampledTriple.h, sampledTriple.r, corrupt_head(threadIndex, sampledTriple.h, sampledTriple.r)
+                        );
                     } else { // Corrupt HEAD
-                        // cout << "corrupting head" << endl;
-                        batch_h[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = corrupt_tail(thread_index, sampledTriple.t, sampledTriple.r);
-                        batch_t[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = sampledTriple.t;
-                        batch_r[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = sampledTriple.r;
+                        triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = Triple(
+                            corrupt_tail(threadIndex, sampledTriple.t, sampledTriple.r),  sampledTriple.r, sampledTriple.t
+                        );
                     }
-                    batch_y[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = -1;
-                    last += batchSize; // There will be <batchSize> triples generated by other threads which must be skipped
+                    labels[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = -1;
+                    // last += batchSize; // There will be <batchSize> triples generated by other threads which must be skipped
                 } else  {
                     if(headBatchFlag){ // Corrupt HEAD by using provided flag which specifies which part of triple must be corrupted
-                        batch_h[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = corrupt_tail(thread_index, sampledTriple.t, sampledTriple.r);
-                        batch_t[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = sampledTriple.t;
-                        batch_r[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = sampledTriple.r;
+                        triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = Triple(
+                            corrupt_tail(threadIndex, sampledTriple.t, sampledTriple.r),  sampledTriple.r, sampledTriple.t
+                        );
                     } else { // Corrupt TAIL
-                        batch_h[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = sampledTriple.h;
-                        batch_t[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = corrupt_head(thread_index, sampledTriple.h, sampledTriple.r);
-                        batch_r[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = sampledTriple.r;
+                        triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = Triple(
+                            sampledTriple.h, sampledTriple.r, corrupt_head(threadIndex, sampledTriple.h, sampledTriple.r)
+                        );
                     }
-                    batch_y[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = -1;
-                    last += batchSize;
+                    labels[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = -1;
+                    // last += batchSize;
                 }
             } // end loop for each negative triple with corrupted entity
             // Corrupt relations
-            for (INT negative_triple_index = 0; negative_triple_index < n_negative_triples_with_corrupted_relation_per_positive; negative_triple_index++) {
-                batch_h[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = sampledTriple.h;
-                batch_t[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = sampledTriple.t;
-                batch_r[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = corrupt_rel(thread_index, sampledTriple.h, sampledTriple.t);
-                batch_y[patternComponentOffset * sampledTripleIndex + current_triple_index + last] = -1;
-                last += batchSize;
+            for (INT negativeTripleOffset = 1; negativeTripleOffset <= relationNegativeRate; negativeTripleOffset++) {
+                triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + (entityNegativeRate + negativeTripleOffset) * batchSize] = Triple(
+                    sampledTriple.h,  corrupt_rel(threadIndex, sampledTriple.h, sampledTriple.t), sampledTriple.t
+                );
+                labels[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + (entityNegativeRate + negativeTripleOffset) * batchSize] = -1;
+                // last += batchSize;
             }
-            sampledTripleIndex += 1;
+            patternComponentIndex += 1;
         }
 
         INT observedTripleIndexCounter = 0; // For tracking observed triples in their duplicating locations
@@ -113,23 +115,36 @@ void* getPatternBatch(void* con) {
                 break;
             }
 
-            batch_h[patternComponentOffset * (sampledTripleIndex + observedTripleIndexCounter) + current_triple_index] = batch_h[observedTripleIndex * patternComponentOffset + current_triple_index];
-            batch_t[patternComponentOffset * (sampledTripleIndex + observedTripleIndexCounter) + current_triple_index] = batch_t[observedTripleIndex * patternComponentOffset + current_triple_index];
-            batch_r[patternComponentOffset * (sampledTripleIndex + observedTripleIndexCounter) + current_triple_index] = batch_r[observedTripleIndex * patternComponentOffset + current_triple_index];
-            batch_y[patternComponentOffset * (sampledTripleIndex + observedTripleIndexCounter) + current_triple_index] = batch_y[observedTripleIndex * patternComponentOffset + current_triple_index];
-            INT last = batchSize;
+            triples[patternComponentOffset * (patternComponentIndex + observedTripleIndexCounter) + batchWiseTripleIndex] =
+                triples[patternComponentOffset * observedTripleIndex + batchWiseTripleIndex];
+            labels[patternComponentOffset * (patternComponentOffset + observedTripleIndexCounter) + batchWiseTripleIndex] = 1;
+            // labels[patternComponentOffset * observedTripleIndex + batchWiseTripleIndex];
 
-            for (INT negative_triple_index = 0; negative_triple_index < n_negative_triples_per_positive + n_negative_triples_with_corrupted_relation_per_positive; negative_triple_index++) {
-                batch_h[patternComponentOffset * (sampledTripleIndex + observedTripleIndexCounter) + current_triple_index + last] = batch_h[patternComponentOffset * observedTripleIndex + current_triple_index + last];
-                batch_t[patternComponentOffset * (sampledTripleIndex + observedTripleIndexCounter) + current_triple_index + last] = batch_t[patternComponentOffset * observedTripleIndex + current_triple_index + last];
-                batch_r[patternComponentOffset * (sampledTripleIndex + observedTripleIndexCounter) + current_triple_index + last] = batch_r[patternComponentOffset * observedTripleIndex + current_triple_index + last];
-                batch_y[patternComponentOffset * (sampledTripleIndex + observedTripleIndexCounter) + current_triple_index + last] = -1;
-                last += batchSize;
+            // INT last = batchSize;
+
+            for (INT negativeTripleOffset = 1; negativeTripleOffset <= entityNegativeRate + relationNegativeRate; negativeTripleOffset++) {
+                triples[patternComponentOffset * (patternComponentIndex + observedTripleIndexCounter) + batchWiseTripleIndex + negativeTripleOffset * batchSize] =
+                    triples[patternComponentOffset * observedTripleIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize];
+                labels[patternComponentOffset * (patternComponentIndex + observedTripleIndexCounter) + batchWiseTripleIndex + negativeTripleOffset * batchSize] = -1;
+                // last += batchSize;
             }
 
             observedTripleIndexCounter++;
         }
 	} // end loop for each positive triple in the batch which should be processed by the thread
 	pthread_exit(NULL);
+}
+
+Pattern decodePatternName(string name) {
+    if (name == "none") {
+        return none;
+    }
+    if (name == "inverse") {
+        return inverse;
+    }
+    if (name == "symmetric") {
+        return symmetric;
+    }
+    throw "Unknown triple pattern provided";
 }
 

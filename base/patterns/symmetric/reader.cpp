@@ -111,6 +111,6 @@ void separateSymmetricTriples(Triple* triples, INT nTriples, bool verbose, bool 
     }
 
     // patternDescriptions[symmetricPatternName].instanceSets = symmetricTriplePatternInstances;
-    patternDescriptions[symmetricPatternName] = PatternDescription(symmetric, nTriplesPerPattern, symmetricTriplePatternInstances);
+    patternDescriptions[symmetric] = PatternDescription(symmetric, nTriplesPerPattern, symmetricTriplePatternInstances);
 }
 

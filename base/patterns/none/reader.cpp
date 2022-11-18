@@ -69,6 +69,6 @@ void separateNoneTriples(Triple* triples, INT nTriples, bool verbose, bool drop_
     }
 
     // patternDescriptions[nonePatternName].instanceSets = noneTriplePatternInstances;
-    patternDescriptions[nonePatternName] = PatternDescription(none, nTriplesPerPattern, noneTriplePatternInstances);
+    patternDescriptions[none] = PatternDescription(none, nTriplesPerPattern, noneTriplePatternInstances);
 }
 
