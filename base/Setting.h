@@ -59,8 +59,8 @@ INT getValidTotal();
 ============================================================
 */
 
-extern INT bernFlag;
-extern INT crossSamplingFlag;
+// extern INT bernFlag;
+// extern INT crossSamplingFlag;
 
 extern "C"
 void setBern(INT con); 

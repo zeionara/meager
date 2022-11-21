@@ -23,9 +23,14 @@ struct PatternSampler: Sampler {
     Pattern pattern;
     INT nObservedTriplesPerPatternInstance;
 
-    PatternSampler(Pattern pattern, INT nObservedTriplesPerPatternInstance) {
+    bool bern;
+    bool crossSampling;
+
+    PatternSampler(Pattern pattern, INT nObservedTriplesPerPatternInstance, bool bern = false, bool crossSampling = false) {
         this->pattern = pattern;
         this->nObservedTriplesPerPatternInstance = nObservedTriplesPerPatternInstance;
+        this->bern = bern;
+        this->crossSampling = crossSampling;
     }
 
     TripleBatch* sample(INT batchSize, INT entityNegativeRate, INT relationNegativeRate, INT headBatchFlag) {
@@ -65,6 +70,9 @@ struct PatternSampler: Sampler {
         INT nObservedTriplesPerPatternInstance = state->nObservedTriplesPerPatternInstance;
         REAL headCorruptionThreshold = state->headCorruptionThreshold;
 
+        bool bern = state->bern;
+        bool crossSampling = state->crossSampling;
+
         INT first_triple_index, last_triple_index;
 
         if (batchSize % workThreads == 0) {
@@ -91,8 +99,8 @@ struct PatternSampler: Sampler {
                 // INT last = batchSize;
                 // Sample negative triples
                 for (INT negativeTripleOffset = 1; negativeTripleOffset <= entityNegativeRate; negativeTripleOffset++) {
-                    if (!crossSamplingFlag){
-                        if (bernFlag) // flag for considering a portion of triples with unique head/tail for those of which there is a given relationship
+                    if (!crossSampling){
+                        if (bern) // flag for considering a portion of triples with unique head/tail for those of which there is a given relationship
                             headCorruptionThreshold = 1000 * trainList->relationScore->head[sampledTriple.r] / (
                                 trainList->relationScore->tail[sampledTriple.r] + trainList->relationScore->head[sampledTriple.r]
                             );

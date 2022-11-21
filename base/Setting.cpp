@@ -89,16 +89,16 @@ INT getValidTotal() {
 ============================================================
 */
 
-INT bernFlag = 0;
-INT crossSamplingFlag = 0;
+// INT bernFlag = 0;
+// INT crossSamplingFlag = 0;
 
 extern "C"
 void setBern(INT con) { // supported by erlang adapter
-	bernFlag = con;
+	// bernFlag = con;
 }
 
 extern "C"
 void setHeadTailCrossSampling(INT con){
-	crossSamplingFlag = con;
+	// crossSamplingFlag = con;
 }
 

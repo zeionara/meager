@@ -43,6 +43,9 @@ void* getPatternBatch(void* con) {
 
 	INT first_triple_index, last_triple_index;
 
+    bool crossSamplingFlag = false;
+    bool bernFlag = false;
+
 	if (batchSize % workThreads == 0) {
 		first_triple_index = threadIndex * (batchSize / workThreads);
 		last_triple_index = (threadIndex + 1) * (batchSize / workThreads);
