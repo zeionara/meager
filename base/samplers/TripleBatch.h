@@ -13,6 +13,15 @@ struct TripleBatch {
     INT* relation;
     INT* tail;
 
+    TripleBatch(Triple* triples, INT length) {
+        REAL* labels = (REAL*) malloc(length * sizeof(REAL));
+
+        for (INT i = 0; i < length; i++)
+            labels[i] = 1;
+
+        TripleBatch(triples, labels, length);
+    };
+
     TripleBatch(Triple* triples, REAL* labels, INT length) {
         head = (INT*) malloc(length * sizeof(INT));
         relation = (INT*) malloc(length * sizeof(INT));
