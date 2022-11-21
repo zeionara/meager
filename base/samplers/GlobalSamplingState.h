@@ -4,6 +4,7 @@
 #include "../triple/main.h"
 #include "../patterns/main.h"
 
+
 struct GlobalSamplingState {
     Triple* triples;
     REAL* labels;

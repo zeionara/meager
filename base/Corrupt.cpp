@@ -7,6 +7,7 @@ INT corrupt_head(INT id, INT h, INT r) { // Sample an incorrect tail given head,
 
 	lef = trainList->head->left[h] - 1;
 	rig = trainList->head->right[h];
+    cout << lef << "++" << rig << endl;
 	while (lef + 1 < rig) { // Find location of the first triple having required relationship and save it to the rig (and subsequently - to the ll) variable
 		mid = (lef + rig) >> 1;
 		if (trainList->head->items[mid].r >= r) rig = mid; else // If same relationship then move right boundary closer to the left (i.e. closer to the beginning of the list)
@@ -22,6 +23,10 @@ INT corrupt_head(INT id, INT h, INT r) { // Sample an incorrect tail given head,
 		rig = mid;
 	}
 	rr = lef;
+
+    cout << "Some elements from the triples list: " << trainList->head->items[1000].h << " " << trainList->head->items[2000].h << " " << trainList->head->items[3000].h << endl;
+
+    cout << "Detected bounds " << ll << " " << rr << endl;
 
 	INT tmp = rand_max(id, trainList->frequencies->nEntities - (rr - ll + 2)); // Generate random entity index in the interval [0; nEntities - (nTailEntitiesForGivenHead + nHeadEntitiesForGivenHead)]
 	if (tmp < trainList->head->items[ll].t) return tmp; // If generated entity index is less than any other tail entity index (in other case the generated triple would probably not be unique) then return this

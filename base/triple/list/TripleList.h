@@ -34,7 +34,8 @@ struct TripleList {
     void sort(INT nItems) { // number of unique relations or entities depending on this->element
         std::sort(
             this->items, this->items + this->length,
-            this->element == rel ? Triple::cmp_rel2 : this->element == ::TripleElement::head ? Triple::cmp_head : Triple::cmp_tail
+            // this->element == rel ? Triple::cmp_rel2 : this->element == ::TripleElement::head ? Triple::cmp_head : Triple::cmp_tail
+            this->element == rel ? Triple::cmp_rel : this->element == ::TripleElement::head ? Triple::cmp_head : Triple::cmp_tail
         );
 
         INT* left = (INT *)calloc(nItems, sizeof(INT));

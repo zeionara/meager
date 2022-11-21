@@ -81,7 +81,8 @@ struct ThickTripleListWrapper {
         this->content->sort(this->frequencies->nEntities);
         this->head->sort(this->frequencies->nEntities);
         this->tail->sort(this->frequencies->nEntities);
-        this->relation->sort(this->frequencies->nRelations);
+        this->relation->sort(this->frequencies->nEntities);
+        // this->relation->sort(this->frequencies->nRelations);
     }
 
     void read(File* file, bool enable_filters = false, bool verbose = false) {
