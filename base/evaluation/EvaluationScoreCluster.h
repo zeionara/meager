@@ -15,7 +15,9 @@ struct EvaluationScoreCluster: EvaluationScoreContainer {
     }
 
     void updateMetrics() {
+        // cout << "Updating metrics in cluster" << endl;
         constrained->updateMetrics();
+        // cout << "Updating metrics in cluster" << endl;
         unconstrained->updateMetrics();
     }
 

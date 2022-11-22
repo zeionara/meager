@@ -5,7 +5,9 @@
 #include "../triple/list/ThinTripleListWrapper.h"
 #include "../triple/type.h"
 
-struct DefaultCorpus {
+#include "Corpus.h"
+
+struct DefaultCorpus: Corpus {
 
     ThickTripleListWrapper* train;
     ThinTripleListWrapper* test;

@@ -1,6 +1,8 @@
 #ifndef EVALUATION_METRIC_METRIC_SET_TRACKER
 #define EVALUATION_METRIC_METRIC_SET_TRACKER
 
+#include <iostream>
+
 #include "MetricTracker.h"
 
 #include "CountMetricTracker.h"
@@ -10,11 +12,13 @@
 using namespace std;
 
 struct MetricSetTracker {
-    MetricTrackerBase* trackers;
+    MetricTrackerBase** trackers;
     INT length;
 
     MetricSetTracker() {
-        MetricTrackerBase* trackers[5];
+        trackers = (MetricTrackerBase**) malloc(5 * sizeof(MetricTrackerBase*));
+
+        // tracker_1 = new CountMetricTracker(1);
 
         trackers[0] = new CountMetricTracker(1);
         trackers[1] = new CountMetricTracker(3);
@@ -26,21 +30,25 @@ struct MetricSetTracker {
     }
 
     void update(EvaluationScore* score) {
+        // cout << "Updating metrics one by one" << endl;
+        // cout << score << endl;
+        // cout << length << endl;
         for (INT i = 0; i < length; i++) {
-            this->trackers[i].update(score);
+            // cout << "Updating " << i << endl;
+            this->trackers[i]->update(score);
         }
     }
 
     void reset() {
         for (INT i = 0; i < length; i++) {
-            this->trackers[i].reset();
+            this->trackers[i]->reset();
         }
     }
 
     void printMetrics(string prefix, INT nTriples) {
         printf(
             "%s\t%f\t%f\t%f\t%f\t%f\n",
-            prefix.c_str(), trackers[0].divide(nTriples), trackers[1].divide(nTriples), trackers[2].divide(nTriples), trackers[3].divide(nTriples), trackers[4].divide(nTriples)
+            prefix.c_str(), trackers[0]->divide(nTriples), trackers[1]->divide(nTriples), trackers[2]->divide(nTriples), trackers[3]->divide(nTriples), trackers[4]->divide(nTriples)
         );
     }
 };

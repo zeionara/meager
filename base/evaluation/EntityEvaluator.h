@@ -28,14 +28,14 @@ struct EntityEvaluator {
         this->state = new EvaluationScoreCluster();
     }
 
-    TripleBatch makeBatch() { // Generate all possible triples for every entity which may be used as a triple head
+    TripleBatch* makeBatch() { // Generate all possible triples for every entity which may be used as a triple head
         Triple* triples = (Triple*) malloc(this->triples->frequencies->nEntities * sizeof(Triple));
 
         for (INT i = 0; i < this->triples->frequencies->nEntities; i++) {
             triples[i] = makeTriple(i);
         }
 
-        return TripleBatch(triples, this->triples->frequencies->nEntities);
+        return new TripleBatch(triples, this->triples->frequencies->nEntities);
     }
 
     void evaluate(REAL *probabilities, bool reverse) {
@@ -43,7 +43,7 @@ struct EntityEvaluator {
 
         REAL reference_distance = probabilities[getTripleComponent(reference)];
 
-        state->resetScore();
+        // state->resetScore();
 
         for (INT hypothesis = 0; hypothesis < triples->frequencies->nEntities; hypothesis++) {
             if (hypothesis != getTripleComponent(reference)) { 
@@ -52,16 +52,16 @@ struct EntityEvaluator {
 
                 REAL hypothesis_distance = probabilities[hypothesis];
                 if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) {
-                    state->unconstrained->unfiltered += 1; // Count incorrectly classified triples
+                    state->unconstrained->unfiltered->value += 1; // Count incorrectly classified triples
                     if (not corpus->contains(sampledTriple)) // If less probable triple is not present in the dataset
-                        state->unconstrained->filtered += 1; // Count incorrectly classified triples which are not present in the dataset (filtered score must be better than unfiltered concerning rank)
+                        state->unconstrained->filtered->value += 1; // Count incorrectly classified triples which are not present in the dataset (filtered score must be better than unfiltered concerning rank)
                 }
 
                 if (corpus->allows(sampledTriple)) {
                     if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) {
-                        state->constrained->unfiltered += 1; // Count incorrectly classified triples the head of which is presented in type constraint list for heads (constrained score must be better than unconstrained)
+                        state->constrained->unfiltered->value += 1; // Count incorrectly classified triples the head of which is presented in type constraint list for heads (constrained score must be better than unconstrained)
                         if (not corpus->contains(sampledTriple)) {
-                            state->constrained->filtered += 1; // Count incorrectly classified triples the head of which is presented in type constraint list for heads but triple does not exist
+                            state->constrained->filtered->value += 1; // Count incorrectly classified triples the head of which is presented in type constraint list for heads but triple does not exist
                         }
                     }
                 }
@@ -69,7 +69,14 @@ struct EntityEvaluator {
             }
         }
 
+        // cout << "Updating metrics" << endl;
+
+        // cout << state << endl;
+
         state->updateMetrics();
+
+        // cout << "Updated metrics" << endl;
+
         currentTripleIndex++;
     }
 

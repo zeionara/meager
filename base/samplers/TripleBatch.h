@@ -19,10 +19,14 @@ struct TripleBatch {
         for (INT i = 0; i < length; i++)
             labels[i] = 1;
 
-        TripleBatch(triples, labels, length);
+        init(triples, labels, length);
     };
 
     TripleBatch(Triple* triples, REAL* labels, INT length) {
+        init(triples, labels, length);
+    }
+
+    void init(Triple* triples, REAL* labels, INT length) {
         head = (INT*) malloc(length * sizeof(INT));
         relation = (INT*) malloc(length * sizeof(INT));
         tail = (INT*) malloc(length * sizeof(INT));

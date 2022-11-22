@@ -1,7 +1,11 @@
 #ifndef EVALUATION_METRIC_COUNT_METRIC_TRACKER_H
 #define EVALUATION_METRIC_COUNT_METRIC_TRACKER_H
 
+#include <iostream>
+
 #include "MetricTracker.h"
+
+using namespace std;
 
 struct CountMetricTracker: MetricTracker<INT> {
 
@@ -12,6 +16,8 @@ struct CountMetricTracker: MetricTracker<INT> {
     }
 
     void update(EvaluationScore* score) {
+        // cout << "Update count metric score" << endl;
+        // cout << "Got score " << score->value << endl;
         if (score->value < n) {
             value += 1;
         }

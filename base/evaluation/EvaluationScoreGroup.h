@@ -12,12 +12,20 @@ struct EvaluationScoreGroup: EvaluationScoreContainer {
     EvaluationScore* unfiltered;
 
     EvaluationScoreGroup() {
+        // MetricSetTracker* tracker = new MetricSetTracker();
+        // cout << "Created metric set tracker " << tracker << endl;
         filtered = new EvaluationScore(new MetricSetTracker());
+        // cout << "Written metric set tracker " << filtered->metrics << endl;
         unfiltered = new EvaluationScore(new MetricSetTracker());
     }
 
     void updateMetrics() {
+        // cout << "Updating metrics in group" << endl;
         filtered->updateMetrics();
+        // cout << filtered->metrics << endl;
+        // cout << filtered->metrics->trackers << endl;
+        // filtered->metrics->update(filtered);
+        // cout << "Updating metrics in group" << endl;
         unfiltered->updateMetrics();
     }
 

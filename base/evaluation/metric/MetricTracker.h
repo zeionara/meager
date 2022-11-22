@@ -22,7 +22,7 @@ template<typename T> struct MetricTracker: MetricTrackerBase {
     }
 
     REAL divide(INT divisor) {
-        return value / divisor;
+        return double(value) / divisor;
     }
 
 };

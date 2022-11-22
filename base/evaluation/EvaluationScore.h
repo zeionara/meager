@@ -18,6 +18,10 @@ struct EvaluationScore: EvaluationScoreContainer {
 
     void updateMetrics();
 
+    void updateMetrica() {
+        
+    }
+
     void resetValue() {
         value = 0;
     }

@@ -1,4 +1,3 @@
-#include "EvaluationScore.h"
 #include "metric/MetricSetTracker.h"
 
 void EvaluationScore::resetMetrics() {
