@@ -18,9 +18,10 @@ using namespace std;
 
 extern ERL_NIF_TERM
 sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    // cout << "Start sampling" << endl;
     INT batch_size = enif_get_long_(env, argv[0]); 
 
-    cout << "batch size = " << batch_size << endl;
+    // cout << "batch size = " << batch_size << endl;
 
     INT entity_negative_rate = enif_get_long_(env, argv[1]); 
     INT relation_negative_rate = enif_get_long_(env, argv[2]); 
@@ -97,9 +98,14 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     }
 
     Sampler* sampler = new PatternSampler(pattern, n_observed_triples_per_pattern_instance);
+
+    // cout << "Created sampler" << endl;
+
     TripleBatch* tripleBatch = sampler->sample(batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag);
 
-    // sampling(batch_h_encoded, batch_t_encoded, batch_r_encoded, batch_y_encoded, batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag, patternDescriptionIterator->first, n_observed_triples_per_pattern_instance);
+    // cout << "Used sampler" << endl;
+
+    // sampling(batch_h_encoded, batch_t_encoded, batch_r_encoded, batch_y_encoded, batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag, "none", n_observed_triples_per_pattern_instance);
 
     // enif_encode_array_of_long(env, batch_h_encoded, batch_h, batch_tuple_size);
     // enif_encode_array_of_long(env, batch_t_encoded, batch_t, batch_tuple_size);
@@ -131,6 +137,8 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     ERL_NIF_TERM result = enif_make_list_from_array(env, batch, 4);
 
     delete [] batch;
+
+    // cout << "Stop sampling" << endl;
 
     return completed_with_success(
         env,

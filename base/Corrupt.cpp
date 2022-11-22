@@ -24,9 +24,9 @@ INT corrupt_head(INT id, INT h, INT r) { // Sample an incorrect tail given head,
 	}
 	rr = lef;
 
-    cout << "Some elements from the triples list: " << trainList->head->items[1000].h << " " << trainList->head->items[2000].h << " " << trainList->head->items[3000].h << endl;
+    // cout << "Some elements from the triples list: " << trainList->head->items[1000].h << " " << trainList->head->items[2000].h << " " << trainList->head->items[3000].h << endl;
 
-    cout << "Detected bounds " << ll << " " << rr << endl;
+    // cout << "Detected bounds " << ll << " " << rr << endl;
 
 	INT tmp = rand_max(id, trainList->frequencies->nEntities - (rr - ll + 2)); // Generate random entity index in the interval [0; nEntities - (nTailEntitiesForGivenHead + nHeadEntitiesForGivenHead)]
 	if (tmp < trainList->head->items[ll].t) return tmp; // If generated entity index is less than any other tail entity index (in other case the generated triple would probably not be unique) then return this

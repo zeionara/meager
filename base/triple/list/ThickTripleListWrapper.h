@@ -80,6 +80,15 @@ struct ThickTripleListWrapper {
     void sort() {
         this->content->sort(this->frequencies->nEntities);
         this->head->sort(this->frequencies->nEntities);
+
+        // for (INT i = 0; i < this->head->length; i++) {
+        //     if (this->head->left[i] == -1) {
+        //         cout << i << endl;
+        //     }
+        // }
+
+        // throw "stop";
+
         this->tail->sort(this->frequencies->nEntities);
         this->relation->sort(this->frequencies->nEntities);
         // this->relation->sort(this->frequencies->nRelations);

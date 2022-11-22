@@ -50,6 +50,8 @@ struct TripleList {
 
         this->left = left;
         this->right = right;
+        
+        finalize();
     }
 
     void update(INT i, INT* left, INT* right) {
