@@ -37,6 +37,20 @@ struct ThickTripleListWrapper {
         this->read(file, enable_filters, verbose);
     }
 
+    ThickTripleListWrapper(string path, bool enable_filters = false, bool verbose = false) {
+        File* file = readNumberOfTriples(path, verbose);
+
+        this->content = new TripleList(file->length, ::TripleElement::head);
+        this->head = new TripleList(file->length, ::TripleElement::head);
+        this->relation = new TripleList(file->length, rel);
+        this->tail = new TripleList(file->length, ::TripleElement::tail);
+
+        this->length = file->length;
+        this->index = new TripleIndex();
+
+        this->read(file, enable_filters, verbose);
+    }
+
     void dropDuplicates(INT nEntities, INT nRelations) {
         INT nUniqueTriples = 1;
 
@@ -95,7 +109,9 @@ struct ThickTripleListWrapper {
     }
 
     void read(File* file, bool enable_filters = false, bool verbose = false) {
+        cout << "Before reading triples" << endl;
         TripleIds tripleIds = readTriples(file, enable_filters, this->content->items, this->index);
+        cout << "After reading triples" << endl;
 
         if (verbose) {
             printf("n train triples: %ld", tripleIds.last_triple);

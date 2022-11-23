@@ -5,11 +5,18 @@
 #include <string>
 #include "Reader.h"
 
+#include "storage/LocalTsvCorpus.h"
+#include "global.h"
+
 std::string inPath = "../data/FB15K/"; // By default fb15k corpus is used
 std::string outPath = "../data/FB15K/";
 
 extern "C"
-void setInPath(char *path, bool as_tsv) { // supported by erlang adapter
+void setInPath(char *path, bool as_tsv) { // supported by erlang adapter // TODO: rename to 'initCorpus'
+    corpus = new LocalTsvCorpus(path);
+
+    // TODO: delete
+
 	INT len = strlen(path);
 	inPath = "";
 

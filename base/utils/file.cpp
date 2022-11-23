@@ -85,6 +85,30 @@ File* readHeader(std::string relativePath, bool verbose, std::function<void(INT)
     return new File(input_file, length);
 }
 
+File* readHeaderUsingAbsolutePath(std::string absolutePath, bool verbose, std::function<void(INT)> printMessage) {
+	FILE *input_file;
+	INT length;
+
+	input_file = fopen(absolutePath.c_str(), "r");
+
+    // std::cout << "oooooooooooooooooooooooooooo" << std::endl;
+
+	if (input_file == nullptr) {
+	 	std::cerr << '`' << absolutePath << '`' << " does not exist" << std::endl;
+        throw "File does not exist";
+	}
+
+	fscanf(input_file, "%ld", &length);
+
+    // std::cout << "oooooooooooooooooooooooooooo" << std::endl;
+
+    if (verbose) {
+        printMessage(length);
+    }
+
+    return new File(input_file, length);
+}
+
 
 File* readNumberOfElements(TripleComponent component, bool verbose) {
 	// FILE *input_file;
@@ -151,6 +175,15 @@ File* readNumberOfTriples(SubsetType subsetType, bool verbose) {
     // }
 
     // return input_file;
+}
+
+File* readNumberOfTriples(std::string path, bool verbose) {
+    return readHeaderUsingAbsolutePath(
+        path, verbose,
+        [&](INT result){
+            printf("The total number of %s triples is %ld.\n", path.c_str(), result);
+        }
+    );
 }
 
 File* readNumberOfTypeConstrainedRelations(bool verbose) {
