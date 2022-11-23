@@ -21,11 +21,11 @@ struct EntityEvaluator {
     // virtual bool isTripleFromDataset(Triple triple) = 0;
     // virtual bool isCorrectTriple(Triple triple) = 0;
    
-    EntityEvaluator(Corpus* corpus, ThickTripleListWrapper* triples, ThinTripleListWrapper* testTriples) {
+    EntityEvaluator(Corpus* corpus, ThickTripleListWrapper* triples, ThinTripleListWrapper* testTriples, MetricSetTrackerMaker makeMetricSetTracker) {
         this->corpus = corpus;
         this->triples = triples;
         this->testTriples = testTriples;
-        this->state = new EvaluationScoreCluster();
+        this->state = new EvaluationScoreCluster(makeMetricSetTracker);
     }
 
     TripleBatch* makeBatch() { // Generate all possible triples for every entity which may be used as a triple head

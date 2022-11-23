@@ -273,7 +273,46 @@ ERL_NIF_TERM init_test(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     evaluator = new Evaluator(
         new DefaultCorpus(trainList, testList, validList, types),
         trainList,
-        testList
+        testList,
+        []() {
+            // INT const length = 7;
+            INT const length = 5;
+
+            cout << "WTF" << endl;
+
+            MetricTrackerBase** trackers = (MetricTrackerBase**) malloc(length * sizeof(MetricTrackerBase*));
+
+            cout << "WTF" << endl;
+
+            trackers[0] = new CountMetricTracker(1);
+            trackers[1] = new CountMetricTracker(3);
+            trackers[2] = new CountMetricTracker(10);
+            trackers[5] = new RankMetricTracker();
+            trackers[6] = new ReciprocalRankMetricTracker();
+
+            // trackers[0] = new CountMetricTracker(1, "top-n@1");
+            // trackers[1] = new CountMetricTracker(3, "top-n@3");
+            // trackers[2] = new CountMetricTracker(10, "top-n@10");
+            // trackers[3] = new CountMetricTracker(100, "top-n@100");
+            // trackers[4] = new CountMetricTracker(1000, "top-n@1000");
+            // trackers[5] = new RankMetricTracker("rank");
+            // trackers[6] = new ReciprocalRankMetricTracker("reciprocal-rank");
+
+            // cout << "Making new metric set tracker" << endl;
+
+            // return new MetricSetTracker(trackers, length);
+
+            // MetricTrackerBase (*trackerss)[length] = {
+            // trackers = {
+            //     new CountMetricTracker(1),
+            //     new CountMetricTracker(3),
+            //     new CountMetricTracker(10),
+            //     new RankMetricTracker(),
+            //     new ReciprocalRankMetricTracker()
+            // };
+
+            return new MetricSetTracker(trackers, length);
+        }
     );
 
     return enif_make_int(env, 0);

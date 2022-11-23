@@ -5,6 +5,7 @@
 
 struct ReciprocalRankMetricTracker: MetricTracker<REAL> {
 
+    // ReciprocalRankMetricTracker(string label): MetricTracker(label) {};
     ReciprocalRankMetricTracker(): MetricTracker() {};
 
     void update(EvaluationScore* score) {

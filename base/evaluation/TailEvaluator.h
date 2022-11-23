@@ -5,7 +5,8 @@
 
 struct TailEvaluator: EntityEvaluator {
 
-    TailEvaluator(Corpus* corpus, ThickTripleListWrapper* triples, ThinTripleListWrapper* testTriples): EntityEvaluator(corpus, triples, testTriples) {};
+    TailEvaluator(Corpus* corpus, ThickTripleListWrapper* triples, ThinTripleListWrapper* testTriples, MetricSetTrackerMaker makeMetricSetTracker):
+        EntityEvaluator(corpus, triples, testTriples, makeMetricSetTracker) {};
 
     Triple makeTriple(INT i) {
         return Triple(testTriples->content->items[currentTripleIndex].t, testTriples->content->items[currentTripleIndex].r, i);

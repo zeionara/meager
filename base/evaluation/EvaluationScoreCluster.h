@@ -9,9 +9,9 @@ struct EvaluationScoreCluster: EvaluationScoreContainer {
     EvaluationScoreGroup* constrained;
     EvaluationScoreGroup* unconstrained;
 
-    EvaluationScoreCluster() {
-        constrained = new EvaluationScoreGroup();
-        unconstrained = new EvaluationScoreGroup();
+    EvaluationScoreCluster(MetricSetTrackerMaker makeMetricSetTracker) {
+        constrained = new EvaluationScoreGroup(makeMetricSetTracker);
+        unconstrained = new EvaluationScoreGroup(makeMetricSetTracker);
     }
 
     void updateMetrics() {
@@ -37,8 +37,8 @@ struct EvaluationScoreCluster: EvaluationScoreContainer {
     }
 
     void printMetrics(string prefix, INT nTriples) {
-        constrained->printMetrics(prefix + " constrained", nTriples);
         unconstrained->printMetrics(prefix + " unconstrained", nTriples);
+        constrained->printMetrics(prefix + " constrained", nTriples);
     }
 
 };

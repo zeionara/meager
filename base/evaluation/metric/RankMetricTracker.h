@@ -5,6 +5,7 @@
 
 struct RankMetricTracker: MetricTracker<INT> {
 
+    // RankMetricTracker(string label): MetricTracker(label) {};
     RankMetricTracker(): MetricTracker() {};
 
     void update(EvaluationScore* score) {

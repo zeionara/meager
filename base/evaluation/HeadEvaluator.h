@@ -5,7 +5,8 @@
 
 struct HeadEvaluator: EntityEvaluator {
 
-    HeadEvaluator(Corpus* corpus, ThickTripleListWrapper* triples, ThinTripleListWrapper* testTriples): EntityEvaluator(corpus, triples, testTriples) {};
+    HeadEvaluator(Corpus* corpus, ThickTripleListWrapper* triples, ThinTripleListWrapper* testTriples, MetricSetTrackerMaker makeMetricSetTracker):
+        EntityEvaluator(corpus, triples, testTriples, makeMetricSetTracker) {};
 
     Triple makeTriple(INT i) {
         return Triple(i, testTriples->content->items[currentTripleIndex].r, testTriples->content->items[currentTripleIndex].t);

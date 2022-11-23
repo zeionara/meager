@@ -24,17 +24,18 @@ struct Evaluator {
     HeadEvaluator* head;
     TailEvaluator* tail;
 
-    Evaluator(Corpus* corpus, ThickTripleListWrapper* triples, ThinTripleListWrapper* testTriples) {
+    Evaluator(Corpus* corpus, ThickTripleListWrapper* triples, ThinTripleListWrapper* testTriples, MetricSetTrackerMaker makeMetricSetTracker) {
         this->corpus = corpus;
         this->triples = triples;
         this->testTriples = testTriples;
 
-        this->head = new HeadEvaluator(corpus, triples, testTriples);
-        this->tail = new TailEvaluator(corpus, triples, testTriples);
+        this->head = new HeadEvaluator(corpus, triples, testTriples, makeMetricSetTracker);
+        this->tail = new TailEvaluator(corpus, triples, testTriples, makeMetricSetTracker);
     }
 
     void printMetrics() {
         // this->head->state->printMetrics("head", this->testTriples->length);
+        // this->head->state->unconstrained->unfiltered->metrics->printHeader();
         this->head->state->printMetrics("head", this->testTriples->length);
         this->tail->state->printMetrics("tail", this->testTriples->length);
     }

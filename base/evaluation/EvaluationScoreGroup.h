@@ -6,17 +6,21 @@
 
 #include "metric/MetricSetTracker.h"
 
+typedef MetricSetTracker* (*MetricSetTrackerMaker)();
+
 struct EvaluationScoreGroup: EvaluationScoreContainer {
 
     EvaluationScore* filtered;
     EvaluationScore* unfiltered;
 
-    EvaluationScoreGroup() {
+    EvaluationScoreGroup(MetricSetTrackerMaker makeMetricSetTracker) {
         // MetricSetTracker* tracker = new MetricSetTracker();
         // cout << "Created metric set tracker " << tracker << endl;
-        filtered = new EvaluationScore(new MetricSetTracker());
+        // filtered = new EvaluationScore(new MetricSetTracker());
+        filtered = new EvaluationScore(makeMetricSetTracker());
         // cout << "Written metric set tracker " << filtered->metrics << endl;
-        unfiltered = new EvaluationScore(new MetricSetTracker());
+        // unfiltered = new EvaluationScore(new MetricSetTracker());
+        unfiltered = new EvaluationScore(makeMetricSetTracker());
     }
 
     void updateMetrics() {
@@ -45,8 +49,8 @@ struct EvaluationScoreGroup: EvaluationScoreContainer {
     }
 
     void printMetrics(string prefix, INT nTriples) {
-        filtered->metrics->printMetrics(prefix + " filtered", nTriples);
         filtered->metrics->printMetrics(prefix + " unfiltered", nTriples);
+        filtered->metrics->printMetrics(prefix + " filtered", nTriples);
     }
 
 };
