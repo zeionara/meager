@@ -29,8 +29,10 @@ struct Evaluator {
         this->triples = triples;
         this->testTriples = testTriples;
 
+        // cout << "Making evaluators" << endl;
         this->head = new HeadEvaluator(corpus, triples, testTriples, makeMetricSetTracker);
         this->tail = new TailEvaluator(corpus, triples, testTriples, makeMetricSetTracker);
+        // cout << "Made evaluators" << endl;
     }
 
     void printMetrics() {

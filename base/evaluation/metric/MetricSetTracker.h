@@ -16,19 +16,18 @@ struct MetricSetTracker {
     INT length;
 
     MetricSetTracker(MetricTrackerBase** trackers, INT length) {
-        // this->trackers = trackers;
-        // this->length = length;
-        trackers = (MetricTrackerBase**) malloc(5 * sizeof(MetricTrackerBase*));
+    // MetricSetTracker() {
+        this->trackers = trackers;
+        this->length = length;
+        // trackers = (MetricTrackerBase**) malloc(5 * sizeof(MetricTrackerBase*));
 
-        // tracker_1 = new CountMetricTracker(1);
+        // trackers[0] = new CountMetricTracker(1);
+        // trackers[1] = new CountMetricTracker(3);
+        // trackers[2] = new CountMetricTracker(10);
+        // trackers[3] = new RankMetricTracker();
+        // trackers[4] = new ReciprocalRankMetricTracker();
 
-        trackers[0] = new CountMetricTracker(1);
-        trackers[1] = new CountMetricTracker(3);
-        trackers[2] = new CountMetricTracker(10);
-        trackers[3] = new RankMetricTracker();
-        trackers[4] = new ReciprocalRankMetricTracker();
-
-        length = 5;
+        // length = 5;
     }
 
     void update(EvaluationScore* score) {
@@ -61,19 +60,19 @@ struct MetricSetTracker {
     void printMetrics(string prefix, INT nTriples) {
         // string formatString = "%s";
 
-        // printf("%s", prefix.c_str());
+        printf("%s", prefix.c_str());
 
-        // for (INT i = 0; i < length; i++) {
-        //     printf("\t%f", trackers[i]->divide(nTriples));
-        // }
+        for (INT i = 0; i < length; i++) {
+            printf("\t%f", trackers[i]->divide(nTriples));
+        }
 
-        // printf("\n");
+        printf("\n");
 
-        printf(
-            "%s\t%f\t%f\t%f\t%f\t%f\n",
-            // formatString.c_str(),
-            prefix.c_str(), trackers[0]->divide(nTriples), trackers[1]->divide(nTriples), trackers[2]->divide(nTriples), trackers[3]->divide(nTriples), trackers[4]->divide(nTriples)
-        );
+        // printf(
+        //     "%s\t%f\t%f\t%f\t%f\t%f\n",
+        //     // formatString.c_str(),
+        //     prefix.c_str(), trackers[0]->divide(nTriples), trackers[1]->divide(nTriples), trackers[2]->divide(nTriples), trackers[3]->divide(nTriples), trackers[4]->divide(nTriples)
+        // );
     }
 };
 

@@ -11,8 +11,9 @@ struct CountMetricTracker: MetricTracker<INT> {
 
     INT n;
 
+    CountMetricTracker(INT n, string label): MetricTracker() {
     // CountMetricTracker(INT n, string label): MetricTracker(label) {
-    CountMetricTracker(INT n): MetricTracker() {
+    // CountMetricTracker(INT n): MetricTracker() {
         this->n = n;
     }
 
