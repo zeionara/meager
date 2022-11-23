@@ -47,15 +47,15 @@ struct MetricSetTracker {
         }
     }
 
-    // void printHeader() {
-    //     printf("metric");
+    void printHeader() {
+        printf("metric");
 
-    //     // for (INT i = 0; i < length; i++) {
-    //     //     printf("\t%s", trackers[i]->label.c_str());
-    //     // }
+        for (INT i = 0; i < length; i++) {
+            printf("\t%s", trackers[i]->getLabel().c_str());
+        }
 
-    //     printf("\n");
-    // }
+        printf("\n");
+    }
 
     void printMetrics(string prefix, INT nTriples) {
         // string formatString = "%s";

@@ -287,13 +287,13 @@ ERL_NIF_TERM init_test(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
             // trackers[i++] = new RankMetricTracker();
             // trackers[i++] = new ReciprocalRankMetricTracker();
 
-            trackers[i++] = new CountMetricTracker(1, "top-n@1");
-            trackers[i++] = new CountMetricTracker(3, "top-n@3");
-            trackers[i++] = new CountMetricTracker(10, "top-n@10");
-            trackers[i++] = new CountMetricTracker(100, "top-n@100");
-            trackers[i++] = new CountMetricTracker(1000, "top-n@1000");
-            trackers[i++] = new RankMetricTracker("rank");
-            trackers[i++] = new ReciprocalRankMetricTracker("reciprocal-rank");
+            trackers[i++] = new CountMetricTracker(1);
+            trackers[i++] = new CountMetricTracker(3);
+            trackers[i++] = new CountMetricTracker(10);
+            trackers[i++] = new CountMetricTracker(100);
+            trackers[i++] = new CountMetricTracker(1000);
+            trackers[i++] = new RankMetricTracker();
+            trackers[i++] = new ReciprocalRankMetricTracker();
 
             // cout << "Making new metric set tracker" << endl;
 

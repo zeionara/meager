@@ -5,14 +5,17 @@
 
 struct ReciprocalRankMetricTracker: MetricTracker<REAL> {
 
-    // ReciprocalRankMetricTracker(string label): MetricTracker(label) {};
-    ReciprocalRankMetricTracker(string label): MetricTracker() {};
+    /// ReciprocalRankMetricTracker(string label): MetricTracker(label) {};
+    ReciprocalRankMetricTracker(): MetricTracker() {};
     // ReciprocalRankMetricTracker(): MetricTracker() {};
 
     void update(EvaluationScore* score) {
         value += 1.0 / (score->value + 1);
     }
 
+    string getLabel() {
+        return "reciprocal-rank";
+    }
 };
 
 #endif

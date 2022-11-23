@@ -27,12 +27,12 @@ struct EvaluationScoreGroup: EvaluationScoreContainer {
     }
 
     void updateMetrics() {
-        cout << "Updating metrics in group" << endl;
+        // cout << "Updating metrics in group" << endl;
         filtered->updateMetrics();
         // cout << filtered->metrics << endl;
         // cout << filtered->metrics->trackers << endl;
         // filtered->metrics->update(filtered);
-        cout << "Updating metrics in group" << endl;
+        // cout << "Updating metrics in group" << endl;
         unfiltered->updateMetrics();
     }
 

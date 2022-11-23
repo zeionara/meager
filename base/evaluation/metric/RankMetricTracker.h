@@ -5,7 +5,7 @@
 
 struct RankMetricTracker: MetricTracker<INT> {
 
-    RankMetricTracker(string label): MetricTracker() {};
+    RankMetricTracker(): MetricTracker() {};
     // RankMetricTracker(string label): MetricTracker(label) {};
     // RankMetricTracker(): MetricTracker() {};
 
@@ -13,6 +13,9 @@ struct RankMetricTracker: MetricTracker<INT> {
         value += score->value + 1;
     }
 
+    string getLabel() {
+        return "rank";
+    }
 };
 
 #endif

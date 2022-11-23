@@ -37,7 +37,7 @@ struct Evaluator {
 
     void printMetrics() {
         // this->head->state->printMetrics("head", this->testTriples->length);
-        // this->head->state->unconstrained->unfiltered->metrics->printHeader();
+        this->head->state->unconstrained->unfiltered->metrics->printHeader();
         this->head->state->printMetrics("head", this->testTriples->length);
         this->tail->state->printMetrics("tail", this->testTriples->length);
     }
