@@ -109,9 +109,9 @@ struct ThickTripleListWrapper {
     }
 
     void read(File* file, bool enable_filters = false, bool verbose = false) {
-        cout << "Before reading triples" << endl;
+        // cout << "Before reading triples" << endl;
         TripleIds tripleIds = readTriples(file, enable_filters, this->content->items, this->index);
-        cout << "After reading triples" << endl;
+        // cout << "After reading triples" << endl;
 
         if (verbose) {
             printf("n train triples: %ld", tripleIds.last_triple);

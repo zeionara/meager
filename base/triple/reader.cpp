@@ -9,16 +9,16 @@
 // INT* current_triple_id = new INT(0);
 
 TripleIds readTriples(File* file, bool enable_filters, Triple* tripleList, TripleIndex* tripleIndex, INT start_internal_entity_id, INT start_internal_relation_id) {
-    cout << "start reading triples" << endl;
+    // cout << "start reading triples" << endl;
     INT* current_internal_entity_id = new INT(start_internal_entity_id < 0 ? 0 : start_internal_entity_id);
     INT* current_internal_relation_id = new INT(start_internal_relation_id < 0 ? 0 : start_internal_relation_id);
-    cout << "continue reading triples" << endl;
+    // cout << "continue reading triples" << endl;
 
 	// Triple* trainList = (Triple *)calloc(trainTotal, sizeof(Triple));
 
     INT j = 0;
-    cout << file->length << endl;
-    cout << "start loop" << endl;
+    // cout << file->length << endl;
+    // cout << "start loop" << endl;
 
 	for (INT i = 0; i < file->length; i++) { // Reading train samples
         INT h, r, t;
@@ -32,8 +32,8 @@ TripleIds readTriples(File* file, bool enable_filters, Triple* tripleList, Tripl
 
         // Triple triple = Triple(h, r, t);
 
-        if (i == 0)
-            cout << h << " -" << r << "-> " << t << endl;
+        // if (i == 0)
+        //     cout << h << " -" << r << "-> " << t << endl;
 
         if (!enable_filters || isAcceptableTriple(h, r, t)) {
             if (enable_filters) {
