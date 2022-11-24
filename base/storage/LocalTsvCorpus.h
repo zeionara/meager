@@ -35,6 +35,7 @@ struct LocalTsvCorpus: LocalCorpus {
 
     LocalTsvCorpus(string path, bool enableFilters = false): LocalCorpus(path, enableFilters) {
         if (enableFilters) {
+            cout << "FILTERS ARE ENABLED" << endl;
             encoder = new TripleEncoder();
         }
     };

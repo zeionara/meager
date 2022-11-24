@@ -70,7 +70,7 @@ void separateInverseTriples(Triple* triples, INT nTriples, TripleIndex* index, b
             }
         } else {
             for (int j = 0; j <= nTriplesPerPattern; j++) {
-                if (j <= patternInstance.observedTripleIndices.size()) {
+                if (j <= patternInstance.observedTripleIndices.size()) {  // if at least j triples from the pattern are observed
                     inverseTriplePatternInstances[j]->push_back(patternInstance); 
                 }
             }
@@ -82,8 +82,9 @@ void separateInverseTriples(Triple* triples, INT nTriples, TripleIndex* index, b
 	for (INT i = 0; i < nTriples; i++) { // Reading train samples
         Triple triple = triples[i];
 
-        INT relation = enable_filters ? internal_to_external_relation_id.at(triple.r) : triple.r;
-        // INT relation = triple.r;
+        // INT relation = enable_filters ? internal_to_external_relation_id.at(triple.r) : triple.r;
+        // keep relations and entities represented using internal indices
+        INT relation = triple.r;
 
         // cout << "Relation: " << relation << endl;
 
@@ -93,9 +94,10 @@ void separateInverseTriples(Triple* triples, INT nTriples, TripleIndex* index, b
             // cout << "1" << endl;
             // cout << triple.t << endl;
             auto direct_pattern_instance = InversePatternInstance(
-                    triple,
-                    Triple(triple.t, enable_filters ? external_to_internal_relation_id.find(forwardRelationIterator->second)->second : forwardRelationIterator->second, triple.h),
-                    index
+                triple,
+                // Triple(triple.t, enable_filters ? external_to_internal_relation_id.find(forwardRelationIterator->second)->second : forwardRelationIterator->second, triple.h),
+                Triple(triple.t, forwardRelationIterator->second, triple.h),
+                index
             );
             // cout << "Pushing pattern instance" << endl;
             pushPatternInstance(direct_pattern_instance);
@@ -105,10 +107,10 @@ void separateInverseTriples(Triple* triples, INT nTriples, TripleIndex* index, b
             auto backwardRelationIterator = inverseBackwardRelationToForward.find(triple.r); // unordered_map<INT, unordered_set<INT>>
             if (backwardRelationIterator != inverseBackwardRelationToForward.end()) {
                 auto inverse_pattern_instance = InversePatternInstance(
-                        Triple(triple.t, backwardRelationIterator->second, triple.h),
-                        triple,
-                        index,
-                        false
+                    Triple(triple.t, backwardRelationIterator->second, triple.h),
+                    triple,
+                    index,
+                    false
                 );
                 // cout << "Pushing pattern instance" << endl;
                 pushPatternInstance(inverse_pattern_instance);

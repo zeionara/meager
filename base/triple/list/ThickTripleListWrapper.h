@@ -118,14 +118,21 @@ struct ThickTripleListWrapper {
 
         if (verbose) {
             // printf("n train triples: %ld", tripleIds.last_triple);
-            printf("n train triples: %ld", nTriples);
+            printf("n train triples before dropping duplicates: %ld\n", nTriples);
         }
 
         file->close();
 
-        separateNoneTriples(this->content->items, this->length, verbose, true, enable_filters);
-        separateSymmetricTriples(this->content->items, this->length, verbose);
-        separateInverseTriples(this->content->items, this->length, this->index, verbose, true, enable_filters);
+        // separateNoneTriples(this->content->items, this->length, verbose, true, enable_filters);
+        // separateSymmetricTriples(this->content->items, this->length, verbose);
+        // separateInverseTriples(this->content->items, this->length, this->index, verbose, true, enable_filters);
+        separateNoneTriples(this->content->items, nTriples, verbose, true, enable_filters); // nTriples may be different from this->length if filters are enabled
+        separateSymmetricTriples(this->content->items, nTriples, verbose);
+        separateInverseTriples(this->content->items, nTriples, this->index, verbose, true, enable_filters);
+
+        if (verbose) {
+            cout << "Separated all patterns" << endl;
+        }
 
         // Maybe do this before sampling patterns?
         if (enable_filters) {
@@ -136,6 +143,11 @@ struct ThickTripleListWrapper {
             File* entities = readNumberOfElements(TripleComponent::entity, verbose);
 
             this->dropDuplicates(entities->length, relations->length);
+        }
+
+        if (verbose) {
+            // printf("n train triples: %ld", tripleIds.last_triple);
+            printf("n train triples after dropping duplicates: %ld\n", this->length);
         }
         
         this->sort();

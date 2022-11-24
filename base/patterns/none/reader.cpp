@@ -55,6 +55,8 @@ void separateNoneTriples(Triple* triples, INT nTriples, bool verbose, bool drop_
         }
 	}
 
+    cout << "Should collect " << nTriples << " none pattern instances" << endl;
+
     if (verbose) {
         for (int i = 0; i <= nTriplesPerPattern; i++) {
             cout << "Collected " << noneTriplePatternInstances[i]->size() << " none pattern instances in which there are " << i << " or more observed patterns" << endl;
