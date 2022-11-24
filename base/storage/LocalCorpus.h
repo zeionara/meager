@@ -13,7 +13,7 @@ struct LocalCorpus: Corpus {
         this->path = path;
     }
 
-    virtual void importTrain(string path, bool enableFilters = false, bool verbose = false) = 0;
+    virtual void importTrain(bool enableFilters = false, bool verbose = false) = 0;
 };
 
 #endif

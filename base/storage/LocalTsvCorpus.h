@@ -12,14 +12,9 @@ struct LocalTsvCorpus: LocalCorpus {
 
     LocalTsvCorpus(string path): LocalCorpus(path) {};
 
-    void importTrain(string path, bool enableFilters, bool verbose) {
-        // cout << "started reading train subset for corpus from " << this->path + "/" + path << endl;
+    void importTrain(bool enableFilters, bool verbose) {
         cout << "started reading train subset for corpus from " << this->path + path << endl;
-        // ThickTripleListWrapper* tmp = new ThickTripleListWrapper(::SubsetType::train, false, false);
-        // cout << enableFilters << endl;
-        // cout << verbose << endl;
-        this->train = new ThickTripleListWrapper(this->path + path, enableFilters, verbose);
-        // ThickTripleListWrapper* tmp = new ThickTripleListWrapper(::SubsetType::train, false, false);
+        this->train = new ThickTripleListWrapper(path + getFilename(::SubsetType::train), enableFilters, verbose);
         cout << "finished reading train subset for corpus" << endl;
     }
 
@@ -28,6 +23,20 @@ struct LocalTsvCorpus: LocalCorpus {
     }
     bool allows(Triple triple) {
         return false;
+    }
+
+    static string getFilename(SubsetType subsetType) {
+        switch (subsetType) {
+            case ::SubsetType::train:
+                return "train2id.txt";
+            case test:
+                return "test2id.txt";
+            case valid:
+                return "valid2id.txt";
+        }
+
+        cout << "Incorrect subset type" << endl;
+        throw "Incorrect subset type";
     }
 };
 
