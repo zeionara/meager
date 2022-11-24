@@ -8,14 +8,16 @@
 
 using namespace std;
 
+template <typename K>
+
 struct TripleComponentEncoder {
 
-    unordered_map<INT, INT> encodingMap;
-    vector<INT> decodingMap;
+    unordered_map<K, INT> encodingMap;
+    vector<K> decodingMap;
 
     INT nEncodedValues = 0;
 
-    INT encode(INT external_id) {
+    INT encode(K external_id) {
         auto iterator = encodingMap.find(external_id);
 
         // cout << "Translating external id " << external_id << " ..." << endl;
@@ -31,7 +33,7 @@ struct TripleComponentEncoder {
         return iterator->second;
     }
 
-    bool contains(INT external_id) {
+    bool contains(K external_id) {
         auto iterator = encodingMap.find(external_id);
 
         if (iterator == encodingMap.end()) {

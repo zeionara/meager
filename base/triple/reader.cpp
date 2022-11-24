@@ -13,7 +13,7 @@
 
 // TripleIds readTriples(
 INT readTriples(
-    File* file, bool enable_filters, TripleFilter* filter, TripleEncoder* encoder, Triple* tripleList, TripleIndex* tripleIndex
+    File* file, bool enable_filters, TripleFilter* filter, TripleEncoder<INT>* encoder, Triple* tripleList, TripleIndex* tripleIndex
     // , INT start_internal_entity_id, INT start_internal_relation_id
 ) {
     // cout << "start reading triples" << endl;

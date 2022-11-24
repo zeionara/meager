@@ -39,7 +39,7 @@ struct ThickTripleListWrapper {
         // this->read(file, enable_filters, verbose);
     }
 
-    ThickTripleListWrapper(string path, bool enable_filters, TripleFilter* filter, TripleEncoder* encoder, bool verbose = false) {
+    ThickTripleListWrapper(string path, bool enable_filters, TripleFilter* filter, TripleEncoder<INT>* encoder, bool verbose = false) {
         File* file = readNumberOfTriples(path, verbose);
 
         this->content = new TripleList(file->length, ::TripleElement::head);
@@ -110,7 +110,7 @@ struct ThickTripleListWrapper {
         // this->relation->sort(this->frequencies->nRelations);
     }
 
-    void read(File* file, bool enable_filters, TripleFilter* filter, TripleEncoder* encoder, bool verbose = false) {
+    void read(File* file, bool enable_filters, TripleFilter* filter, TripleEncoder<INT>* encoder, bool verbose = false) {
         // cout << "Before reading triples" << endl;
         // TripleIds tripleIds = readTriples(file, enable_filters, filter, encoder, this->content->items, this->index);
         INT nTriples = readTriples(file, enable_filters, filter, encoder, this->content->items, this->index);

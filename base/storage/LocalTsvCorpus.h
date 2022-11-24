@@ -31,12 +31,12 @@ struct LocalTsvCorpus: LocalCorpus {
 
     RelationTypes* types;
     TripleFilter* filter;
-    TripleEncoder* encoder;
+    TripleEncoder<INT>* encoder;
 
     LocalTsvCorpus(string path, bool enableFilters = false): LocalCorpus(path, enableFilters) {
         if (enableFilters) {
             cout << "FILTERS ARE ENABLED" << endl;
-            encoder = new TripleEncoder();
+            encoder = new TripleEncoder<INT>();
         }
     };
 

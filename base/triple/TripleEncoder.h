@@ -9,14 +9,15 @@
 
 using namespace std;
 
+template <typename T>
 struct TripleEncoder {
 
-    TripleComponentEncoder* entity = new TripleComponentEncoder();
-    TripleComponentEncoder* relation = new TripleComponentEncoder();
+    TripleComponentEncoder<T>* entity = new TripleComponentEncoder<T>();
+    TripleComponentEncoder<T>* relation = new TripleComponentEncoder<T>();
 
-    Triple encode(Triple triple) {
-        return Triple(entity->encode(triple.h), relation->encode(triple.r), entity->encode(triple.t));
-    }
+    // Triple encode(Triple triple) {
+    //     return Triple(entity->encode(triple.h), relation->encode(triple.r), entity->encode(triple.t));
+    // }
 };
 
 #endif

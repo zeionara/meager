@@ -31,7 +31,7 @@ struct ThinTripleListWrapper {
         // this->read(file, startInternalEntityId, startInternalRelationId, enable_filters, verbose);
     }
 
-    ThinTripleListWrapper(string path, bool enable_filters, TripleFilter* filter, TripleEncoder* encoder, bool verbose = false) {
+    ThinTripleListWrapper(string path, bool enable_filters, TripleFilter* filter, TripleEncoder<INT>* encoder, bool verbose = false) {
         File* file = readNumberOfTriples(path, verbose);
 
         this->content = new TripleList(file->length, ::TripleElement::rel);
@@ -47,7 +47,7 @@ struct ThinTripleListWrapper {
     }
 
     // void read(File* file, INT startInternalEntityId, INT startInternalRelationId, bool enable_filters = false, bool verbose = false) {
-    void read(File* file, bool enable_filters, TripleFilter* filter, TripleEncoder* encoder, bool verbose = false) {
+    void read(File* file, bool enable_filters, TripleFilter* filter, TripleEncoder<INT>* encoder, bool verbose = false) {
         cout << "reading triples" << endl;
         INT nTriples = readTriples(file, enable_filters, filter, encoder, this->content->items, this->index);
         cout << "finished reading triples" << endl;
