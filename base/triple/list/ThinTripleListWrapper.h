@@ -29,6 +29,17 @@ struct ThinTripleListWrapper {
         this->read(file, startInternalEntityId, startInternalRelationId, enable_filters, verbose);
     }
 
+    ThinTripleListWrapper(string path, INT startInternalEntityId, INT startInternalRelationId, bool enable_filters = false, bool verbose = false) {
+        File* file = readNumberOfTriples(path, verbose);
+
+        this->content = new TripleList(file->length, ::TripleElement::rel);
+
+        this->length = file->length;
+        this->index = new TripleIndex;
+
+        this->read(file, startInternalEntityId, startInternalRelationId, enable_filters, verbose);
+    }
+
     void sort() {
         this->content->sort(this->nRelations);
     }

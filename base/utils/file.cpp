@@ -215,3 +215,12 @@ File* readNumberOfTypeConstrainedRelations(bool verbose) {
 
     // return input_file;
 }
+
+File* readNumberOfTypeConstrainedRelations(std::string path, bool verbose) {
+    return readHeaderUsingAbsolutePath(
+        path, verbose,
+        [&](INT result){
+            printf("The total number of type constrained relations is %ld.\n", result);
+        }
+    );
+}

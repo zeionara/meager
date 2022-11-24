@@ -2,6 +2,15 @@
 #define API_READ_H
 
 extern
-void importTrain(bool enableFilters = false, bool verbose = false);
+void importTrain(bool verbose = false);
+
+extern
+void importTest(bool verbose = false);
+
+extern
+void importValid(bool verbose = false);
+
+extern
+void importTypes(bool verbose = false);
 
 #endif

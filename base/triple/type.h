@@ -89,6 +89,23 @@ struct RelationTypes {
         fclose(f_type);
     }
 
+    RelationTypes(string path, bool verbose = false) {
+        File* file = readNumberOfTypeConstrainedRelations(path, verbose);
+
+        FILE* f_type = file->file;
+        INT nTypeConstrainedRelations = file->length;
+
+        relations = (RelationType**)calloc(file->length, sizeof(RelationType*));
+
+        this->length = file->length;
+
+        for (INT i = 0; i < file->length; i++) {
+            relations[i] = new RelationType(file->file);
+        }
+
+        fclose(f_type);
+    }
+
     RelationType* get(INT relation) {
         for (INT i = 0; i < this->length; i++) {
             if (this->relations[i]->relation == relation) {

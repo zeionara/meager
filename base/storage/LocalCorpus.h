@@ -8,12 +8,17 @@ using namespace std;
 
 struct LocalCorpus: Corpus {
     string path;
+    bool enableFilters;
 
-    LocalCorpus(string path) {
+    LocalCorpus(string path, bool enableFilters = false) {
         this->path = path;
+        this->enableFilters = enableFilters;
     }
 
-    virtual void importTrain(bool enableFilters = false, bool verbose = false) = 0;
+    virtual void importTrain(bool verbose = false) = 0;
+    virtual void importTest(bool verbose = false) = 0;
+    virtual void importValid(bool verbose = false) = 0;
+    virtual void importTypes(bool verbose = false) = 0;
 };
 
 #endif
