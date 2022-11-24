@@ -57,7 +57,10 @@ struct LocalTsvCorpus: LocalCorpus {
     }
 
     void importTypes(bool verbose) {
-        this->types = new RelationTypes(path + TYPE_FILENAME, verbose);
+        this->types = new RelationTypes(path + TYPE_FILENAME, enableFilters, encoder, verbose);
+        if (verbose) {
+            cout << "Imported types for " << types->length << " relations" << endl;
+        }
     }
 
     void importFilter(bool verbose, bool dropDuplicates) {

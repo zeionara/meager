@@ -30,6 +30,16 @@ struct TripleComponentEncoder {
 
         return iterator->second;
     }
+
+    bool contains(INT external_id) {
+        auto iterator = encodingMap.find(external_id);
+
+        if (iterator == encodingMap.end()) {
+            return false;
+        }
+
+        return true;
+    }
 };
 
 #endif

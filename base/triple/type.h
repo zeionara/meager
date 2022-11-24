@@ -38,6 +38,16 @@ struct AllowedTripleElements {
         }
         return false;
     }
+
+    void encode(TripleComponentEncoder* encoder) {
+        INT j = 0;
+        for (INT i = 0; i < this->length; i++) {
+            if (encoder->contains(this->items[i])) {
+                items[j++] = encoder->encode(this->items[i]);
+            }
+        }
+        length = j;
+    }
 };
 
 struct RelationType {
@@ -66,6 +76,12 @@ struct RelationType {
 
         this->relation = headRelation;
     }
+
+    void encode(TripleEncoder* encoder) {
+        relation = encoder->relation->encode(relation);
+        heads->encode(encoder->entity);
+        tails->encode(encoder->entity);
+    }
 };
 
 struct RelationTypes {
@@ -89,7 +105,7 @@ struct RelationTypes {
         fclose(f_type);
     }
 
-    RelationTypes(string path, bool verbose = false) {
+    RelationTypes(string path, bool enableFilters, TripleEncoder* encoder, bool verbose = false) {
         File* file = readNumberOfTypeConstrainedRelations(path, verbose);
 
         FILE* f_type = file->file;
@@ -99,9 +115,17 @@ struct RelationTypes {
 
         this->length = file->length;
 
+        INT j = 0;
         for (INT i = 0; i < file->length; i++) {
-            relations[i] = new RelationType(file->file);
+            RelationType* relation = new RelationType(file->file);
+            if (!enableFilters || encoder->relation->contains(relation->relation)) {
+                if (enableFilters) {
+                    relation->encode(encoder);
+                }
+                relations[j++] = relation;
+            }
         }
+        length = j;
 
         fclose(f_type);
     }
