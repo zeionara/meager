@@ -47,10 +47,23 @@ struct LocalTsvCorpus: LocalCorpus {
     }
 
     bool contains(Triple triple) {
-        return false;
+        return train->index->contains(triple) || test->index->contains(triple) || valid->index->contains(triple);
     }
+
+    bool allowsHead(Triple triple) {
+        return types->get(triple.r)->heads->contains(triple.h);
+    }
+
+    bool allowsTail(Triple triple) {
+        return types->get(triple.r)->tails->contains(triple.t);
+    }
+
     bool allows(Triple triple) {
-        return false;
+        return allowsHead(triple) && allowsTail(triple);
+    }
+
+    INT getLength() {
+        return train->length + test->length + valid->length;
     }
 };
 

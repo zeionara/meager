@@ -65,32 +65,38 @@ INT getWorkThreads() {
 
 extern "C"
 INT getEntityTotal() {
-	return trainList->frequencies->nEntities;
+    return corpus->train->frequencies->nEntities;
+	// return trainList->frequencies->nEntities;
 }
 
 extern "C"
 INT getRelationTotal() {
-	return trainList->frequencies->nRelations;
+    return corpus->train->frequencies->nRelations;
+	// return trainList->frequencies->nRelations;
 }
 
 extern "C"
 INT getTripleTotal() {
-	return trainList->length + testList->length + validList->length;
+    return corpus->getLength();
+	// return trainList->length + testList->length + validList->length;
 }
 
 extern "C"
 INT getTrainTotal() {
-	return trainList->length;
+    return corpus->train->length;
+	// return trainList->length;
 }
 
 extern "C"
 INT getTestTotal() {
-	return testList->length;
+    return corpus->test->length;
+	// return testList->length;
 }
 
 extern "C"
 INT getValidTotal() {
-	return validList->length;
+    return corpus->valid->length;
+	// return validList->length;
 }
 /*
 ============================================================

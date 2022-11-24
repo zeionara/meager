@@ -1,3 +1,3 @@
-#include "storage/LocalCorpus.h"
+#include "storage/LocalTsvCorpus.h"
 
-LocalCorpus* corpus;
+LocalTsvCorpus* corpus;

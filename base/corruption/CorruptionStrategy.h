@@ -4,20 +4,25 @@
 #include "../triple/list/ThickTripleListWrapper.h"
 #include "../triple/list/ThinTripleListWrapper.h"
 
-struct CorruptionStrategy {
-    ThickTripleListWrapper* triples;
+#include "../storage/LocalTsvCorpus.h"
 
-    ThinTripleListWrapper* testTriples;
-    ThinTripleListWrapper* validTriples;
+struct CorruptionStrategy {
+    // ThickTripleListWrapper* triples;
+
+    // ThinTripleListWrapper* testTriples;
+    // ThinTripleListWrapper* validTriples;
+
+    // LocalTsvCorpus* corpus;
 
     INT threadId;
 
-    CorruptionStrategy(ThickTripleListWrapper* triples, INT threadId, ThinTripleListWrapper* testTriples, ThinTripleListWrapper* validTriples) {
-        this->triples = triples;
+    CorruptionStrategy(INT threadId) {
+        // this->triples = triples;
+        // this->corpus = corpus;
         this->threadId = threadId;
 
-        this->testTriples = testTriples;
-        this->validTriples = validTriples;
+        // this->testTriples = testTriples;
+        // this->validTriples = validTriples;
     }
 
     virtual Triple corruptHead(Triple triple) = 0;

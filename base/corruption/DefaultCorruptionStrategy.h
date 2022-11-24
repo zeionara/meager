@@ -9,8 +9,14 @@
 
 struct DefaultCorruptionStrategy: CorruptionStrategy {
 
-    DefaultCorruptionStrategy(ThickTripleListWrapper* triples, INT threadId, ThinTripleListWrapper* testTriples, ThinTripleListWrapper* validTriples):
-        CorruptionStrategy(triples, threadId, testTriples, validTriples) {};
+    // DefaultCorruptionStrategy(ThickTripleListWrapper* triples, INT threadId, ThinTripleListWrapper* testTriples, ThinTripleListWrapper* validTriples):
+    //     CorruptionStrategy(triples, threadId, testTriples, validTriples) {};
+
+    LocalTsvCorpus* corpus;
+
+    DefaultCorruptionStrategy(LocalTsvCorpus* corpus, INT threadId): CorruptionStrategy(threadId) {
+        this->corpus = corpus;
+    };
 
     INT corruptEntity(
         TripleList* list, Triple triple, INT maxId,
@@ -73,7 +79,7 @@ struct DefaultCorruptionStrategy: CorruptionStrategy {
 
     Triple corruptHead(Triple triple) {
         INT corruptedHead = corruptEntity(
-            triples->tail, triple, triples->frequencies->nEntities,
+            corpus->train->tail, triple, corpus->train->frequencies->nEntities,
             [](Triple triple){return triple.t;}, [](Triple triple){return triple.r;}, [](Triple triple){return triple.h;}
         );
         return Triple(corruptedHead, triple.r, triple.t);
@@ -81,7 +87,7 @@ struct DefaultCorruptionStrategy: CorruptionStrategy {
 
     Triple corruptTail(Triple triple) {
         INT corruptedTail = corruptEntity(
-            this->triples->head, triple, this->triples->frequencies->nEntities,
+            corpus->train->head, triple, corpus->train->frequencies->nEntities,
             [](Triple triple){return triple.h;}, [](Triple triple){return triple.r;}, [](Triple triple){return triple.t;}
         );
         return Triple(triple.h, triple.r, corruptedTail);
@@ -89,7 +95,7 @@ struct DefaultCorruptionStrategy: CorruptionStrategy {
 
     Triple corruptRelation(Triple triple) {
         INT corruptedRelation = corruptEntity(
-            triples->relation, triple, triples->frequencies->nRelations,
+            corpus->train->relation, triple, corpus->train->frequencies->nRelations,
             [](Triple triple){return triple.h;}, [](Triple triple){return triple.t;}, [](Triple triple){return triple.r;}
         );
         return Triple(triple.h, corruptedRelation, triple.t);
@@ -115,7 +121,7 @@ struct DefaultCorruptionStrategy: CorruptionStrategy {
     }
 
     private: bool isCorrectTriple(Triple triple) { // Check whether a triple is presented in the dataset (tripleList variables contains triples from all subsets)
-        return triples->index->contains(triple) || testTriples->index->contains(triple) || validTriples->index->contains(triple);
+        return corpus->train->index->contains(triple) || corpus->test->index->contains(triple) || corpus->valid->index->contains(triple);
     }
 };
 

@@ -16,6 +16,8 @@
 #include "TripleBatch.h"
 #include "Sampler.h"
 
+#include "../global.h"
+
 using namespace std;
 
 typedef void * (*PTR)(void *);
@@ -36,6 +38,7 @@ struct PatternSampler: Sampler {
     }
 
     TripleBatch* sample(INT batchSize, INT entityNegativeRate, INT relationNegativeRate, INT headBatchFlag) {
+        // cout << "Creating sampler" << endl;
         GlobalSamplingState* globalState = new GlobalSamplingState(
             batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, pattern, nObservedTriplesPerPatternInstance, 500
         );
@@ -46,7 +49,7 @@ struct PatternSampler: Sampler {
         for (INT thread_index = 0; thread_index < workThreads; thread_index++) {
             localStates[thread_index].id = thread_index;
             localStates[thread_index].globalState = globalState;
-            localStates[thread_index].corruptionStrategy = new DefaultCorruptionStrategy(trainList, thread_index, testList, validList);
+            localStates[thread_index].corruptionStrategy = new DefaultCorruptionStrategy(corpus, thread_index);
             pthread_create(&threads[thread_index], NULL, run, (void*)(localStates + thread_index));
         }
 
