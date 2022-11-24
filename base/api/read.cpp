@@ -15,3 +15,7 @@ void importValid(bool verbose = false) {
 void importTypes(bool verbose = false) {
     corpus->importTypes(verbose); 
 }
+
+void importFilter(bool verbose = false, bool dropDuplicates = true) {
+    corpus->importFilter(verbose, dropDuplicates); 
+}

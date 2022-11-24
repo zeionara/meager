@@ -38,7 +38,7 @@ void importTestFiles(bool verbose = false, bool enable_filters = false) {
     // cout << trainLists << endl;
     testList = new ThinTripleListWrapper(test, trainList->frequencies->nEntities, trainList->frequencies->nRelations, enable_filters, verbose);
     // cout << "Starting reading valid lists" << endl;
-    validList = new ThinTripleListWrapper(test, testList->nEntities, testList->nRelations, enable_filters, verbose);
+    validList = new ThinTripleListWrapper(test, trainList->frequencies->nEntities, trainList->frequencies->nRelations, enable_filters, verbose);
 }
 
 RelationTypes* types;

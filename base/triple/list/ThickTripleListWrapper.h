@@ -9,6 +9,8 @@
 #include "../../patterns/inverse/reader.h"
 
 #include "RelationScore.h"
+#include "../../filters/TripleFilter.h"
+#include "../TripleEncoder.h"
 
 struct ThickTripleListWrapper {
     TripleList* content;
@@ -34,10 +36,10 @@ struct ThickTripleListWrapper {
         this->length = file->length;
         this->index = new TripleIndex();
 
-        this->read(file, enable_filters, verbose);
+        // this->read(file, enable_filters, verbose);
     }
 
-    ThickTripleListWrapper(string path, bool enable_filters = false, bool verbose = false) {
+    ThickTripleListWrapper(string path, bool enable_filters, TripleFilter* filter, TripleEncoder* encoder, bool verbose = false) {
         File* file = readNumberOfTriples(path, verbose);
 
         this->content = new TripleList(file->length, ::TripleElement::head);
@@ -48,7 +50,7 @@ struct ThickTripleListWrapper {
         this->length = file->length;
         this->index = new TripleIndex();
 
-        this->read(file, enable_filters, verbose);
+        this->read(file, enable_filters, filter, encoder, verbose);
     }
 
     void dropDuplicates(INT nEntities, INT nRelations) {
@@ -108,13 +110,15 @@ struct ThickTripleListWrapper {
         // this->relation->sort(this->frequencies->nRelations);
     }
 
-    void read(File* file, bool enable_filters = false, bool verbose = false) {
+    void read(File* file, bool enable_filters, TripleFilter* filter, TripleEncoder* encoder, bool verbose = false) {
         // cout << "Before reading triples" << endl;
-        TripleIds tripleIds = readTriples(file, enable_filters, this->content->items, this->index);
+        // TripleIds tripleIds = readTriples(file, enable_filters, filter, encoder, this->content->items, this->index);
+        INT nTriples = readTriples(file, enable_filters, filter, encoder, this->content->items, this->index);
         // cout << "After reading triples" << endl;
 
         if (verbose) {
-            printf("n train triples: %ld", tripleIds.last_triple);
+            // printf("n train triples: %ld", tripleIds.last_triple);
+            printf("n train triples: %ld", nTriples);
         }
 
         file->close();
@@ -125,7 +129,8 @@ struct ThickTripleListWrapper {
 
         // Maybe do this before sampling patterns?
         if (enable_filters) {
-            this->dropDuplicates(tripleIds.last_entity, tripleIds.last_relation);
+            // this->dropDuplicates(tripleIds.last_entity, tripleIds.last_relation);
+            this->dropDuplicates(encoder->entity->nEncodedValues, encoder->relation->nEncodedValues);
         } else {
             File* relations = readNumberOfElements(TripleComponent::relation, verbose);
             File* entities = readNumberOfElements(TripleComponent::entity, verbose);

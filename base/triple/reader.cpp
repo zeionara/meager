@@ -6,12 +6,19 @@
 #include "TripleIndex.h"
 #include "../utils/main.h"
 
+#include "../filters/TripleFilter.h"
+#include "TripleEncoder.h"
+
 // INT* current_triple_id = new INT(0);
 
-TripleIds readTriples(File* file, bool enable_filters, Triple* tripleList, TripleIndex* tripleIndex, INT start_internal_entity_id, INT start_internal_relation_id) {
+// TripleIds readTriples(
+INT readTriples(
+    File* file, bool enable_filters, TripleFilter* filter, TripleEncoder* encoder, Triple* tripleList, TripleIndex* tripleIndex
+    // , INT start_internal_entity_id, INT start_internal_relation_id
+) {
     // cout << "start reading triples" << endl;
-    INT* current_internal_entity_id = new INT(start_internal_entity_id < 0 ? 0 : start_internal_entity_id);
-    INT* current_internal_relation_id = new INT(start_internal_relation_id < 0 ? 0 : start_internal_relation_id);
+    // INT* current_internal_entity_id = new INT(start_internal_entity_id < 0 ? 0 : start_internal_entity_id);
+    // INT* current_internal_relation_id = new INT(start_internal_relation_id < 0 ? 0 : start_internal_relation_id);
     // cout << "continue reading triples" << endl;
 
 	// Triple* trainList = (Triple *)calloc(trainTotal, sizeof(Triple));
@@ -35,11 +42,16 @@ TripleIds readTriples(File* file, bool enable_filters, Triple* tripleList, Tripl
         // if (i == 0)
         //     cout << h << " -" << r << "-> " << t << endl;
 
-        if (!enable_filters || isAcceptableTriple(h, r, t)) {
+        // if (!enable_filters || isAcceptableTriple(h, r, t)) {
+        if (!enable_filters || filter->allows(Triple(h, r, t))) {
             if (enable_filters) {
-                tripleList[j].h = external_to_internal_id(h, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
-                tripleList[j].t = external_to_internal_id(t, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
-                tripleList[j].r = external_to_internal_id(r, current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
+                // tripleList[j].h = external_to_internal_id(h, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+                // tripleList[j].t = external_to_internal_id(t, current_internal_entity_id, &external_to_internal_entity_id, &internal_to_external_entity_id);
+                // tripleList[j].r = external_to_internal_id(r, current_internal_relation_id, &external_to_internal_relation_id, &internal_to_external_relation_id);
+
+                tripleList[j].h = encoder->entity->encode(h);
+                tripleList[j].t = encoder->entity->encode(h);
+                tripleList[j].r = encoder->relation->encode(r);
 
                 // trainList[j].print();
             } else {
@@ -63,11 +75,12 @@ TripleIds readTriples(File* file, bool enable_filters, Triple* tripleList, Tripl
 	}
     // cout << "scanned all" << endl;
 
-    TripleIds tripleIds;
+    // TripleIds tripleIds;
 
-    tripleIds.last_entity = *current_internal_entity_id;
-    tripleIds.last_relation = *current_internal_relation_id;
-    tripleIds.last_triple = j;
+    // tripleIds.last_entity = *current_internal_entity_id;
+    // tripleIds.last_relation = *current_internal_relation_id;
+    // tripleIds.last_triple = j;
 
-    return tripleIds;
+    // return tripleIds;
+    return j;
 }

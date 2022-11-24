@@ -7,6 +7,8 @@
 #include "../../utils/main.h"
 
 #include "TripleList.h"
+#include "../TripleEncoder.h"
+#include "../../filters/TripleFilter.h"
 
 struct ThinTripleListWrapper {
     TripleList* content;
@@ -15,8 +17,8 @@ struct ThinTripleListWrapper {
 
     TripleIndex* index;
 
-    INT nEntities;
-    INT nRelations;
+    // INT nEntities;
+    // INT nRelations;
 
     ThinTripleListWrapper(SubsetType subset, INT startInternalEntityId, INT startInternalRelationId, bool enable_filters = false, bool verbose = false) {
         File* file = readNumberOfTriples(subset, verbose);
@@ -26,10 +28,10 @@ struct ThinTripleListWrapper {
         this->length = file->length;
         this->index = new TripleIndex;
 
-        this->read(file, startInternalEntityId, startInternalRelationId, enable_filters, verbose);
+        // this->read(file, startInternalEntityId, startInternalRelationId, enable_filters, verbose);
     }
 
-    ThinTripleListWrapper(string path, INT startInternalEntityId, INT startInternalRelationId, bool enable_filters = false, bool verbose = false) {
+    ThinTripleListWrapper(string path, bool enable_filters, TripleFilter* filter, TripleEncoder* encoder, bool verbose = false) {
         File* file = readNumberOfTriples(path, verbose);
 
         this->content = new TripleList(file->length, ::TripleElement::rel);
@@ -37,22 +39,27 @@ struct ThinTripleListWrapper {
         this->length = file->length;
         this->index = new TripleIndex;
 
-        this->read(file, startInternalEntityId, startInternalRelationId, enable_filters, verbose);
+        this->read(file, enable_filters, filter, encoder, verbose);
     }
 
-    void sort() {
-        this->content->sort(this->nRelations);
+    void sort(INT nEntities) {
+        this->content->sort(nEntities);
     }
 
-    void read(File* file, INT startInternalEntityId, INT startInternalRelationId, bool enable_filters = false, bool verbose = false) {
-        TripleIds tripleIds = readTriples(file, enable_filters, this->content->items, this->index, startInternalEntityId, startInternalRelationId);
+    // void read(File* file, INT startInternalEntityId, INT startInternalRelationId, bool enable_filters = false, bool verbose = false) {
+    void read(File* file, bool enable_filters, TripleFilter* filter, TripleEncoder* encoder, bool verbose = false) {
+        cout << "reading triples" << endl;
+        INT nTriples = readTriples(file, enable_filters, filter, encoder, this->content->items, this->index);
+        cout << "finished reading triples" << endl;
 
         file->close();
 
-        this->nEntities = tripleIds.last_entity;
-        this->nRelations = tripleIds.last_relation;
-
-        this->sort();
+        if (enable_filters) {
+            this->sort(encoder->entity->nEncodedValues);
+        } else {
+            File* entities = readNumberOfElements(TripleComponent::entity, verbose);
+            this->sort(entities->length);
+        }
     }
 };
 

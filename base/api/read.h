@@ -13,4 +13,7 @@ void importValid(bool verbose = false);
 extern
 void importTypes(bool verbose = false);
 
+extern
+void importFilter(bool verbose = false, bool dropDuplicates = true);
+
 #endif
