@@ -6,6 +6,8 @@
 struct Corpus {
     virtual bool contains(Triple triple) = 0;
     virtual bool allows(Triple triple) = 0;
+    virtual long countEntities() = 0;
+    virtual long countRelations() = 0;
 };
 
 #endif

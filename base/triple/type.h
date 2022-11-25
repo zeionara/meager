@@ -99,17 +99,38 @@ struct RelationTypes {
 
         this->length = contents->length;
 
+        // cout << encoder->relation->contains(5) << endl;
+        // cout << encoder->relation->contains(6) << endl;
+        // cout << encoder->relation->contains(7) << endl;
+
         INT j = 0;
         for (INT i = 0; i < contents->length; i += 2) {
-            RelationType<T>* relation = new RelationType<T>(contents->relations[i], contents->relations[i + 1]);
-            if (!enableFilters || encoder->relation->contains(relation->relation)) {
+            RelationTypeContents<T>* head = contents->relations[i];
+            RelationTypeContents<T>* tail = contents->relations[i + 1];
+
+            INT notEncodedRelation = head->relation;
+
+            // cout << "Checking relation " << head->relation << endl;
+
+            if (!enableFilters || encoder->relation->contains(head->relation)) {
                 if (enableFilters) {
-                    relation->encode(encoder);
+                    head->encode(encoder);
+                    tail->encode(encoder);
                 }
+            }
+
+            RelationType<T>* relation = new RelationType<T>(head, tail);
+
+            if (!enableFilters || encoder->relation->contains(notEncodedRelation)) {
+                //if (enableFilters) {
+                //    relation->encode(encoder);
+                //}
                 relations[j++] = relation;
             }
         }
         length = j;
+
+        cout << "Passed " << length << " relations" << endl;
     }
 
     RelationType<T>* get(INT relation) {

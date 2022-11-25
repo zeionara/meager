@@ -17,7 +17,8 @@ Evaluator<INT>* evaluator;
 
 extern ERL_NIF_TERM
 get_head_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    int batch_tuple_size = corpus->train->frequencies->nEntities;
+    // cout << "get head batch start " << corpus->countEntities() << endl;
+    int batch_tuple_size = corpus->countEntities();
 
     ERL_NIF_TERM* batch_h = new ERL_NIF_TERM[batch_tuple_size]();
     ERL_NIF_TERM* batch_t = new ERL_NIF_TERM[batch_tuple_size]();
@@ -64,12 +65,14 @@ get_head_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     delete [] batch;
 
+    // cout << "get head batch end" << endl;
     return result;
 }
 
 extern ERL_NIF_TERM
 test_head(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    int batch_tuple_size = corpus->train->frequencies->nEntities;
+    // cout << "test head batch start" << endl;
+    int batch_tuple_size = corpus->countEntities();
 
     REAL* predictions_encoded = new REAL[batch_tuple_size]();
 
@@ -83,12 +86,14 @@ test_head(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     // cout << "Tested head" << endl;
 
+    // cout << "test head batch end" << endl;
     return enif_make_int(env, 0);
 }
 
 extern ERL_NIF_TERM
 get_tail_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    int batch_tuple_size = corpus->train->frequencies->nEntities;
+    // cout << "get tail batch start" << endl;
+    int batch_tuple_size = corpus->countEntities();
 
     ERL_NIF_TERM* batch_h = new ERL_NIF_TERM[batch_tuple_size]();
     ERL_NIF_TERM* batch_t = new ERL_NIF_TERM[batch_tuple_size]();
@@ -132,12 +137,13 @@ get_tail_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     delete [] batch;
 
+    // cout << "get tail batch end" << endl;
     return result;
 }
 
 extern ERL_NIF_TERM
 test_tail(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    int batch_tuple_size = corpus->train->frequencies->nEntities;
+    int batch_tuple_size = corpus->countEntities();
 
     REAL* predictions_encoded = new REAL[batch_tuple_size]();
 
@@ -157,7 +163,7 @@ test_tail(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
 extern ERL_NIF_TERM
 get_valid_head_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    int batch_tuple_size = corpus->train->frequencies->nEntities;
+    int batch_tuple_size = corpus->countEntities();
 
     ERL_NIF_TERM* batch_h = new ERL_NIF_TERM[batch_tuple_size]();
     ERL_NIF_TERM* batch_t = new ERL_NIF_TERM[batch_tuple_size]();
@@ -196,7 +202,7 @@ get_valid_head_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
 extern ERL_NIF_TERM
 valid_head(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    int batch_tuple_size = corpus->train->frequencies->nEntities;
+    int batch_tuple_size = corpus->countEntities();
 
     REAL* predictions_encoded = new REAL[batch_tuple_size]();
 
@@ -209,7 +215,7 @@ valid_head(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
 extern ERL_NIF_TERM
 get_valid_tail_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    int batch_tuple_size = corpus->train->frequencies->nEntities;
+    int batch_tuple_size = corpus->countEntities();
 
     ERL_NIF_TERM* batch_h = new ERL_NIF_TERM[batch_tuple_size]();
     ERL_NIF_TERM* batch_t = new ERL_NIF_TERM[batch_tuple_size]();
@@ -248,7 +254,7 @@ get_valid_tail_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
 extern ERL_NIF_TERM
 valid_tail(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    int batch_tuple_size = corpus->train->frequencies->nEntities;
+    int batch_tuple_size = corpus->countEntities();
 
     REAL* predictions_encoded = new REAL[batch_tuple_size]();
 
@@ -272,7 +278,7 @@ ERL_NIF_TERM test_link_prediction_(ErlNifEnv *env, int argc, const ERL_NIF_TERM 
 ERL_NIF_TERM init_test(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     initTest();
 
-    cout << "Initializing evaluator" << endl;
+    // cout << "Initializing evaluator" << endl;
 
     evaluator = new Evaluator<INT>(
         // new DefaultCorpus(trainList, testList, validList, types),

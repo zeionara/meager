@@ -15,7 +15,7 @@ std::string outPath = "../data/FB15K/";
 extern "C"
 void setInPath(char *path, bool as_tsv) { // supported by erlang adapter // TODO: rename to 'initCorpus'
     // corpus = new LocalTsvCorpus(path, false);
-    corpus = new LocalTsvCorpus<INT>(new OpenKECorpusReader(path), false);
+    corpus = new LocalTsvCorpus<INT>(new OpenKECorpusReader(path), true);
 
     // TODO: delete
 

@@ -52,6 +52,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
                     items[j].h = encoder->entity->encode(h);
                     items[j].t = encoder->entity->encode(t);
                     items[j].r = encoder->relation->encode(r);
+                    // cout << "Encoded " << r << endl;
                 } else {
                     items[j].h = h;
                     items[j].t = t;
@@ -63,6 +64,9 @@ struct OpenKECorpusReader: CorpusReader<INT> {
                 j++;
             }
         }
+
+        cout << "Current entity id in encoder = " << encoder->entity->nEncodedValues << endl;
+
 
         triples->length = j;
 

@@ -22,6 +22,19 @@ struct RelationTypeContents {
         this->length = length;
         this->entities = entities;
     }
+
+    void encode(TripleEncoder<T>* encoder) {
+        INT j = 0;
+
+        relation = encoder->relation->encode(relation);
+        for (INT i = 0; i < this->length; i++) {
+            if (encoder->entity->contains(entities[i])) {
+                entities[j++] = encoder->entity->encode(entities[i]);
+            }
+        }
+
+        length = j;
+    }
 };
 
 template <typename T>

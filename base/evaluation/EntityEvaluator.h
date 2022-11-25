@@ -30,23 +30,31 @@ struct EntityEvaluator {
     }
 
     TripleBatch* makeBatch() { // Generate all possible triples for every entity which may be used as a triple head
-        Triple* triples = (Triple*) malloc(this->triples->frequencies->nEntities * sizeof(Triple));
+        Triple* triples = (Triple*) malloc(this->corpus->countEntities() * sizeof(Triple));
 
-        for (INT i = 0; i < this->triples->frequencies->nEntities; i++) {
+        for (INT i = 0; i < this->corpus->countEntities(); i++) {
             triples[i] = makeTriple(i);
         }
 
-        return new TripleBatch(triples, this->triples->frequencies->nEntities);
+        return new TripleBatch(triples, this->corpus->countEntities());
     }
 
     void evaluate(REAL *probabilities, bool reverse) {
+        // cout << "Test triples @ " << currentTripleIndex << endl;
+        // cout << testTriples << endl;
+
         Triple reference = testTriples->content->items[currentTripleIndex];
+
+        // cout << "Reference @ " << getTripleComponent(reference) <<  endl;
 
         REAL reference_distance = probabilities[getTripleComponent(reference)];
 
-        // state->resetScore();
+        // cout << state->unconstrained->unfiltered->value;
+        state->resetScore();
+        //
+        // cout << "Looping" << endl;
 
-        for (INT hypothesis = 0; hypothesis < triples->frequencies->nEntities; hypothesis++) {
+        for (INT hypothesis = 0; hypothesis < this->corpus->countEntities(); hypothesis++) {
             if (hypothesis != getTripleComponent(reference)) { 
 
                 Triple sampledTriple = makeTriple(hypothesis);

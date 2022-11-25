@@ -58,6 +58,9 @@ struct LocalTsvCorpus: LocalCorpus<T> {
     }
 
     void importTypes(bool verbose) {
+        // cout << encoder->relation->contains(5) << endl;
+        // cout << encoder->relation->contains(6) << endl;
+        // cout << encoder->relation->contains(7) << endl;
         this->types = new RelationTypes<T>(this->enableFilters, encoder, this->reader, verbose);
         if (verbose) {
             cout << "Imported types for " << types->length << " relations" << endl;
@@ -84,6 +87,20 @@ struct LocalTsvCorpus: LocalCorpus<T> {
 
     bool allows(Triple triple) {
         return allowsHead(triple) && allowsTail(triple);
+    }
+
+    INT countEntities() {
+        if (this->enableFilters) {
+            return encoder->entity->nEncodedValues;
+        }
+        return train->frequencies->nEntities;
+    }
+
+    INT countRelations() {
+        if (this->enableFilters) {
+            return encoder->relation->nEncodedValues;
+        }
+        return train->frequencies->nRelations;
     }
 
     INT getLength() {
