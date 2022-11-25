@@ -1,3 +1,3 @@
 #include "storage/LocalTsvCorpus.h"
 
-LocalTsvCorpus* corpus;
+LocalTsvCorpus<INT>* corpus;

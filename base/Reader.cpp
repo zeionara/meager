@@ -1,8 +1,8 @@
 #include "triple/list/main.h"
 #include "triple/type.h"
 
-ThickTripleListWrapper* trainList;
-ThinTripleListWrapper* testList, *validList;
+ThickTripleListWrapper<INT>* trainList;
+ThinTripleListWrapper<INT>* testList, *validList;
 
 void print_triples(std::string header, Triple* triples, int nTriples) {
     std::cout << header << "\n";
@@ -24,30 +24,30 @@ void importTrainFiles(bool verbose = false, bool enable_filters = false) {
     //     }
     // } 
     
-    trainList = new ThickTripleListWrapper(train, enable_filters, verbose);
+    // trainList = new ThickTripleListWrapper(train, enable_filters, verbose);
 
-    if (verbose) {
-        cout << "print relation score" << endl;
-        trainList->relationScore->print();
-    }
+    // if (verbose) {
+    //     cout << "print relation score" << endl;
+    //     trainList->relationScore->print();
+    // }
 }
 
 extern "C"
 void importTestFiles(bool verbose = false, bool enable_filters = false) {
     // cout << "Starting reading test lists" << endl;
     // cout << trainLists << endl;
-    testList = new ThinTripleListWrapper(test, trainList->frequencies->nEntities, trainList->frequencies->nRelations, enable_filters, verbose);
+    // testList = new ThinTripleListWrapper(test, trainList->frequencies->nEntities, trainList->frequencies->nRelations, enable_filters, verbose);
     // cout << "Starting reading valid lists" << endl;
-    validList = new ThinTripleListWrapper(test, trainList->frequencies->nEntities, trainList->frequencies->nRelations, enable_filters, verbose);
+    // validList = new ThinTripleListWrapper(test, trainList->frequencies->nEntities, trainList->frequencies->nRelations, enable_filters, verbose);
 }
 
-RelationTypes* types;
+RelationTypes<INT>* types;
 
 extern "C"
 void importTypeFiles() {
     bool verbose = true;
 
-    types = new RelationTypes(verbose);
+    // types = new RelationTypes(verbose);
 
     cout << "Finished reading relation types" << endl;
 }

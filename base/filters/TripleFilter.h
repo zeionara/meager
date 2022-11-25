@@ -3,17 +3,19 @@
 
 #include "FilterPatterns.h"
 
+template <typename T>
 struct TripleFilter {
 
-    FilterPatterns* excluding;
-    FilterPatterns* including;
+    FilterPatterns<T>* excluding;
+    FilterPatterns<T>* including;
 
     // bool enabled;
 
     // TripleFilter(bool enable, bool verbose, bool drop_duplicates, string includingPath = "", string excludingPath = "") {
-    TripleFilter(bool verbose, bool drop_duplicates, string includingPath = "", string excludingPath = "") {
-        excluding = new FilterPatterns(excludingPath, verbose, drop_duplicates); // readFilterPatterns("excluding");
-        including = new FilterPatterns(includingPath, verbose, drop_duplicates); // readFilterPatterns("excluding");
+    TripleFilter(CorpusReader<T>* reader, bool verbose, bool drop_duplicates) {
+        cout << "Initializing filter" << endl;
+        including = new FilterPatterns<T>(reader, false, verbose, drop_duplicates); // readFilterPatterns("excluding");
+        excluding = new FilterPatterns<T>(reader, true, verbose, drop_duplicates); // readFilterPatterns("excluding");
     }
 
     bool allows(Triple triple) {

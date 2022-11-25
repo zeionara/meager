@@ -11,29 +11,30 @@
 
 using namespace std;
 
-string const TRAIN_FILENAME = "train2id.txt";
-string const TEST_FILENAME = "test2id.txt";
-string const VALID_FILENAME = "valid2id.txt";
+string const _TRAIN_FILENAME = "train2id.txt";
+string const _TEST_FILENAME = "test2id.txt";
+string const _VALID_FILENAME = "valid2id.txt";
 
-string const TYPE_FILENAME = "type_constrain.txt";
+string const _TYPE_FILENAME = "type_constrain.txt";
 
-string const ENTITIES_FILENAME = "entity2id.txt";
-string const RELATIONS_FILENAME = "relation2id.txt";
+string const _ENTITIES_FILENAME = "entity2id.txt";
+string const _RELATIONS_FILENAME = "relation2id.txt";
 
-string const INCLUDING_FILTERS_FILENAME = "filters/including.txt";
-string const EXCLUDING_FILTERS_FILENAME = "filters/excluding.txt";
+string const _INCLUDING_FILTERS_FILENAME = "filters/including.txt";
+string const _EXCLUDING_FILTERS_FILENAME = "filters/excluding.txt";
 
-struct LocalTsvCorpus: LocalCorpus {
-    ThickTripleListWrapper* train;
+template <typename T>
+struct LocalTsvCorpus: LocalCorpus<T> {
+    ThickTripleListWrapper<T>* train;
 
-    ThinTripleListWrapper* test;
-    ThinTripleListWrapper* valid;
+    ThinTripleListWrapper<T>* test;
+    ThinTripleListWrapper<T>* valid;
 
-    RelationTypes* types;
-    TripleFilter* filter;
-    TripleEncoder<INT>* encoder;
+    RelationTypes<T>* types;
+    TripleFilter<T>* filter;
+    TripleEncoder<T>* encoder;
 
-    LocalTsvCorpus(string path, bool enableFilters = false): LocalCorpus(path, enableFilters) {
+    LocalTsvCorpus(CorpusReader<T>* reader, bool enableFilters = false): LocalCorpus<T>(reader, enableFilters) {
         if (enableFilters) {
             cout << "FILTERS ARE ENABLED" << endl;
             encoder = new TripleEncoder<INT>();
@@ -41,31 +42,31 @@ struct LocalTsvCorpus: LocalCorpus {
     };
 
     void importTrain(bool verbose) {
-        cout << "started reading train subset for corpus from " << this->path + path << endl;
-        this->train = new ThickTripleListWrapper(path + TRAIN_FILENAME, enableFilters, filter, encoder, verbose);
+        cout << "started reading train subset for corpus from " << endl;
+        this->train = new ThickTripleListWrapper<T>(::SubsetType::train, this->reader, filter, encoder, this->enableFilters, verbose);
         cout << "finished reading train subset for corpus" << endl;
     }
 
     void importTest(bool verbose) {
-        cout << "started reading test subset for corpus from " << this->path + path << endl;
-        this->test = new ThinTripleListWrapper(path + TEST_FILENAME, enableFilters, filter, encoder, verbose);
+        cout << "started reading test subset for corpus from " << endl;
+        this->test = new ThinTripleListWrapper<T>(::SubsetType::test, this->reader, filter, encoder, this->enableFilters, verbose);
         cout << "finished reading test subset for corpus" << endl;
     }
 
     void importValid(bool verbose) {
-        this->valid = new ThinTripleListWrapper(path + VALID_FILENAME, enableFilters, filter, encoder, verbose);
+        this->valid = new ThinTripleListWrapper<T>(::SubsetType::valid, this->reader, filter, encoder, this->enableFilters, verbose);
     }
 
     void importTypes(bool verbose) {
-        this->types = new RelationTypes(path + TYPE_FILENAME, enableFilters, encoder, verbose);
+        this->types = new RelationTypes<T>(this->enableFilters, encoder, this->reader, verbose);
         if (verbose) {
             cout << "Imported types for " << types->length << " relations" << endl;
         }
     }
 
     void importFilter(bool verbose, bool dropDuplicates) {
-        if (enableFilters) {
-            this->filter = new TripleFilter(verbose, dropDuplicates, path + INCLUDING_FILTERS_FILENAME, path + EXCLUDING_FILTERS_FILENAME);
+        if (this->enableFilters) {
+            this->filter = new TripleFilter<T>(this->reader, verbose, dropDuplicates);
         }
     }
 

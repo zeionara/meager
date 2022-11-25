@@ -7,14 +7,15 @@
 #include "../Random.h"
 #include "../Reader.h"
 
+template <typename T>
 struct DefaultCorruptionStrategy: CorruptionStrategy {
 
     // DefaultCorruptionStrategy(ThickTripleListWrapper* triples, INT threadId, ThinTripleListWrapper* testTriples, ThinTripleListWrapper* validTriples):
     //     CorruptionStrategy(triples, threadId, testTriples, validTriples) {};
 
-    LocalTsvCorpus* corpus;
+    LocalTsvCorpus<T>* corpus;
 
-    DefaultCorruptionStrategy(LocalTsvCorpus* corpus, INT threadId): CorruptionStrategy(threadId) {
+    DefaultCorruptionStrategy(LocalTsvCorpus<T>* corpus, INT threadId): CorruptionStrategy(threadId) {
         this->corpus = corpus;
     };
 

@@ -8,21 +8,23 @@
 #include <unordered_set>
 
 #include "../triple/main.h"
+#include "../storage/CorpusReader.h"
 
 using namespace std;
 
+template <typename T>
 struct FilterPatterns {
 
 	bool empty;
     vector<regex> items;
 
-    FilterPatterns(string path, bool verbose = false, bool drop_duplicates = true) {
+    FilterPatterns(CorpusReader<T>* reader, bool excluding = false, bool verbose = false, bool drop_duplicates = true) {
         try {
-            items = readFilterPatterns(path, verbose, drop_duplicates); 
+            items = reader->readFilterPatterns(excluding, verbose, drop_duplicates); 
+            empty = false;
         } catch (invalid_argument& e) {
             empty = true;
         }
-        empty = false;
     }
 
     bool match(Triple triple) {
@@ -34,37 +36,37 @@ struct FilterPatterns {
         return false;
     }
 
-    vector<regex> readFilterPatterns(string path, bool verbose, bool drop_duplicates) {
-        if (verbose) {
-            cout << "Reading " << path << " triple patterns..." << endl;
-        }
+    // vector<regex> readFilterPatterns(string path, bool verbose, bool drop_duplicates) {
+    //     if (verbose) {
+    //         cout << "Reading " << path << " triple patterns..." << endl;
+    //     }
 
-        ifstream in_file(path);
+    //     ifstream in_file(path);
 
-        if (!in_file.good()) {
-            throw invalid_argument("Cannot find file " + path + " on disk");
-        }
+    //     if (!in_file.good()) {
+    //         throw invalid_argument("Cannot find file " + path + " on disk");
+    //     }
 
-        vector<regex> patterns;
+    //     vector<regex> patterns;
 
-        for (string line; getline(in_file, line);) {
-            if (drop_duplicates) {
-                unordered_set<string> seenPatterns;
+    //     for (string line; getline(in_file, line);) {
+    //         if (drop_duplicates) {
+    //             unordered_set<string> seenPatterns;
 
-                if (seenPatterns.find(line) == seenPatterns.end()) {
-                    seenPatterns.insert(line);
-                    regex line_regex(line);
-                    patterns.push_back(line_regex); 
-                    cout << "Read filtering pattern " << line << endl;
-                }
-            } else {
-                regex line_regex(line);
-                patterns.push_back(line_regex); 
-            }
-        }
+    //             if (seenPatterns.find(line) == seenPatterns.end()) {
+    //                 seenPatterns.insert(line);
+    //                 regex line_regex(line);
+    //                 patterns.push_back(line_regex); 
+    //                 cout << "Read filtering pattern " << line << endl;
+    //             }
+    //         } else {
+    //             regex line_regex(line);
+    //             patterns.push_back(line_regex); 
+    //         }
+    //     }
 
-        return patterns;
-    }
+    //     return patterns;
+    // }
 };
 
 #endif

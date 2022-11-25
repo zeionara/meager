@@ -13,7 +13,7 @@
 //  Test
 //
 
-Evaluator* evaluator;
+Evaluator<INT>* evaluator;
 
 extern ERL_NIF_TERM
 get_head_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
@@ -274,7 +274,7 @@ ERL_NIF_TERM init_test(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     cout << "Initializing evaluator" << endl;
 
-    evaluator = new Evaluator(
+    evaluator = new Evaluator<INT>(
         // new DefaultCorpus(trainList, testList, validList, types),
         corpus,
         corpus->train,

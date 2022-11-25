@@ -9,13 +9,13 @@
 
 struct DefaultCorpus: Corpus {
 
-    ThickTripleListWrapper* train;
-    ThinTripleListWrapper* test;
-    ThinTripleListWrapper* valid;
+    ThickTripleListWrapper<INT>* train;
+    ThinTripleListWrapper<INT>* test;
+    ThinTripleListWrapper<INT>* valid;
 
-    RelationTypes* types;
+    RelationTypes<INT>* types;
 
-    DefaultCorpus(ThickTripleListWrapper* train, ThinTripleListWrapper* test, ThinTripleListWrapper* valid, RelationTypes* types) {
+    DefaultCorpus(ThickTripleListWrapper<INT>* train, ThinTripleListWrapper<INT>* test, ThinTripleListWrapper<INT>* valid, RelationTypes<INT>* types) {
         this->train = train;
         this->test = test;
         this->valid = valid;

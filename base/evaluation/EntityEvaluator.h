@@ -9,19 +9,20 @@
 #include "EvaluationScoreCluster.h"
 #include "../storage/Corpus.h"
 
+template <typename T>
 struct EntityEvaluator {
     INT currentTripleIndex;
 
     EvaluationScoreCluster* state;
     Corpus* corpus;
 
-    ThickTripleListWrapper* triples;
-    ThinTripleListWrapper* testTriples;
+    ThickTripleListWrapper<T>* triples;
+    ThinTripleListWrapper<T>* testTriples;
 
     // virtual bool isTripleFromDataset(Triple triple) = 0;
     // virtual bool isCorrectTriple(Triple triple) = 0;
    
-    EntityEvaluator(Corpus* corpus, ThickTripleListWrapper* triples, ThinTripleListWrapper* testTriples, MetricSetTrackerMaker makeMetricSetTracker) {
+    EntityEvaluator(Corpus* corpus, ThickTripleListWrapper<T>* triples, ThinTripleListWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker) {
         this->corpus = corpus;
         this->triples = triples;
         this->testTriples = testTriples;

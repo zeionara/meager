@@ -8,26 +8,16 @@
 #include "../patterns/symmetric/reader.h"
 #include "../patterns/inverse/reader.h"
 
+template <typename T>
 struct AllowedTripleElements {
     INT* items;
     INT length;
 
-    AllowedTripleElements(FILE* file) {
-        INT length;
+    AllowedTripleElements(RelationTypeContents<T>* contents) {
+        this->items = contents->entities;
+        this->length = contents->length;
 
-        fscanf(file, "%ld", &length);
-
-        // cout << "Found " << length << " items" << endl;
-
-        INT* items = (INT*)calloc(length, sizeof(INT));
-
-        for (INT j = 0; j < length; j++) {
-            fscanf(file, "%ld", &items[j]);
-        }
         std::sort(items, items + length);
-
-        this->items = items;
-        this->length = length;
     }
 
     bool contains(INT value) {
@@ -50,31 +40,27 @@ struct AllowedTripleElements {
     }
 };
 
+template <typename T>
 struct RelationType {
-    AllowedTripleElements* heads;
-    AllowedTripleElements* tails;
+    AllowedTripleElements<T>* heads;
+    AllowedTripleElements<T>* tails;
     INT relation;
 
-    RelationType(FILE* file) {
-        INT headRelation;
-        fscanf(file, "%ld", &headRelation);
+    RelationType(RelationTypeContents<T>* headContents, RelationTypeContents<T>* tailContents) {
 
         // cout << "Handling heads for relation " << headRelation << endl;
 
-        heads = new AllowedTripleElements(file);
+        heads = new AllowedTripleElements<T>(headContents);
 
-        INT tailRelation;
-        fscanf(file, "%ld", &tailRelation);
-
-        if (tailRelation != headRelation) {
+        if (headContents->relation != tailContents->relation) {
             throw "Relation type can be created only for one relation";
         }
 
         // cout << "Handling tails for relation " << headRelation << endl;
 
-        tails = new AllowedTripleElements(file);
+        tails = new AllowedTripleElements<T>(tailContents);
 
-        this->relation = headRelation;
+        this->relation = headContents->relation;
     }
 
     void encode(TripleEncoder<INT>* encoder) {
@@ -84,8 +70,9 @@ struct RelationType {
     }
 };
 
+template <typename T>
 struct RelationTypes {
-    RelationType** relations;
+    RelationType<T>** relations;
     INT length;
 
     RelationTypes(bool verbose = false) {
@@ -94,30 +81,27 @@ struct RelationTypes {
         FILE* f_type = file->file;
         INT nTypeConstrainedRelations = file->length;
 
-        relations = (RelationType**)calloc(file->length, sizeof(RelationType*));
+        relations = (RelationType<T>**)calloc(file->length, sizeof(RelationType<T>*));
 
         this->length = file->length;
 
-        for (INT i = 0; i < file->length; i++) {
-            relations[i] = new RelationType(file->file);
-        }
+        // for (INT i = 0; i < file->length; i++) {
+        //     relations[i] = new RelationType(file->file);
+        // }
 
         fclose(f_type);
     }
 
-    RelationTypes(string path, bool enableFilters, TripleEncoder<INT>* encoder, bool verbose = false) {
-        File* file = readNumberOfTypeConstrainedRelations(path, verbose);
+    RelationTypes(bool enableFilters, TripleEncoder<T>* encoder, CorpusReader<T>* reader, bool verbose = false) {
+        RelationTypesContents<T>* contents = reader->readRelationTypesContents(verbose);
 
-        FILE* f_type = file->file;
-        INT nTypeConstrainedRelations = file->length;
+        relations = (RelationType<T>**)calloc(contents->length, sizeof(RelationType<T>*));
 
-        relations = (RelationType**)calloc(file->length, sizeof(RelationType*));
-
-        this->length = file->length;
+        this->length = contents->length;
 
         INT j = 0;
-        for (INT i = 0; i < file->length; i++) {
-            RelationType* relation = new RelationType(file->file);
+        for (INT i = 0; i < contents->length; i += 2) {
+            RelationType<T>* relation = new RelationType<T>(contents->relations[i], contents->relations[i + 1]);
             if (!enableFilters || encoder->relation->contains(relation->relation)) {
                 if (enableFilters) {
                     relation->encode(encoder);
@@ -126,11 +110,9 @@ struct RelationTypes {
             }
         }
         length = j;
-
-        fclose(f_type);
     }
 
-    RelationType* get(INT relation) {
+    RelationType<T>* get(INT relation) {
         for (INT i = 0; i < this->length; i++) {
             if (this->relations[i]->relation == relation) {
                 return this->relations[i];

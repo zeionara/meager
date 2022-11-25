@@ -3,15 +3,17 @@
 
 #include "../triple/main.h"
 #include "Corpus.h"
+#include "CorpusReader.h"
 
 using namespace std;
 
+template <typename T>
 struct LocalCorpus: Corpus {
-    string path;
+    CorpusReader<T>* reader;
     bool enableFilters;
 
-    LocalCorpus(string path, bool enableFilters = false) {
-        this->path = path;
+    LocalCorpus(CorpusReader<T>* reader, bool enableFilters = false) {
+        this->reader = reader;
         this->enableFilters = enableFilters;
     }
 

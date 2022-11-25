@@ -10,6 +10,7 @@
 #include "../TripleEncoder.h"
 #include "../../filters/TripleFilter.h"
 
+template <typename T>
 struct ThinTripleListWrapper {
     TripleList* content;
 
@@ -31,15 +32,16 @@ struct ThinTripleListWrapper {
         // this->read(file, startInternalEntityId, startInternalRelationId, enable_filters, verbose);
     }
 
-    ThinTripleListWrapper(string path, bool enable_filters, TripleFilter* filter, TripleEncoder<INT>* encoder, bool verbose = false) {
-        File* file = readNumberOfTriples(path, verbose);
-
-        this->content = new TripleList(file->length, ::TripleElement::rel);
-
-        this->length = file->length;
+    ThinTripleListWrapper(SubsetType subset, CorpusReader<T>* reader, TripleFilter<T>* filter, TripleEncoder<INT>* encoder, bool enable_filters, bool verbose = false) {
         this->index = new TripleIndex;
 
-        this->read(file, enable_filters, filter, encoder, verbose);
+        cout << "reading triples" << endl;
+        this->content = reader->readTriples(subset, index, ::TripleElement::rel, filter, encoder, verbose);
+        cout << "finished reading triples" << endl;
+
+        this->length = content->length;
+
+        this->read(reader, filter, encoder, enable_filters, verbose);
     }
 
     void sort(INT nEntities) {
@@ -47,18 +49,13 @@ struct ThinTripleListWrapper {
     }
 
     // void read(File* file, INT startInternalEntityId, INT startInternalRelationId, bool enable_filters = false, bool verbose = false) {
-    void read(File* file, bool enable_filters, TripleFilter* filter, TripleEncoder<INT>* encoder, bool verbose = false) {
-        cout << "reading triples" << endl;
-        INT nTriples = readTriples(file, enable_filters, filter, encoder, this->content->items, this->index);
-        cout << "finished reading triples" << endl;
-
-        file->close();
+    void read(CorpusReader<T>* reader, TripleFilter<T>* filter, TripleEncoder<INT>* encoder, bool enable_filters, bool verbose = false) {
+        // INT nTriples = readTriples(file, enable_filters, filter, encoder, this->content->items, this->index);
 
         if (enable_filters) {
             this->sort(encoder->entity->nEncodedValues);
         } else {
-            File* entities = readNumberOfElements(TripleComponent::entity, verbose);
-            this->sort(entities->length);
+            this->sort(reader->readVocabularySize(entity));
         }
     }
 };

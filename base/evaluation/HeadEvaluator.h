@@ -3,13 +3,14 @@
 
 #include "EntityEvaluator.h"
 
-struct HeadEvaluator: EntityEvaluator {
+template <typename T>
+struct HeadEvaluator: EntityEvaluator<T> {
 
-    HeadEvaluator(Corpus* corpus, ThickTripleListWrapper* triples, ThinTripleListWrapper* testTriples, MetricSetTrackerMaker makeMetricSetTracker):
-        EntityEvaluator(corpus, triples, testTriples, makeMetricSetTracker) {};
+    HeadEvaluator(Corpus* corpus, ThickTripleListWrapper<T>* triples, ThinTripleListWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker):
+        EntityEvaluator<T>(corpus, triples, testTriples, makeMetricSetTracker) {};
 
     Triple makeTriple(INT i) {
-        return Triple(i, testTriples->content->items[currentTripleIndex].r, testTriples->content->items[currentTripleIndex].t);
+        return Triple(i, this->testTriples->content->items[this->currentTripleIndex].r, this->testTriples->content->items[this->currentTripleIndex].t);
     }
 
     INT getTripleComponent(Triple triple) {

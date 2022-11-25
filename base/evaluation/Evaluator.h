@@ -14,24 +14,25 @@
 #include "HeadEvaluator.h"
 #include "TailEvaluator.h"
 
+template <typename T>
 struct Evaluator {
 
     Corpus* corpus;
 
-    ThickTripleListWrapper* triples;
-    ThinTripleListWrapper* testTriples;
+    ThickTripleListWrapper<T>* triples;
+    ThinTripleListWrapper<T>* testTriples;
 
-    HeadEvaluator* head;
-    TailEvaluator* tail;
+    HeadEvaluator<T>* head;
+    TailEvaluator<T>* tail;
 
-    Evaluator(Corpus* corpus, ThickTripleListWrapper* triples, ThinTripleListWrapper* testTriples, MetricSetTrackerMaker makeMetricSetTracker) {
+    Evaluator(Corpus* corpus, ThickTripleListWrapper<T>* triples, ThinTripleListWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker) {
         this->corpus = corpus;
         this->triples = triples;
         this->testTriples = testTriples;
 
         // cout << "Making evaluators" << endl;
-        this->head = new HeadEvaluator(corpus, triples, testTriples, makeMetricSetTracker);
-        this->tail = new TailEvaluator(corpus, triples, testTriples, makeMetricSetTracker);
+        this->head = new HeadEvaluator<T>(corpus, triples, testTriples, makeMetricSetTracker);
+        this->tail = new TailEvaluator<T>(corpus, triples, testTriples, makeMetricSetTracker);
         // cout << "Made evaluators" << endl;
     }
 

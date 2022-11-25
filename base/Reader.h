@@ -14,11 +14,11 @@
 #include "triple/TripleIndex.h"
 
 extern
-ThickTripleListWrapper* trainList;
+ThickTripleListWrapper<INT>* trainList;
 extern
-ThinTripleListWrapper* testList, *validList;
+ThinTripleListWrapper<INT>* testList, *validList;
 extern
-RelationTypes* types;
+RelationTypes<INT>* types;
 
 void print_triples(std::string header, Triple* triples, int nTriples);
 

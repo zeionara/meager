@@ -224,3 +224,12 @@ File* readNumberOfTypeConstrainedRelations(std::string path, bool verbose) {
         }
     );
 }
+
+File* readNumberOfElements(std::string path, bool verbose) {
+    return readHeaderUsingAbsolutePath(
+        path, verbose,
+        [&](INT result){
+            printf("The total number of %s is %ld.\n", path.c_str(), result);
+        }
+    );
+}

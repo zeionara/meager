@@ -4,6 +4,6 @@
 #include "storage/LocalTsvCorpus.h"
 
 extern
-LocalTsvCorpus* corpus;
+LocalTsvCorpus<INT>* corpus;
 
 #endif
