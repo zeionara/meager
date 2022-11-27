@@ -1,10 +1,13 @@
 #include "Setting.h"
 #include <cstdlib>
+#include <iostream>
 
 unsigned long long *next_random;
 
 extern "C"
 void randReset() { // Generate random numbers for each thread
+    std::cout << workThreads << std::endl;
+    throw "ok";
 	next_random = (unsigned long long *)calloc(workThreads, sizeof(unsigned long long));
 	for (INT i = 0; i < workThreads; i++)
 		next_random[i] = rand();
