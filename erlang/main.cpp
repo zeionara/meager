@@ -97,7 +97,7 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         return completed_with_error(env, &message);
     }
 
-    Sampler* sampler = new PatternSampler<INT>(pattern, n_observed_triples_per_pattern_instance, false, false, 4);
+    Sampler* sampler = new PatternSampler<INT>(pattern, n_observed_triples_per_pattern_instance, false, false, 8);
 
     // cout << "Created sampler" << endl;
 
