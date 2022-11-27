@@ -12,12 +12,12 @@ const int nTriplesPerPattern = 2;
 // vector<PatternInstance> symmetricTriples;
 vector<PatternInstance>** inverseTriplePatternInstances = (vector<PatternInstance>**)malloc(sizeof(vector<PatternInstance>*) * (nTriplesPerPattern + 1));
 
-void separateInverseTriples(Triple* triples, INT nTriples, TripleIndex* index, bool verbose, bool drop_duplicates, bool enable_filters) {
+void separateInverseTriples(string path, Triple* triples, INT nTriples, TripleIndex* index, bool verbose, bool drop_duplicates, bool enable_filters) {
     if (verbose) {
 		cout << "Separating inverse triples..." << endl;
     }
 
-    ifstream in_file(inPath + "patterns/inverse.txt");
+    ifstream in_file(path + "patterns/inverse.txt");
 
     int forwardRelation, backwardRelation;
     // unordered_set<int> inverseForwardRelations;

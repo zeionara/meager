@@ -23,6 +23,7 @@ extern // "C"
 void sampling(INT *batch_h, INT *batch_t, INT *batch_r, REAL *batch_y, INT batchSize, INT negRate, INT negRelRate, INT headBatchFlag, string pattern_name, int nObservedTriplesPerPatternInstance) {
     // const unsigned int nPatternInstanceSets = 3;
     // std::cout << "Started sampling in " << workThreads << " threads" << endl;
+    INT workThreads = 4;
 	pthread_t *pt = (pthread_t *)malloc(workThreads * sizeof(pthread_t));
 	Parameter *para = (Parameter *)malloc(workThreads * sizeof(Parameter));
 

@@ -23,39 +23,42 @@ using namespace std;
 typedef void * (*PTR)(void *);
 
 
+template <typename T>
 struct PatternSampler: Sampler {
     Pattern pattern;
     INT nObservedTriplesPerPatternInstance;
+    INT nWorkers;
 
     bool bern;
     bool crossSampling;
 
-    PatternSampler(Pattern pattern, INT nObservedTriplesPerPatternInstance, bool bern = false, bool crossSampling = false) {
+    PatternSampler(Pattern pattern, INT nObservedTriplesPerPatternInstance, bool bern = false, bool crossSampling = false, INT nWorkers = 1) {
         this->pattern = pattern;
         this->nObservedTriplesPerPatternInstance = nObservedTriplesPerPatternInstance;
         this->bern = bern;
         this->crossSampling = crossSampling;
+        this->nWorkers = nWorkers;
     }
 
     TripleBatch* sample(INT batchSize, INT entityNegativeRate, INT relationNegativeRate, INT headBatchFlag) {
         // cout << "Creating sampler" << endl;
         GlobalSamplingState* globalState = new GlobalSamplingState(
-            batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, pattern, nObservedTriplesPerPatternInstance, 500
+            batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, pattern, nObservedTriplesPerPatternInstance, 500, false, false, nWorkers
         );
 
-        pthread_t* threads = (pthread_t*) malloc(workThreads * sizeof(pthread_t));
-        LocalSamplingState* localStates = (LocalSamplingState*) malloc(workThreads * sizeof(LocalSamplingState));
+        pthread_t* threads = (pthread_t*) malloc(nWorkers * sizeof(pthread_t));
+        LocalSamplingState* localStates = (LocalSamplingState*) malloc(nWorkers * sizeof(LocalSamplingState));
 
-        for (INT thread_index = 0; thread_index < workThreads; thread_index++) {
+        for (INT thread_index = 0; thread_index < nWorkers; thread_index++) {
             localStates[thread_index].id = thread_index;
             localStates[thread_index].globalState = globalState;
-            localStates[thread_index].corruptionStrategy = new DefaultCorruptionStrategy(corpus, thread_index);
+            localStates[thread_index].corruptionStrategy = new DefaultCorruptionStrategy<T>(corpus, thread_index);
             pthread_create(&threads[thread_index], NULL, run, (void*)(localStates + thread_index));
         }
 
         // cout << "Waiting for the workers to complete" << endl;
 
-        for (INT thread_index = 0; thread_index < workThreads; thread_index++) {
+        for (INT thread_index = 0; thread_index < nWorkers; thread_index++) {
             pthread_join(threads[thread_index], NULL);
         }
 
@@ -87,14 +90,16 @@ struct PatternSampler: Sampler {
         bool bern = state->bern;
         bool crossSampling = state->crossSampling;
 
+        INT nWorkers = state->nWorkers;
+
         INT first_triple_index, last_triple_index;
 
-        if (batchSize % workThreads == 0) {
-            first_triple_index = threadIndex * (batchSize / workThreads);
-            last_triple_index = (threadIndex + 1) * (batchSize / workThreads);
+        if (batchSize % nWorkers == 0) {
+            first_triple_index = threadIndex * (batchSize / nWorkers);
+            last_triple_index = (threadIndex + 1) * (batchSize / nWorkers);
         } else {
-            first_triple_index = threadIndex * (batchSize / workThreads + 1); // Last (incomplete) batch is distributed over all complete batches
-            last_triple_index = (threadIndex + 1) * (batchSize / workThreads + 1);
+            first_triple_index = threadIndex * (batchSize / nWorkers + 1); // Last (incomplete) batch is distributed over all complete batches
+            last_triple_index = (threadIndex + 1) * (batchSize / nWorkers + 1);
             if (last_triple_index > batchSize) last_triple_index = batchSize;  // The last batch contains fewer elements
         }
 

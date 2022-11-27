@@ -76,7 +76,7 @@ struct RelationTypes {
     INT length;
 
     RelationTypes(bool verbose = false) {
-        File* file = readNumberOfTypeConstrainedRelations(verbose);
+        File* file = readNumberOfTypeConstrainedRelations("", verbose);
 
         FILE* f_type = file->file;
         INT nTypeConstrainedRelations = file->length;

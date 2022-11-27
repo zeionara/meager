@@ -9,8 +9,8 @@
 #include "global.h"
 #include "storage/OpenKECorpusReader.h"
 
-std::string inPath = "../data/FB15K/"; // By default fb15k corpus is used
-std::string outPath = "../data/FB15K/";
+// std::string inPath = "../data/FB15K/"; // By default fb15k corpus is used
+// std::string outPath = "../data/FB15K/";
 
 extern "C"
 void setInPath(char *path, bool as_tsv) { // supported by erlang adapter // TODO: rename to 'initCorpus'
@@ -19,39 +19,41 @@ void setInPath(char *path, bool as_tsv) { // supported by erlang adapter // TODO
 
     // TODO: delete
 
-	INT len = strlen(path);
-	inPath = "";
+	// INT len = strlen(path);
+	// inPath = "";
 
-	for (INT i = 0; i < len; i++)
-		inPath = inPath + path[i];
+	// for (INT i = 0; i < len; i++)
+	// 	inPath = inPath + path[i];
 
     if (!as_tsv)
-        printf("corpus path : %s\n", inPath.c_str());
+        printf("corpus path : %s\n", path);
 }
 
 extern "C"
 void setOutPath(char *path) {
-	INT len = strlen(path);
-	outPath = "";
-	for (INT i = 0; i < len; i++)
-		outPath = outPath + path[i];
-	printf("Output Files Path : %s\n", outPath.c_str());
+	// INT len = strlen(path);
+	// outPath = "";
+	// for (INT i = 0; i < len; i++)
+	// 	outPath = outPath + path[i];
+	printf("Output Files Path : %s\n", path);
 }
 
 /*
 ============================================================
 */
 
-INT workThreads = 1; // By default concurrency is disabled
+// INT workThreads = 1; // By default concurrency is disabled
 
 extern "C"
 void setWorkThreads(INT threads) {
-	workThreads = threads;
+	// workThreads = threads;
 }
 
 extern "C"
 INT getWorkThreads() {
-	return workThreads;
+    cout << "Cannot obtain number of work threads because the method is deprecated" << endl;
+    throw "Cannot obtain number of work threads";
+	// return workThreads;
 }
 
 /*

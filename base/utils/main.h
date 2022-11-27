@@ -24,13 +24,13 @@ struct File {
     }
 };
 
-File* readNumberOfElements(TripleComponent component = entity, bool verbose = false);
+File* readNumberOfElements(TripleComponent component = entity, std::string path = "", bool verbose = false);
 File* readNumberOfElements(std::string path, bool verbose);
 
-File* readNumberOfTriples(SubsetType subsetType = train, bool verbose = false);
+File* readNumberOfTriples(SubsetType subsetType = train, std::string path = "", bool verbose = false);
 File* readNumberOfTriples(std::string path, bool verbose = false);
 
-File* readNumberOfTypeConstrainedRelations(bool verbose);
+// File* readNumberOfTypeConstrainedRelations(bool verbose);
 File* readNumberOfTypeConstrainedRelations(std::string path, bool verbose);
 
 #endif

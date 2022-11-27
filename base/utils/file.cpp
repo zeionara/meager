@@ -58,32 +58,32 @@ std::string getSubsetTypeName(SubsetType subsetType) {
     }
 }
 
-File* readHeader(std::string relativePath, bool verbose, std::function<void(INT)> printMessage) {
-	FILE *input_file;
-	INT length;
-
-    // std::string relativePath = getInputPath(idMapping, component);
-    // std::string componentName = component == entity ? "entities" : "relations";
-
-	input_file = fopen((inPath + relativePath).c_str(), "r");
-
-	if (input_file == nullptr) {
-	 	std::cerr << '`' << inPath << relativePath << '`' << " does not exist" << std::endl;
-        throw "File does not exist";
-	 	// return new File(input_file, ;
-	}
-
-	fscanf(input_file, "%ld", &length);
-
-    if (verbose) {
-        printMessage(length);
-        // printf("The total number of %s is %ld.\n", getPluralTripleComponentName(component).c_str(), *tmp);
-    }
-
-	// fclose(input_file);
-
-    return new File(input_file, length);
-}
+// File* readHeader(std::string relativePath, bool verbose, std::function<void(INT)> printMessage) {
+// 	FILE *input_file;
+// 	INT length;
+// 
+//     // std::string relativePath = getInputPath(idMapping, component);
+//     // std::string componentName = component == entity ? "entities" : "relations";
+// 
+// 	input_file = fopen((inPath + relativePath).c_str(), "r");
+// 
+// 	if (input_file == nullptr) {
+// 	 	std::cerr << '`' << inPath << relativePath << '`' << " does not exist" << std::endl;
+//         throw "File does not exist";
+// 	 	// return new File(input_file, ;
+// 	}
+// 
+// 	fscanf(input_file, "%ld", &length);
+// 
+//     if (verbose) {
+//         printMessage(length);
+//         // printf("The total number of %s is %ld.\n", getPluralTripleComponentName(component).c_str(), *tmp);
+//     }
+// 
+// 	// fclose(input_file);
+// 
+//     return new File(input_file, length);
+// }
 
 File* readHeaderUsingAbsolutePath(std::string absolutePath, bool verbose, std::function<void(INT)> printMessage) {
 	FILE *input_file;
@@ -110,7 +110,7 @@ File* readHeaderUsingAbsolutePath(std::string absolutePath, bool verbose, std::f
 }
 
 
-File* readNumberOfElements(TripleComponent component, bool verbose) {
+File* readNumberOfElements(TripleComponent component, std::string path, bool verbose) {
 	// FILE *input_file;
 	// INT* tmp;
     // long* total = component == entity ? &entityTotal : &relationTotal;
@@ -118,8 +118,8 @@ File* readNumberOfElements(TripleComponent component, bool verbose) {
     std::string relativePath = getInputPath(idMapping, component);
     std::string componentName = component == entity ? "entities" : "relations";
 
-    File* file = readHeader(
-        relativePath, verbose,
+    File* file = readHeaderUsingAbsolutePath(
+        path + relativePath, verbose,
         [&](INT result){
             printf("The total number of %s is %ld.\n", getPluralTripleComponentName(component).c_str(), result);
         }
@@ -147,15 +147,15 @@ File* readNumberOfElements(TripleComponent component, bool verbose) {
     // return *tmp;
 }
 
-File* readNumberOfTriples(SubsetType subsetType, bool verbose) {
+File* readNumberOfTriples(SubsetType subsetType, std::string path, bool verbose) {
     // FILE *input_file;
 	// int tmp;
     // long* total = subsetType == train ? &trainTotal : subsetType == test ? &testTotal : &validTotal;
 
     std::string relativePath = getInputPath(triples, subsetType);
 
-    return readHeader(
-        relativePath, verbose,
+    return readHeaderUsingAbsolutePath(
+        path + relativePath, verbose,
         [&](INT result){
             printf("The total number of %s triples is %ld.\n", getSubsetTypeName(subsetType).c_str(), result);
         }
@@ -186,35 +186,35 @@ File* readNumberOfTriples(std::string path, bool verbose) {
     );
 }
 
-File* readNumberOfTypeConstrainedRelations(bool verbose) {
-    // FILE *input_file;
-	// int tmp;
-    // long* total = subsetType == train ? &trainTotal : subsetType == test ? &testTotal : &validTotal;
-
-    std::string relativePath = getInputPath(typeConstraint);
-
-    return readHeader(
-        relativePath, verbose,
-        [&](INT result){
-            printf("The total number of type constrained relations is %ld.\n", result);
-        }
-    );
-
-	// input_file = fopen((inPath + relativePath).c_str(), "r");
-
-	// if (input_file == nullptr) {
-	// 	std::cout << '`' << inPath << relativePath << '`' << " does not exist" << std::endl;
-	// 	throw std::invalid_argument("File does not exist");
-	// }
-
-	// fscanf(input_file, "%ld", total); // Reading number of train samples
-
-    // if (verbose) {
-    //     printf("The total number of %s triples is %ld.\n", getSubsetTypeName(subsetType).c_str(), *total);
-    // }
-
-    // return input_file;
-}
+// File* readNumberOfTypeConstrainedRelations(std::string path, bool verbose) {
+//     // FILE *input_file;
+// 	// int tmp;
+//     // long* total = subsetType == train ? &trainTotal : subsetType == test ? &testTotal : &validTotal;
+// 
+//     std::string relativePath = getInputPath(typeConstraint);
+// 
+//     return readHeaderUsingAbsolutePath(
+//         path + relativePath, verbose,
+//         [&](INT result){
+//             printf("The total number of type constrained relations is %ld.\n", result);
+//         }
+//     );
+// 
+// 	// input_file = fopen((inPath + relativePath).c_str(), "r");
+// 
+// 	// if (input_file == nullptr) {
+// 	// 	std::cout << '`' << inPath << relativePath << '`' << " does not exist" << std::endl;
+// 	// 	throw std::invalid_argument("File does not exist");
+// 	// }
+// 
+// 	// fscanf(input_file, "%ld", total); // Reading number of train samples
+// 
+//     // if (verbose) {
+//     //     printf("The total number of %s triples is %ld.\n", getSubsetTypeName(subsetType).c_str(), *total);
+//     // }
+// 
+//     // return input_file;
+// }
 
 File* readNumberOfTypeConstrainedRelations(std::string path, bool verbose) {
     return readHeaderUsingAbsolutePath(

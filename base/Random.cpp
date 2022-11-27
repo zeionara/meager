@@ -4,9 +4,9 @@
 unsigned long long *next_random;
 
 extern "C"
-void randReset() { // Generate random numbers for each thread
-	next_random = (unsigned long long *)calloc(workThreads, sizeof(unsigned long long));
-	for (INT i = 0; i < workThreads; i++)
+void randReset(INT nWorkers) { // Generate random numbers for each thread
+	next_random = (unsigned long long *)calloc(nWorkers, sizeof(unsigned long long));
+	for (INT i = 0; i < nWorkers; i++)
 		next_random[i] = rand();
 }
 

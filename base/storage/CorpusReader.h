@@ -54,6 +54,8 @@ struct TripleFilter;
 template <typename T>
 struct CorpusReader {
 
+    string path; // TODO: Delete this
+
     virtual TripleList* readTriples(SubsetType subsetType, TripleIndex* tripleIndex, TripleElement tripleElement, TripleFilter<T>* filter, TripleEncoder<T>* encoder, bool verbose) = 0;
     virtual INT readVocabularySize(TripleComponent tripleComponent, bool verbose = false) = 0;
     virtual vector<regex> readFilterPatterns(bool excluding = false, bool verbose = false, bool drop_duplicates = true) = 0;

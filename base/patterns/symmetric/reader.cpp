@@ -12,12 +12,12 @@ const int nTriplesPerPattern = 2;
 // vector<PatternInstance> symmetricTriples;
 vector<PatternInstance>** symmetricTriplePatternInstances = (vector<PatternInstance>**)malloc(sizeof(vector<PatternInstance>*) * (nTriplesPerPattern + 1));
 
-void separateSymmetricTriples(Triple* triples, INT nTriples, bool verbose, bool drop_duplicates) {
+void separateSymmetricTriples(string path, Triple* triples, INT nTriples, bool verbose, bool drop_duplicates) {
     if (verbose) {
 		cout << "Separating symmetric triples..." << endl;
     }
 
-    ifstream in_file(inPath + "patterns/symmetric.txt");
+    ifstream in_file(path + "patterns/symmetric.txt");
 
     int relation;
     unordered_set<int> symmetricRelations;

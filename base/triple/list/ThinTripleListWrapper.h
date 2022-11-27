@@ -22,7 +22,7 @@ struct ThinTripleListWrapper {
     // INT nRelations;
 
     ThinTripleListWrapper(SubsetType subset, INT startInternalEntityId, INT startInternalRelationId, bool enable_filters = false, bool verbose = false) {
-        File* file = readNumberOfTriples(subset, verbose);
+        File* file = readNumberOfTriples(subset, "", verbose);
 
         this->content = new TripleList(file->length, ::TripleElement::rel);
 

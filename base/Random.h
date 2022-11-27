@@ -5,7 +5,7 @@
 #include <cstdlib>
 
 extern "C"
-void randReset();
+void randReset(INT nWorkers);
 
 unsigned long long randd(INT id);
 

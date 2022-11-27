@@ -20,7 +20,8 @@ vector<regex> readFilterPatterns(string filename, bool verbose, bool drop_duplic
 		cout << "Reading " << filename << " triple patterns..." << endl;
     }
 
-    string path = inPath + "filters/" + filename + ".txt";
+    // string path = inPath + "filters/" + filename + ".txt";
+    string path = "filters/" + filename + ".txt";
     ifstream in_file(path);
 
     if (!in_file.good()) {

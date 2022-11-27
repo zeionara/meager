@@ -7,7 +7,7 @@
 
 #include "../../triple/TripleIndex.h"
 
-void separateInverseTriples(Triple* triples, INT nTriples, TripleIndex* index, bool verbose = false, bool drop_duplicates = true, bool enable_filters = false);
+void separateInverseTriples(string path, Triple* triples, INT nTriples, TripleIndex* index, bool verbose = false, bool drop_duplicates = true, bool enable_filters = false);
 
 // extern
 // std::vector<PatternInstance> symmetricTriples;

@@ -27,7 +27,7 @@ struct ThickTripleListWrapper {
     RelationScore* relationScore;
 
     ThickTripleListWrapper(SubsetType subset, bool enable_filters = false, bool verbose = false) {
-        File* file = readNumberOfTriples(subset, verbose);
+        File* file = readNumberOfTriples(subset, "", verbose);
 
         this->content = new TripleList(file->length, ::TripleElement::head);
         this->head = new TripleList(file->length, ::TripleElement::head);
@@ -135,8 +135,8 @@ struct ThickTripleListWrapper {
         // separateSymmetricTriples(this->content->items, this->length, verbose);
         // separateInverseTriples(this->content->items, this->length, this->index, verbose, true, enable_filters);
         separateNoneTriples(this->content->items, content->length, verbose, true, enable_filters); // nTriples may be different from this->length if filters are enabled
-        separateSymmetricTriples(this->content->items, content->length, verbose);
-        separateInverseTriples(this->content->items, content->length, this->index, verbose, true, enable_filters);
+        separateSymmetricTriples(reader->path, this->content->items, content->length, verbose);
+        separateInverseTriples(reader->path, this->content->items, content->length, this->index, verbose, true, enable_filters);
 
         if (verbose) {
             cout << "Separated all patterns" << endl;

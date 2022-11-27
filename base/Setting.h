@@ -6,8 +6,8 @@
 #include <cstdio>
 #include <string>
 
-extern std::string inPath;
-extern std::string outPath;
+// extern std::string inPath;
+// extern std::string outPath;
 
 extern "C"
 void setInPath(char *path, bool as_tsv = false);
@@ -19,7 +19,7 @@ void setOutPath(char *path);
 ============================================================
 */
 
-extern INT workThreads; // By default concurrency is disabled
+// extern INT workThreads; // By default concurrency is disabled
 
 extern "C"
 void setWorkThreads(INT threads); 
