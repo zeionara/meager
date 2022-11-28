@@ -1,6 +1,8 @@
 #ifndef EVALUATION_METRIC_METRIC_TRACKER_H
 #define EVALUATION_METRIC_METRIC_TRACKER_H
 
+#include <string>
+
 #include "../EvaluationScore.h"
 
 using namespace std;

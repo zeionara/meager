@@ -1,7 +1,7 @@
 #ifndef EVALUATION_EVALUATION_SCORE_H
 #define EVALUATION_EVALUATION_SCORE_H
 
-#include "../Setting.h"
+#include "../types.h"
 #include "EvaluationScoreContainer.h"
 
 struct MetricSetTracker;

@@ -1,8 +1,9 @@
 #ifndef TRIPLE_H
 #define TRIPLE_H
-#include "../Setting.h"
-// #include "TripleIndex.h"
 
+#include "../types.h"
+
+#include <cstring>
 #include <functional>
 #include <algorithm>
 #include <string>

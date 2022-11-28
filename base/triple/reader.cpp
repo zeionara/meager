@@ -1,4 +1,4 @@
-#include "../Setting.h"
+#include "../types.h"
 #include "../filters/main.h"
 
 #include "main.h"

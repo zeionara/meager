@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../Setting.h"
+#include "../types.h"
 
 using namespace std;
 

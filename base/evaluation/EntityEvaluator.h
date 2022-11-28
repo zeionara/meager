@@ -1,7 +1,6 @@
 #ifndef EVALUATION_ENTITY_EVALUATOR_H
 #define EVALUATION_ENTITY_EVALUATOR_H
 
-#include "../Setting.h"
 #include "../triple/list/ThickTripleListWrapper.h"
 #include "../triple/list/ThinTripleListWrapper.h"
 #include "../samplers/TripleBatch.h"

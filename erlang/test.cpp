@@ -1,6 +1,6 @@
 #include "erl_nif.h"
 #include "utils.h"
-#include "../base/Setting.h"
+#include "../base/types.h"
 // #include "../base/Test.h"
 
 #include "../base/evaluation/Evaluator.h"

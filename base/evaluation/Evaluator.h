@@ -3,7 +3,6 @@
 
 #include <functional>
 
-#include "../Setting.h"
 #include "../triple/list/ThickTripleListWrapper.h"
 #include "../triple/list/ThinTripleListWrapper.h"
 #include "../samplers/TripleBatch.h"

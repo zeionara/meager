@@ -1,4 +1,4 @@
-#include "Setting.h"
+#include "types.h"
 #include <cstdlib>
 
 unsigned long long *next_random;

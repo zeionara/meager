@@ -1,4 +1,4 @@
-#include "../base/Setting.h"
+#include "../base/types.h"
 // #include "../base/main.h"
 // #include <iostream>
 

@@ -1,7 +1,6 @@
 #ifndef TRIPLE_INDEX_H
 #define TRIPLE_INDEX_H
 
-#include "../Setting.h"
 #include "main.h"
 
 #include <unordered_set>

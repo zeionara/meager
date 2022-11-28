@@ -1,7 +1,7 @@
 #ifndef RANDOM_H
 #define RANDOM_H
 
-#include "Setting.h"
+#include "types.h"
 #include <cstdlib>
 
 extern "C"

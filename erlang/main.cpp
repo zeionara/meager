@@ -2,7 +2,7 @@
 #include "setting.h"
 #include "random.h"
 #include "reader.h"
-#include "../base/Setting.h"
+#include "../base/types.h"
 #include "utils.h"
 // #include "../base/main.h"
 #include <iostream>
