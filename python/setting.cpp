@@ -1,42 +1,43 @@
-#include "../base/Setting.h"
+// #include "../base/Setting.h"
+#include "../base/api/corpus.h"
 
 extern "C"
 void set_in_path(char *path, bool as_tsv = false) {
-    setInPath(path, as_tsv);
+    initCorpus(path);
 }
 
 extern "C"
 void set_bern(INT con) {
-    setBern(con);
+    // setBern(con);
 }
 
 extern "C"
 void set_work_threads(INT threads) {
-    setWorkThreads(threads);
+    // setWorkThreads(threads);
 }
 
 extern "C"
 INT get_relation_total() {
-    return getRelationTotal();
+    return countRelations();
 }
 
 extern "C"
 INT get_entity_total() {
-    return getEntityTotal();
+    return countEntities();
 }
 
 extern "C"
 INT get_train_total() {
-    return getTrainTotal();
+    return countTrainTriples();
 }
 
 extern "C"
 INT get_test_total() {
-    return getTestTotal();
+    return countTestTriples();
 }
 
 extern "C"
 INT get_valid_total() {
-    return getValidTotal();
+    return countValidTriples();
 }
 

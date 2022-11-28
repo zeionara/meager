@@ -7,7 +7,7 @@
 #include "../base/storage/DefaultCorpus.h"
 #include "../base/samplers/TripleBatch.h"
 
-#include "../base/global.h"
+#include "../base/api/corpus.h"
 
 //
 //  Test

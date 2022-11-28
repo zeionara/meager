@@ -3,8 +3,9 @@
 // #include "../base/Reader.h"
 #include "../base/filters/main.h"
 
-#include "../base/global.h"
-#include "../base/api/read.h"
+// #include "../base/global.h"
+// #include "../base/api/read.h"
+#include "../base/api/corpus.h"
 
 extern ERL_NIF_TERM
 import_filter_patterns(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
