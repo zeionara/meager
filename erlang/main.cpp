@@ -4,7 +4,7 @@
 #include "reader.h"
 #include "../base/Setting.h"
 #include "utils.h"
-#include "../base/main.h"
+// #include "../base/main.h"
 #include <iostream>
 #include "test.h"
 
