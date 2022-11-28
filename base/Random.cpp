@@ -18,41 +18,13 @@ void randReset(INT nWorkers) { // Generate random numbers for each thread
 	randomizationStates = (RandomizationState**)calloc(nWorkers, sizeof(RandomizationState*));
 	for (INT i = 0; i < nWorkers; i++) {
 		// next_random[i] = rand();
-        //
-        // long seed = rand();
-        // cout << "Init randomizer" << endl;
-		// randomizationStates[i] = new JavaLikeLcgRandomizationState(seed);
 		randomizationStates[i] = new JavaLikeLcgRandomizationState(rand());
-        // cout << randomizationStates[i]->state << endl;
-        // randomizationStates[i]->reset(randa + 1);
-        // cout << randomizationStates[i]->multiplier * randomizationStates[i]->state << endl;
-        // cout << randomizationStates[i]->sample() << endl;
-		// next_random[i] = seed;
-
-        // cout << "vv" << endl;
-        // cout << randomizationStates[i]->state << endl;
-        // cout << next_random[i] << endl;
-        // cout << "^^" << endl;
     }
 }
 
 unsigned long long randd(INT id) { // Generate sequential random numbers
     // next_random[id] = next_random[id] * (unsigned long long)25214903917 + 11;
     // return next_random[id];
-    //
-    // unsigned long long value = next_random[id];
-	// long value = randomizationStates[id]->sample();
-    // std::cout << value << std::endl;
-    // unsigned long long sampledValue = randomizationStates[id]->sample();
-    // if (k < 5) {
-    //     cout << "--" << endl;
-    //     cout << sampledValue << endl;
-    //     cout << value << endl;
-    //     cout << "==" << endl;
-    // }
-    // k += 1;
-    // return value;
-    // return sampledValue;
     return randomizationStates[id]->sample();
 }
 
