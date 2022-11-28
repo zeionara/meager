@@ -16,8 +16,6 @@
 #include "TripleBatch.h"
 #include "Sampler.h"
 
-#include "../global.h"
-
 using namespace std;
 
 typedef void * (*PTR)(void *);
