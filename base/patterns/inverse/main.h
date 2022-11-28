@@ -6,7 +6,7 @@
 #include "../main.h"
 #include "../../triple/list/main.h"
 
-#include "../../Reader.h"
+// #include "../../Reader.h"
 
 extern
 const string inversePatternName;

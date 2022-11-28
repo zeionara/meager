@@ -5,7 +5,7 @@
 #include "../triple/list/ThinTripleListWrapper.h"
 #include "CorruptionStrategy.h"
 #include "../Random.h"
-#include "../Reader.h"
+// #include "../Reader.h"
 
 template <typename T>
 struct DefaultCorruptionStrategy: CorruptionStrategy {
@@ -106,7 +106,7 @@ struct DefaultCorruptionStrategy: CorruptionStrategy {
         INT loop = 0;
         INT t;
         while(1) {
-            INT corruptedTail = types->get(triple.r)->tails->items[rand(0, types->get(triple.r)->tails->length)]; // Select random tail entity id for a given relation according to type mappings
+            INT corruptedTail = corpus->types->get(triple.r)->tails->items[rand(0, corpus->types->get(triple.r)->tails->length)]; // Select random tail entity id for a given relation according to type mappings
             Triple corruptedTriple = Triple(triple.h, triple.r, corruptedTail);
             if (not isCorrectTriple(corruptedTriple)) { // If obtained triple does not exist, then it is a suitable negative sample which may be immediately returned
             //	printf("r:%ld\tt:%ld\n", r, t);

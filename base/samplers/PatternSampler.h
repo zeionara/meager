@@ -12,7 +12,7 @@
 
 #include "../corruption/DefaultCorruptionStrategy.h"
 
-#include "LocalSamplingState.h"
+#include "DefaultLocalSamplingState.h"
 #include "TripleBatch.h"
 #include "Sampler.h"
 
@@ -47,7 +47,7 @@ struct PatternSampler: Sampler {
         );
 
         pthread_t* threads = (pthread_t*) malloc(nWorkers * sizeof(pthread_t));
-        LocalSamplingState* localStates = (LocalSamplingState*) malloc(nWorkers * sizeof(LocalSamplingState));
+        DefaultLocalSamplingState<T>* localStates = (DefaultLocalSamplingState<T>*) malloc(nWorkers * sizeof(DefaultLocalSamplingState<T>));
 
         for (INT thread_index = 0; thread_index < nWorkers; thread_index++) {
             localStates[thread_index].id = thread_index;
@@ -70,7 +70,7 @@ struct PatternSampler: Sampler {
     }
 
     static void* run(void* con) {
-        LocalSamplingState* localState = (LocalSamplingState *)(con);
+        DefaultLocalSamplingState<T>* localState = (DefaultLocalSamplingState<T> *)(con);
         GlobalSamplingState* state = localState->globalState;
 
         INT threadIndex = localState->id;
@@ -85,12 +85,14 @@ struct PatternSampler: Sampler {
         INT nObservedTriplesPerPatternInstance = state->nObservedTriplesPerPatternInstance;
         REAL headCorruptionThreshold = state->headCorruptionThreshold;
 
-        CorruptionStrategy* corruptionStrategy = localState->corruptionStrategy;
+        DefaultCorruptionStrategy<T>* corruptionStrategy = localState->corruptionStrategy;
 
         bool bern = state->bern;
         bool crossSampling = state->crossSampling;
 
         INT nWorkers = state->nWorkers;
+
+        RelationScore* relationScore = corruptionStrategy->corpus->train->relationScore;
 
         INT first_triple_index, last_triple_index;
 
@@ -126,8 +128,8 @@ struct PatternSampler: Sampler {
                 for (INT negativeTripleOffset = 1; negativeTripleOffset <= entityNegativeRate; negativeTripleOffset++) {
                     if (!crossSampling){
                         if (bern) // flag for considering a portion of triples with unique head/tail for those of which there is a given relationship
-                            headCorruptionThreshold = 1000 * trainList->relationScore->head[sampledTriple.r] / (
-                                trainList->relationScore->tail[sampledTriple.r] + trainList->relationScore->head[sampledTriple.r]
+                            headCorruptionThreshold = 1000 * relationScore->head[sampledTriple.r] / (
+                                relationScore->tail[sampledTriple.r] + relationScore->head[sampledTriple.r]
                             );
                         if (randd(threadIndex) % 1000 < headCorruptionThreshold) { // Corrupt TAIL by generating a random number
                             // if (batchWiseTripleIndex == 44)

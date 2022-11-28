@@ -5,7 +5,7 @@
 
 #include "../main.h"
 
-#include "../../Reader.h"
+// #include "../../Reader.h"
 
 extern
 const string nonePatternName;

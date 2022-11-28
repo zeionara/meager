@@ -104,3 +104,9 @@ INT external_to_internal_id(INT external_id, INT* internal_id, unordered_map<INT
 //     return boundaries;
 // }
 
+void print_triples(std::string header, Triple* triples, int nTriples) {
+    std::cout << header << "\n";
+    for (int i = 0; i < nTriples; i++) {
+        triples[i].print();
+    }
+}

@@ -6,24 +6,24 @@
 #include "../main.h"
 #include "../../triple/list/main.h"
 
-#include "../../Reader.h"
+// #include "../../Reader.h"
 
 extern
 const string symmetricPatternName;
 
 struct SymmetricPatternInstance: PatternInstance {
-    SymmetricPatternInstance(Triple forward, Triple backward, bool isForwardObserved = true) {
+    SymmetricPatternInstance(Triple forward, Triple backward, TripleIndex* index, bool isForwardObserved = true) {
         triples = {forward, backward};
         if (isForwardObserved) {
             observedTripleIndices = {0};
 
-            if (trainList->index->contains(backward)) {
+            if (index->contains(backward)) {
                 observedTripleIndices.insert(1);
             }
         } else {
             observedTripleIndices = {1};
 
-            if (trainList->index->contains(forward)) {
+            if (index->contains(forward)) {
                 observedTripleIndices.insert(0);
             }
         }

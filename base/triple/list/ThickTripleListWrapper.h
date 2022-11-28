@@ -135,7 +135,7 @@ struct ThickTripleListWrapper {
         // separateSymmetricTriples(this->content->items, this->length, verbose);
         // separateInverseTriples(this->content->items, this->length, this->index, verbose, true, enable_filters);
         separateNoneTriples(this->content->items, content->length, verbose, true, enable_filters); // nTriples may be different from this->length if filters are enabled
-        separateSymmetricTriples(reader->path, this->content->items, content->length, verbose);
+        separateSymmetricTriples(reader->path, this->content->items, content->length, this->index, verbose);
         separateInverseTriples(reader->path, this->content->items, content->length, this->index, verbose, true, enable_filters);
 
         if (verbose) {

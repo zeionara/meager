@@ -3,7 +3,7 @@
 #include <unordered_set>
 
 #include "main.h"
-#include "../../Reader.h"
+// #include "../../Reader.h"
 
 using namespace std;
 
@@ -12,7 +12,7 @@ const int nTriplesPerPattern = 2;
 // vector<PatternInstance> symmetricTriples;
 vector<PatternInstance>** symmetricTriplePatternInstances = (vector<PatternInstance>**)malloc(sizeof(vector<PatternInstance>*) * (nTriplesPerPattern + 1));
 
-void separateSymmetricTriples(string path, Triple* triples, INT nTriples, bool verbose, bool drop_duplicates) {
+void separateSymmetricTriples(string path, Triple* triples, INT nTriples, TripleIndex* index, bool verbose, bool drop_duplicates) {
     if (verbose) {
 		cout << "Separating symmetric triples..." << endl;
     }
@@ -80,13 +80,15 @@ void separateSymmetricTriples(string path, Triple* triples, INT nTriples, bool v
             // cout << triple.r << " is a symmetric relation" << endl;
             auto direct_pattern_instance = SymmetricPatternInstance(
                     triple,
-                    Triple(triple.t, triple.r, triple.h)
+                    Triple(triple.t, triple.r, triple.h),
+                    index
             );
             pushPatternInstance(direct_pattern_instance);
 
             auto inverse_pattern_instance = SymmetricPatternInstance(
                 Triple(triple.t, triple.r, triple.h),
                 triple,
+                index,
                 false
             );
             pushPatternInstance(inverse_pattern_instance);
