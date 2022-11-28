@@ -1,7 +1,7 @@
 #include "erl_nif.h"
 #include "utils.h"
 #include "../base/Setting.h"
-#include "../base/Test.h"
+// #include "../base/Test.h"
 
 #include "../base/evaluation/Evaluator.h"
 #include "../base/storage/DefaultCorpus.h"
@@ -173,7 +173,7 @@ get_valid_head_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     INT* batch_t_encoded = new INT[batch_tuple_size]();
     INT* batch_r_encoded = new INT[batch_tuple_size]();
 
-    getValidHeadBatch(batch_h_encoded, batch_t_encoded, batch_r_encoded);
+    // getValidHeadBatch(batch_h_encoded, batch_t_encoded, batch_r_encoded);
 
     enif_encode_array_of_long(env, batch_h_encoded, batch_h, batch_tuple_size);
     enif_encode_array_of_long(env, batch_t_encoded, batch_t, batch_tuple_size);
@@ -208,7 +208,7 @@ valid_head(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     encode_array_of_float(env, argv[0], predictions_encoded, batch_tuple_size);
     
-    validHead(predictions_encoded, enif_get_bool(env, argv[1]));
+    // validHead(predictions_encoded, enif_get_bool(env, argv[1]));
 
     return enif_make_int(env, 0);
 }
@@ -225,7 +225,7 @@ get_valid_tail_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     INT* batch_t_encoded = new INT[batch_tuple_size]();
     INT* batch_r_encoded = new INT[batch_tuple_size]();
 
-    getValidTailBatch(batch_h_encoded, batch_t_encoded, batch_r_encoded);
+    // getValidTailBatch(batch_h_encoded, batch_t_encoded, batch_r_encoded);
 
     enif_encode_array_of_long(env, batch_h_encoded, batch_h, batch_tuple_size);
     enif_encode_array_of_long(env, batch_t_encoded, batch_t, batch_tuple_size);
@@ -260,7 +260,7 @@ valid_tail(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     encode_array_of_float(env, argv[0], predictions_encoded, batch_tuple_size);
 
-    validTail(predictions_encoded, enif_get_bool(env, argv[1]));
+    // validTail(predictions_encoded, enif_get_bool(env, argv[1]));
 
     return enif_make_int(env, 0);
 }
@@ -276,7 +276,7 @@ ERL_NIF_TERM test_link_prediction_(ErlNifEnv *env, int argc, const ERL_NIF_TERM 
 }
 
 ERL_NIF_TERM init_test(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    initTest();
+    // initTest();
 
     // cout << "Initializing evaluator" << endl;
 
