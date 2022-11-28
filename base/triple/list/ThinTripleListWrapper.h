@@ -44,8 +44,8 @@ struct ThinTripleListWrapper {
         this->read(reader, filter, encoder, enable_filters, verbose);
     }
 
-    void sort(INT nEntities) {
-        this->content->sort(nEntities);
+    void sort(INT nRelations) {
+        this->content->sort(nRelations, Triple::cmp_rel2); // Sort by relation, then by head, then by tail
     }
 
     // void read(File* file, INT startInternalEntityId, INT startInternalRelationId, bool enable_filters = false, bool verbose = false) {
@@ -53,9 +53,9 @@ struct ThinTripleListWrapper {
         // INT nTriples = readTriples(file, enable_filters, filter, encoder, this->content->items, this->index);
 
         if (enable_filters) {
-            this->sort(encoder->entity->nEncodedValues);
+            this->sort(encoder->relation->nEncodedValues);
         } else {
-            this->sort(reader->readVocabularySize(entity));
+            this->sort(reader->readVocabularySize(::TripleComponent::relation));
         }
     }
 };

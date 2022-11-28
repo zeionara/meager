@@ -102,7 +102,7 @@ struct DefaultCorruptionStrategy: CorruptionStrategy {
         return Triple(triple.h, corruptedRelation, triple.t);
     }
 
-    Triple corrupt(Triple triple){
+    Triple corrupt(Triple triple){  // Corrupt tail
         INT loop = 0;
         INT t;
         while(1) {
