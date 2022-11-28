@@ -30,7 +30,8 @@ set(
     ${PYTHON_SOURCES_FILES}
 )
 
-include_directories(/usr/lib/erlang/usr/include)
+# include_directories(/usr/lib/erlang/usr/include)
+include_directories(/home/zeio/randeer/randeer)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
@@ -38,8 +39,11 @@ add_library(meager ${SOURCES})
 add_library(meager_erlang ${ERLANG_SOURCES})
 add_library(meager_python ${PYTHON_SOURCES})
 
+add_library(randeer SHARED IMPORTED)
+set_target_properties(randeer PROPERTIES IMPORTED_LOCATION /usr/lib/librandeer.so)
+
 target_link_libraries(meager_erlang meager)
 target_link_libraries(meager_python meager)
+target_link_libraries(meager randeer)
 
 install(TARGETS meager meager_erlang meager_python DESTINATION /usr/lib/)
-
