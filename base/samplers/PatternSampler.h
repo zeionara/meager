@@ -1,9 +1,9 @@
 #ifndef PATTERN_SAMPLER_H
 #define PATTERN_SAMPLER_H
 
-#include "../Reader.h"
+// #include "../Reader.h"
 #include "../Random.h"
-#include "../Corrupt.h"
+// #include "../Corrupt.h"
 
 #include <string>
 
