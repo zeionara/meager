@@ -11,10 +11,12 @@ template <typename T>
 struct LocalCorpus: Corpus {
     CorpusReader<T>* reader;
     bool enableFilters;
+    bool verbose;
 
-    LocalCorpus(CorpusReader<T>* reader, bool enableFilters = false) {
+    LocalCorpus(CorpusReader<T>* reader, bool enableFilters = false, bool verbose = false) {
         this->reader = reader;
         this->enableFilters = enableFilters;
+        this->verbose = verbose;
     }
 
     virtual void importTrain(bool verbose = false) = 0;

@@ -14,7 +14,7 @@ extern
 LocalTsvCorpus<long>* corpus;
 
 extern
-void initCorpus(char *path);
+void initCorpus(char *path, bool enableFilters = false, bool verbose = false);
 
 extern
 long countEntities(); 

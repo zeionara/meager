@@ -15,6 +15,8 @@
 #include "../base/samplers/PatternSampler.h"
 #include "../base/api/corpus.h"
 
+#include "corpus.h"
+
 using namespace std;
 
 extern ERL_NIF_TERM
@@ -150,6 +152,10 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 }
 
 static ErlNifFunc meager_nif_funcs[] = {
+    // Corpus
+
+    {"init_corpus", 4, initCorpus_},
+
     //
     //  Settings
     //  

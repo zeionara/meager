@@ -3,10 +3,12 @@
 
 LocalTsvCorpus<long>* corpus;
 
-void initCorpus(char *path) {
+void initCorpus(char *path, bool enableFilters, bool verbose) {
     // corpus = new LocalTsvCorpus<INT>(new OpenKECorpusReader(path), false);
-    corpus = new LocalTsvCorpus<INT>(new OpenKECorpusReader(path), true);
-    printf("corpus path : %s\n", path);
+    corpus = new LocalTsvCorpus<INT>(new OpenKECorpusReader(path), enableFilters, verbose);
+    if (verbose) {
+        printf("corpus path : %s\n", path);
+    }
 }
 
 long countEntities() {
