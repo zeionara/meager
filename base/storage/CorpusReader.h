@@ -9,6 +9,9 @@
 #include "../triple/TripleIndex.h"
 #include "../utils/main.h"
 
+#include "../patterns/main.h"
+#include "../patterns/BinaryPatternRelationMap.h"
+
 using namespace std;
 
 template <typename T>
@@ -61,6 +64,7 @@ struct CorpusReader {
     virtual vector<regex> readFilterPatterns(bool excluding = false, bool verbose = false, bool drop_duplicates = true) = 0;
     virtual RelationTypesContents<T>* readRelationTypesContents(bool verbose = false) = 0;
 
+    virtual BinaryPatternRelationMap<INT>* readBinaryPatterns(Pattern pattern, bool verbose = false) = 0;
 };
 
 #endif

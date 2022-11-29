@@ -19,6 +19,9 @@ string const RELATIONS_FILENAME = "relation2id.txt";
 string const INCLUDING_FILTERS_FILENAME = "filters/including.txt";
 string const EXCLUDING_FILTERS_FILENAME = "filters/excluding.txt";
 
+string const INVERSE_PATTERNS_FILENAME = "patterns/inverse.txt";
+string const SYMMETRIC_PATTERNS_FILENAME = "patterns/symmetric.txt";
+
 struct OpenKECorpusReader: CorpusReader<INT> {
     string path;
 
@@ -135,6 +138,47 @@ struct OpenKECorpusReader: CorpusReader<INT> {
         }
 
         return new RelationTypesContents<INT>(relations, file->length * 2);
+    }
+
+    // void separateInverseTriples(string path, Triple* triples, INT nTriples, TripleIndex* index, bool verbose, bool drop_duplicates, bool enable_filters) {
+    BinaryPatternRelationMap<INT>* readBinaryPatterns(Pattern pattern, bool verbose) {
+        string relativePath;
+
+        switch (pattern) {
+            case inverse:
+                relativePath = INVERSE_PATTERNS_FILENAME;
+                break;
+            case symmetric:
+                relativePath = SYMMETRIC_PATTERNS_FILENAME;
+                break;
+            default:
+                cout << "Pattern is not binary" << endl;
+                throw "Pattern is not binary";
+        }
+
+        ifstream in_file(path + relativePath);
+
+        INT firstRelation, secondRelation;
+
+        unordered_map<INT, INT> firstRelationToSecond;
+        unordered_map<INT, INT> secondRelationToFirst;
+
+        while (in_file >> firstRelation >> secondRelation) {
+            if (verbose) {
+                printf("Read relations %ld and %ld.\n", firstRelation, secondRelation);
+            }
+
+            firstRelationToSecond[firstRelation] = secondRelation;
+            secondRelationToFirst[secondRelation] = firstRelation;
+        }
+        
+        if (verbose) {
+            printf("Number of relations in binary pattern = %d.\n", (int)firstRelationToSecond.size());
+        }
+
+        in_file.close();
+
+        return new BinaryPatternRelationMap<INT>(firstRelationToSecond, secondRelationToFirst);
     }
 };
 

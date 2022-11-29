@@ -4,6 +4,8 @@
 
 #include "main.h"
 // #include "../../Reader.h"
+#include "../../storage/CorpusReader.h"
+#include "../BinaryPatternRelationMap.h"
 
 using namespace std;
 
@@ -12,44 +14,49 @@ const int nTriplesPerPattern = 2;
 // vector<PatternInstance> symmetricTriples;
 vector<PatternInstance>** inverseTriplePatternInstances = (vector<PatternInstance>**)malloc(sizeof(vector<PatternInstance>*) * (nTriplesPerPattern + 1));
 
-void separateInverseTriples(string path, Triple* triples, INT nTriples, TripleIndex* index, bool verbose, bool drop_duplicates, bool enable_filters) {
-    if (verbose) {
-		cout << "Separating inverse triples..." << endl;
-    }
-
-    ifstream in_file(path + "patterns/inverse.txt");
-
-    int forwardRelation, backwardRelation;
-    // unordered_set<int> inverseForwardRelations;
-    // unordered_set<int> inverseBackwardRelations;
-
-    unordered_map<int, int> inverseForwardRelationToBackward;
-    unordered_map<int, int> inverseBackwardRelationToForward;
-
-    // cout << forwardRelation << endl;
-    // cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << endl;
-
-    while (in_file >> forwardRelation >> backwardRelation) {
-        if (verbose) {
-            printf("Read relations %d and %d.\n", forwardRelation, backwardRelation);
-        }
-
-        // inverseForwardRelations.insert(forwardRelation);
-        // inverseBackwardRelations.insert(backwardRelation);
-
-        inverseForwardRelationToBackward[forwardRelation] = backwardRelation;
-        inverseBackwardRelationToForward[backwardRelation] = forwardRelation;
-    }
+// template <typename T>
+void separateInverseTriples(string path, Triple* triples, INT nTriples, TripleIndex* index, CorpusReader<INT>* reader, bool verbose, bool drop_duplicates, bool enable_filters) {
+    BinaryPatternRelationMap<INT>* relationMap = reader->readBinaryPatterns(inverse);
     
-    if (verbose) {
-        printf("Number of inverse relations = %d.\n", (int)inverseForwardRelationToBackward.size());
-    }
+    // if (verbose) {
+	// 	cout << "Separating inverse triples..." << endl;
+    // }
 
-    in_file.close();
+    // ifstream in_file(path + "patterns/inverse.txt");
 
-    if (verbose) {
-        cout << "Inverse triples" << endl;
-    }
+    // int forwardRelation, backwardRelation;
+    // // unordered_set<int> inverseForwardRelations;
+    // // unordered_set<int> inverseBackwardRelations;
+
+    // unordered_map<int, int> inverseForwardRelationToBackward;
+    // unordered_map<int, int> inverseBackwardRelationToForward;
+    unordered_map<INT, INT> inverseForwardRelationToBackward = relationMap->firstToSecond;
+    unordered_map<INT, INT> inverseBackwardRelationToForward = relationMap->secondToFirst;
+
+    // // cout << forwardRelation << endl;
+    // // cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << endl;
+
+    // while (in_file >> forwardRelation >> backwardRelation) {
+    //     if (verbose) {
+    //         printf("Read relations %d and %d.\n", forwardRelation, backwardRelation);
+    //     }
+
+    //     // inverseForwardRelations.insert(forwardRelation);
+    //     // inverseBackwardRelations.insert(backwardRelation);
+
+    //     inverseForwardRelationToBackward[forwardRelation] = backwardRelation;
+    //     inverseBackwardRelationToForward[backwardRelation] = forwardRelation;
+    // }
+    // 
+    // if (verbose) {
+    //     printf("Number of inverse relations = %d.\n", (int)inverseForwardRelationToBackward.size());
+    // }
+
+    // in_file.close();
+
+    // if (verbose) {
+    //     cout << "Inverse triples" << endl;
+    // }
 
     unordered_set<string> seenInstances;
 
