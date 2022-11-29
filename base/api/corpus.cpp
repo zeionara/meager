@@ -4,6 +4,7 @@
 LocalTsvCorpus<long>* corpus;
 
 void initCorpus(char *path) {
+    // corpus = new LocalTsvCorpus<INT>(new OpenKECorpusReader(path), false);
     corpus = new LocalTsvCorpus<INT>(new OpenKECorpusReader(path), true);
     printf("corpus path : %s\n", path);
 }

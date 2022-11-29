@@ -22,7 +22,6 @@ std::vector<PatternInstance>** inverseTriplePatternInstances;
 
 const int nTriplesPerInversePattern = 2;
 
-
 template <typename T>
 void separateInverseTriples(string path, Triple* triples, INT nTriples, TripleIndex* index, CorpusReader<T>* reader, bool verbose, bool drop_duplicates, bool enable_filters) {
     BinaryPatternRelationMap<T>* relationMap = reader->readBinaryPatterns(inverse, true);

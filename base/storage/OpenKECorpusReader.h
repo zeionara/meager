@@ -68,8 +68,11 @@ struct OpenKECorpusReader: CorpusReader<INT> {
             }
         }
 
-        cout << "Current entity id in encoder = " << encoder->entity->nEncodedValues << endl;
+        if (filter != nullptr) {
+            cout << "Current entity id in encoder = " << encoder->entity->nEncodedValues << endl;
+        }
 
+        cout << "STOP" << endl;
 
         triples->length = j;
 
