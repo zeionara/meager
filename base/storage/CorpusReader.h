@@ -11,6 +11,7 @@
 
 #include "../patterns/main.h"
 #include "../patterns/BinaryPatternRelationMap.h"
+#include "../patterns/UnaryPatternRelationSet.h"
 
 using namespace std;
 
@@ -65,6 +66,7 @@ struct CorpusReader {
     virtual RelationTypesContents<T>* readRelationTypesContents(bool verbose = false) = 0;
 
     virtual BinaryPatternRelationMap<INT>* readBinaryPatterns(Pattern pattern, bool verbose = false) = 0;
+    virtual UnaryPatternRelationSet<INT>* readUnaryPatterns(Pattern pattern, bool verbose = false) = 0;
 };
 
 #endif

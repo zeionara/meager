@@ -12,6 +12,7 @@
 #include "../../filters/TripleFilter.h"
 #include "../TripleEncoder.h"
 #include "../../patterns/InversePatternDescription.h"
+#include "../../patterns/symmetric/SymmetricPatternDescription.h"
 
 template <typename T>
 struct ThickTripleListWrapper {
@@ -139,6 +140,7 @@ struct ThickTripleListWrapper {
         separateSymmetricTriples(reader->path, this->content->items, content->length, this->index, verbose);
         // separateInverseTriples<INT>(reader->path, this->content->items, content->length, this->index, reader, verbose, true, enable_filters);
         patternDescriptions[inverse] = InversePatternDescription<T>(content, reader, index, verbose, true);
+        patternDescriptions[symmetric] = SymmetricPatternDescription<T>(content, reader, index, verbose, true);
         // separateInverseTriples(reader->path, this->content->items, content->length, this->index, reader, verbose, true, enable_filters);
 
         if (verbose) {

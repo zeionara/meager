@@ -151,9 +151,6 @@ struct OpenKECorpusReader: CorpusReader<INT> {
             case inverse:
                 relativePath = INVERSE_PATTERNS_FILENAME;
                 break;
-            case symmetric:
-                relativePath = SYMMETRIC_PATTERNS_FILENAME;
-                break;
             default:
                 cout << "Pattern is not binary" << endl;
                 throw "Pattern is not binary";
@@ -182,6 +179,44 @@ struct OpenKECorpusReader: CorpusReader<INT> {
         in_file.close();
 
         return new BinaryPatternRelationMap<INT>(firstRelationToSecond, secondRelationToFirst);
+    }
+
+    UnaryPatternRelationSet<INT>* readUnaryPatterns(Pattern pattern, bool verbose) {
+        string relativePath;
+
+        switch (pattern) {
+            case symmetric:
+                relativePath = SYMMETRIC_PATTERNS_FILENAME;
+                break;
+            default:
+                cout << "Pattern is not unary" << endl;
+                throw "Pattern is not unary";
+        }
+
+        ifstream in_file(path + relativePath);
+
+        INT relation;
+        unordered_set<INT> relations;
+
+        while (in_file >> relation) {
+            if (verbose) {
+                printf("Read relation %ld.\n", relation);
+            }
+
+            relations.insert(relation);
+        }
+        
+        if (verbose) {
+            printf("Number of symmetric relations = %d.\n", (int)relations.size());
+        }
+
+        in_file.close();
+
+        if (verbose) {
+            cout << "Symmetric triples" << endl;
+        }
+
+        return new UnaryPatternRelationSet<INT>(relations);
     }
 };
 
