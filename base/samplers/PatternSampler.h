@@ -41,7 +41,8 @@ struct PatternSampler: Sampler<LocalTsvCorpus<long>> {
     TripleBatch* sample(LocalTsvCorpus<long>* corpus, INT batchSize, INT entityNegativeRate, INT relationNegativeRate, INT headBatchFlag) {
         // cout << "Creating sampler" << endl;
         GlobalSamplingState* globalState = new GlobalSamplingState(
-            batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, pattern, nObservedTriplesPerPatternInstance, 500, false, false, nWorkers
+            corpus->train->patterns->get(pattern),
+            batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, nObservedTriplesPerPatternInstance, 500, false, false, nWorkers
         );
 
         pthread_t* threads = (pthread_t*) malloc(nWorkers * sizeof(pthread_t));

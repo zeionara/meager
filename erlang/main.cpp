@@ -38,7 +38,7 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     // cout << "HEAD BATCH FLAG = " << head_batch_flag << endl;
 
     Pattern pattern = decodePatternName(pattern_name);
-    PatternDescription patternDescription = patternDescriptions[pattern];
+    PatternDescription patternDescription = corpus->train->patterns->get(pattern); // patternDescriptions[pattern];
 
     int nTriplesPerPatternInstance = patternDescription.nTriplesPerInstance;
 

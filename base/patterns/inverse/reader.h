@@ -147,7 +147,7 @@ void separateInverseTriples(string path, Triple* triples, INT nTriples, TripleIn
         // }
     }
 
-    patternDescriptions[inverse] = PatternDescription(inverse, nTriplesPerInversePattern, inverseTriplePatternInstances);
+    // patternDescriptions[inverse] = PatternDescription(inverse, nTriplesPerInversePattern, inverseTriplePatternInstances);
 }
 
 #endif

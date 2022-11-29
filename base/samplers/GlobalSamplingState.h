@@ -27,10 +27,11 @@ struct GlobalSamplingState {
     bool crossSampling;
 
     GlobalSamplingState(
-        INT batchSize, INT entityNegativeRate, INT relationNegativeRate, INT headBatchFlag, Pattern pattern, INT nObservedTriplesPerPatternInstance, INT headCorruptionThreshold,
+        PatternDescription patternDescription,
+        INT batchSize, INT entityNegativeRate, INT relationNegativeRate, INT headBatchFlag, INT nObservedTriplesPerPatternInstance, INT headCorruptionThreshold,
         bool bern = false, bool crossSampling = false, INT nWorkers = 1
     ) {
-        PatternDescription patternDescription = patternDescriptions[pattern];
+        // PatternDescription patternDescription = patternDescriptions[pattern];
 
         INT nTriplesPerPatternInstance = patternDescription.nTriplesPerInstance;
         INT nTriplesToSample = (nTriplesPerPatternInstance + nObservedTriplesPerPatternInstance) * batchSize * (1 + entityNegativeRate + relationNegativeRate);

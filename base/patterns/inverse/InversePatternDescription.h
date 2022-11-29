@@ -1,9 +1,9 @@
 #ifndef PATTERNS_INVERSE_PATTERN_DESCRIPTION_H
 #define PATTERNS_INVERSE_PATTERN_DESCRIPTION_H
 
-#include "BinaryPatternRelationMap.h"
-#include "../storage/CorpusReader.h"
-#include "inverse/main.h"
+#include "../BinaryPatternRelationMap.h"
+#include "../../storage/CorpusReader.h"
+#include "main.h"
 
 template <typename T>
 struct InversePatternDescription: PatternDescription {

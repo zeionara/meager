@@ -11,9 +11,11 @@
 #include "RelationScore.h"
 #include "../../filters/TripleFilter.h"
 #include "../TripleEncoder.h"
-#include "../../patterns/InversePatternDescription.h"
+#include "../../patterns/inverse/InversePatternDescription.h"
 #include "../../patterns/symmetric/SymmetricPatternDescription.h"
 #include "../../patterns/none/NonePatternDescription.h"
+
+#include "../../patterns/PatternDescriptions.h"
 
 template <typename T>
 struct ThickTripleListWrapper {
@@ -28,6 +30,8 @@ struct ThickTripleListWrapper {
     TripleIndex* index;
     Frequencies* frequencies;
     RelationScore* relationScore;
+
+    PatternDescriptions<T>* patterns;
 
     ThickTripleListWrapper(SubsetType subset, bool enable_filters = false, bool verbose = false) {
         File* file = readNumberOfTriples(subset, "", verbose);
@@ -140,15 +144,17 @@ struct ThickTripleListWrapper {
         // separateNoneTriples(this->content->items, content->length, verbose, true, enable_filters); // nTriples may be different from this->length if filters are enabled
         // separateSymmetricTriples(reader->path, this->content->items, content->length, this->index, verbose);
         // separateInverseTriples<INT>(reader->path, this->content->items, content->length, this->index, reader, verbose, true, enable_filters);
-        patternDescriptions[none] = NonePatternDescription(content, verbose, true);
+        // patternDescriptions[none] = NonePatternDescription(content, verbose, true);
         // PatternDescription* patternDescription = new NonePatternDescription(content, verbose, true);
         // cout << patternDescriptions[none].nTriplesPerInstance << endl;
         // throw "WTF";
-        patternDescriptions[inverse] = InversePatternDescription<T>(content, reader, index, verbose, true);
-        patternDescriptions[symmetric] = SymmetricPatternDescription<T>(content, reader, index, verbose, true);
+        // patternDescriptions[inverse] = InversePatternDescription<T>(content, reader, index, verbose, true);
+        // patternDescriptions[symmetric] = SymmetricPatternDescription<T>(content, reader, index, verbose, true);
         // separateInverseTriples(reader->path, this->content->items, content->length, this->index, reader, verbose, true, enable_filters);
 
-        cout << patternDescriptions[inverse].nTriplesPerInstance << endl;
+        patterns = new PatternDescriptions<T>(content, reader, index, verbose, true);
+
+        cout << patterns->get(inverse).nTriplesPerInstance << endl;
 
         if (verbose) {
             cout << "Separated all patterns" << endl;

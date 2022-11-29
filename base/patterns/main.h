@@ -58,8 +58,8 @@ struct PatternDescription {
 
 Pattern decodePatternName(string name);
 
-extern
-unordered_map<Pattern, PatternDescription> patternDescriptions;
+// extern
+// unordered_map<Pattern, PatternDescription> patternDescriptions;
 
 #endif
 
