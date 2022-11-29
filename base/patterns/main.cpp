@@ -1,7 +1,5 @@
 #include "main.h"
 
-unordered_map<Pattern, PatternDescription> patternDescriptions;
-
 Pattern decodePatternName(string name) {
 
     if (name == "none" || name == "nil") {

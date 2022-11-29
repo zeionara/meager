@@ -1,18 +1,15 @@
-#ifndef SYMMETRIC_PATTERN_MAIN
-#define SYMMETRIC_PATTERN_MAIN
+#ifndef PATTERNS_SYMMETRIC_PATTERN_INSTANCE_H
+#define PATTERNS_SYMMETRIC_PATTERN_INSTANCE_H
 
 #include <cstdlib>
 
 #include "../main.h"
-// #include "../../triple/list/main.h"
 #include "../../triple/TripleIndex.h"
 
-// #include "../../Reader.h"
-
-extern
-const string symmetricPatternName;
+const string symmetricPatternName = "symmetric";
 
 struct SymmetricPatternInstance: PatternInstance {
+
     SymmetricPatternInstance(Triple forward, Triple backward, TripleIndex* index, bool isForwardObserved = true) {
         triples = {forward, backward};
         if (isForwardObserved) {
@@ -38,7 +35,7 @@ struct SymmetricPatternInstance: PatternInstance {
         cout << "| backward: head = " << triple.h << ", rel = " << triple.r << ", tail = " << triple.t << getObservanceMark(1) << endl;
         cout << "---" << endl;
     }
+
 };
 
 #endif
-

@@ -3,7 +3,8 @@
 
 #include "../BinaryPatternRelationMap.h"
 #include "../../storage/CorpusReader.h"
-#include "main.h"
+
+#include "InversePatternInstance.h"
 
 template <typename T>
 struct InversePatternDescription: PatternDescription {

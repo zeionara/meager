@@ -1,7 +1,7 @@
 #ifndef PATTERNS_NONE_PATTERN_DESCRIPTION_H
 #define PATTERNS_NONE_PATTERN_DESCRIPTION_H
 
-#include "main.h"
+#include "NonePatternInstance.h"
 
 #include "../../triple/TripleIndex.h"
 #include "../../triple/list/TripleList.h"

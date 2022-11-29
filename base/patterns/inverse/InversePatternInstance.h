@@ -1,17 +1,15 @@
-#ifndef INVERSE_PATTERN_MAIN
-#define INVERSE_PATTERN_MAIN
+#ifndef PATTERNS_INVERSE_PATTERN_INSTANCE_H
+#define PATTERNS_INVERSE_PATTERN_INSTANCE_H
 
 #include <cstdlib>
 
 #include "../main.h"
 #include "../../triple/TripleIndex.h"
 
-// #include "../../Reader.h"
-
-extern
-const string inversePatternName;
+const string inversePatternName = "inverse";
 
 struct InversePatternInstance: PatternInstance {
+
     InversePatternInstance(Triple forward, Triple backward, TripleIndex* index, bool isForwardObserved = true) {
         triples = {forward, backward};
         if (isForwardObserved) {
@@ -37,6 +35,7 @@ struct InversePatternInstance: PatternInstance {
         cout << "| backward: head = " << triple.h << ", rel = " << triple.r << ", tail = " << triple.t << getObservanceMark(1) << endl;
         cout << "---" << endl;
     }
+
 };
 
 #endif
