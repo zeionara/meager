@@ -4,9 +4,9 @@
 #include "TripleIndex.h"
 #include "reader.h"
 
-#include "../patterns/none/reader.h"
-#include "../patterns/symmetric/reader.h"
-#include "../patterns/inverse/reader.h"
+// #include "../patterns/none/reader.h"
+// #include "../patterns/symmetric/reader.h"
+// #include "../patterns/inverse/reader.h"
 
 template <typename T>
 struct AllowedTripleElements {
