@@ -11,7 +11,10 @@
 template <typename T>
 struct InversePatternDescription: PatternDescription {
 
-    InversePatternDescription(TripleList* triples, CorpusReader<T>* reader, TripleIndex* index, bool verbose = false, bool dropDuplicates = true) {
+    InversePatternDescription(
+        TripleList* triples, CorpusReader<T>* reader, TripleIndex* index, TripleEncoder<T>* encoder,
+        bool dropDuplicates = true, bool enableFilters = false, bool verbose = false
+    ) {
 
         label = inversePatternName;
         id = inverse;
@@ -19,7 +22,7 @@ struct InversePatternDescription: PatternDescription {
 
         initInstanceLists();
 
-        BinaryPatternRelationMap<T>* relationMap = reader->readBinaryPatterns(inverse, verbose);
+        BinaryPatternRelationMap<T>* relationMap = reader->readBinaryPatterns(inverse, encoder, enableFilters, verbose);
         
         auto inverseForwardRelationToBackward = relationMap->firstToSecond;
         auto inverseBackwardRelationToForward = relationMap->secondToFirst;

@@ -11,7 +11,10 @@
 template <typename T>
 struct SymmetricPatternDescription: PatternDescription {
 
-    SymmetricPatternDescription(TripleList* triples, CorpusReader<T>* reader, TripleIndex* index, bool verbose = false, bool dropDuplicates = true) {
+    SymmetricPatternDescription(
+        TripleList* triples, CorpusReader<T>* reader, TripleIndex* index, TripleEncoder<T>* encoder,
+        bool dropDuplicates = true, bool enableFilters = false, bool verbose = false
+    ) {
 
         label = symmetricPatternName;
         id = symmetric;
@@ -19,7 +22,7 @@ struct SymmetricPatternDescription: PatternDescription {
 
         initInstanceLists();
 
-        UnaryPatternRelationSet<T>* relationSet = reader->readUnaryPatterns(symmetric, true);
+        UnaryPatternRelationSet<T>* relationSet = reader->readUnaryPatterns(symmetric, encoder, enableFilters, verbose);
         
         auto relations = relationSet->relations;
 

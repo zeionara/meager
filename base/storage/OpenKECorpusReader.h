@@ -29,7 +29,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
         this->path = path;
     }
 
-    TripleList* readTriples(SubsetType subsetType, TripleIndex* tripleIndex, TripleElement tripleElement, TripleFilter<INT>* filter, TripleEncoder<INT>* encoder, bool verbose) {
+    TripleList* readTriples(SubsetType subsetType, TripleIndex* tripleIndex, TripleElement tripleElement, TripleFilter<INT>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose) {
         File* file = readNumberOfTriples(path + (subsetType == train ? TRAIN_FILENAME : subsetType == test ? TEST_FILENAME : VALID_FILENAME), verbose);
         
         TripleList* triples = new TripleList(file->length, tripleElement);
@@ -50,8 +50,8 @@ struct OpenKECorpusReader: CorpusReader<INT> {
 
             // cout << "Filter allows: " << filter->allows(Triple(h, r, t)) << endl;
 
-            if (filter == nullptr || filter->allows(Triple(h, r, t))) {
-                if (filter != nullptr && encoder != nullptr) {
+            if (!enableFilters || filter->allows(Triple(h, r, t))) {
+                if (enableFilters) {
                     items[j].h = encoder->entity->encode(h);
                     items[j].t = encoder->entity->encode(t);
                     items[j].r = encoder->relation->encode(r);
@@ -68,7 +68,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
             }
         }
 
-        if (filter != nullptr) {
+        if (enableFilters) {
             cout << "Current entity id in encoder = " << encoder->entity->nEncodedValues << endl;
         }
 
@@ -144,7 +144,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
     }
 
     // void separateInverseTriples(string path, Triple* triples, INT nTriples, TripleIndex* index, bool verbose, bool drop_duplicates, bool enable_filters) {
-    BinaryPatternRelationMap<INT>* readBinaryPatterns(Pattern pattern, bool verbose) {
+    BinaryPatternRelationMap<INT>* readBinaryPatterns(Pattern pattern, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose) {
         string relativePath;
 
         switch (pattern) {
@@ -168,8 +168,8 @@ struct OpenKECorpusReader: CorpusReader<INT> {
                 printf("Read relations %ld and %ld.\n", firstRelation, secondRelation);
             }
 
-            firstRelationToSecond[firstRelation] = secondRelation;
-            secondRelationToFirst[secondRelation] = firstRelation;
+            firstRelationToSecond[firstRelation] = enableFilters ? encoder->relation->encode(secondRelation) : secondRelation;
+            secondRelationToFirst[secondRelation] = enableFilters ? encoder->relation->encode(firstRelation) : firstRelation;
         }
         
         if (verbose) {
@@ -181,7 +181,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
         return new BinaryPatternRelationMap<INT>(firstRelationToSecond, secondRelationToFirst);
     }
 
-    UnaryPatternRelationSet<INT>* readUnaryPatterns(Pattern pattern, bool verbose) {
+    UnaryPatternRelationSet<INT>* readUnaryPatterns(Pattern pattern, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose) {
         string relativePath;
 
         switch (pattern) {
@@ -203,7 +203,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
                 printf("Read relation %ld.\n", relation);
             }
 
-            relations.insert(relation);
+            relations.insert(enableFilters ? encoder->relation->encode(relation) : relation);
         }
         
         if (verbose) {

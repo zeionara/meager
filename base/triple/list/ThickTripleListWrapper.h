@@ -51,7 +51,7 @@ struct ThickTripleListWrapper {
 
         index = new TripleIndex();
 
-        this->content = reader->readTriples(subset, index, ::TripleElement::head, filter, encoder, verbose);
+        this->content = reader->readTriples(subset, index, ::TripleElement::head, filter, encoder, enable_filters, verbose);
         this->head = new TripleList(content->length, ::TripleElement::head);
         this->relation = new TripleList(content->length, rel);
         this->tail = new TripleList(content->length, ::TripleElement::tail);
@@ -152,7 +152,7 @@ struct ThickTripleListWrapper {
         // patternDescriptions[symmetric] = SymmetricPatternDescription<T>(content, reader, index, verbose, true);
         // separateInverseTriples(reader->path, this->content->items, content->length, this->index, reader, verbose, true, enable_filters);
 
-        patterns = new PatternDescriptions<T>(content, reader, index, verbose, true);
+        patterns = new PatternDescriptions<T>(content, reader, index, encoder, true, enable_filters, verbose);
 
         cout << patterns->get(inverse).nTriplesPerInstance << endl;
 

@@ -36,7 +36,7 @@ struct ThinTripleListWrapper {
         this->index = new TripleIndex;
 
         cout << "reading triples" << endl;
-        this->content = reader->readTriples(subset, index, ::TripleElement::rel, filter, encoder, verbose);
+        this->content = reader->readTriples(subset, index, ::TripleElement::rel, filter, encoder, enable_filters, verbose);
         cout << "finished reading triples" << endl;
 
         this->length = content->length;
