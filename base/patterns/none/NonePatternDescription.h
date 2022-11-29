@@ -10,6 +10,7 @@ struct NonePatternDescription: PatternDescription {
 
     NonePatternDescription(TripleList* triples, bool verbose = false, bool dropDuplicates = true) {
 
+        label = nonePatternName;
         id = none;
         nTriplesPerInstance = 1;
 
@@ -24,12 +25,10 @@ struct NonePatternDescription: PatternDescription {
             );
         }
 
-        cout << "Should collect " << triples->length << " none pattern instances" << endl;
+        seenInstances.clear();
 
         if (verbose) {
-            for (int i = 0; i <= nTriplesPerInstance; i++) {
-                cout << "Collected " << instanceSets[i]->size() << " none pattern instances in which there are " << i << " or more observed patterns" << endl;
-            }
+            printSummary(triples->length);
         }
 
     }

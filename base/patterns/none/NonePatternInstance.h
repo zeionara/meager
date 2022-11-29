@@ -5,7 +5,7 @@
 
 #include "../main.h"
 
-const string nonePatternName = "nil";
+const string nonePatternName = "none";
 
 struct NonePatternInstance: PatternInstance {
 

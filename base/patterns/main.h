@@ -43,6 +43,7 @@ struct PatternInstance {
 };
 
 struct PatternDescription {
+    string label;
     Pattern id;
     int nTriplesPerInstance;
     vector<PatternInstance>** instanceSets;
@@ -79,11 +80,18 @@ struct PatternDescription {
         }
     }
 
-    // PatternDescription(Pattern id_ = none, int nTriplesPerInstance_ = 10, vector<PatternInstance>** instanceSets_ = 0) {
-    //     id = id_;
-    //     nTriplesPerInstance = nTriplesPerInstance_; 
-    //     instanceSets = instanceSets_;
-    // }
+    void printSummary(INT nInstancesTarget = -1) {
+        if (nInstancesTarget > -1) {
+            cout << "Should collect " << nInstancesTarget << " " << label << " pattern instances" << endl;
+        }
+
+        for (int i = 0; i <= nTriplesPerInstance; i++) {
+            cout << "Collected " << instanceSets[i]->size() << " " << label << " pattern instances in which there are " << i << " or more observed patterns" << endl;
+        }
+
+        cout << endl;
+    }
+
 };
 
 Pattern decodePatternName(string name);
