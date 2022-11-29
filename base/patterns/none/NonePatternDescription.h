@@ -1,10 +1,11 @@
 #ifndef PATTERNS_NONE_PATTERN_DESCRIPTION_H
 #define PATTERNS_NONE_PATTERN_DESCRIPTION_H
 
-#include "NonePatternInstance.h"
-
-#include "../../triple/TripleIndex.h"
 #include "../../triple/list/TripleList.h"
+
+#include "../PatternDescription.h"
+
+#include "NonePatternInstance.h"
 
 struct NonePatternDescription: PatternDescription {
 

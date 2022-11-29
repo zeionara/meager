@@ -1,8 +1,10 @@
 #ifndef PATTERNS_SYMMETRIC_PATTERN_DESCRIPTION_H
 #define PATTERNS_SYMMETRIC_PATTERN_DESCRIPTION_H
 
-#include "../BinaryPatternRelationMap.h"
 #include "../../storage/CorpusReader.h"
+
+#include "../BinaryPatternRelationMap.h"
+#include "../PatternDescription.h"
 
 #include "SymmetricPatternInstance.h"
 
@@ -47,6 +49,8 @@ struct SymmetricPatternDescription: PatternDescription {
                 );
             }
         }
+
+        seenInstances.clear();
 
         if (verbose) {
             printSummary();
