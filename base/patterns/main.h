@@ -49,11 +49,11 @@ struct PatternDescription {
     int nTriplesPerInstance;
     vector<PatternInstance>** instanceSets;
 
-    PatternDescription(Pattern id_ = none, int nTriplesPerInstance_ = 0, vector<PatternInstance>** instanceSets_ = 0) {
-        id = id_;
-        nTriplesPerInstance = nTriplesPerInstance_; 
-        instanceSets = instanceSets_;
-    }
+    // PatternDescription(Pattern id_ = none, int nTriplesPerInstance_ = 10, vector<PatternInstance>** instanceSets_ = 0) {
+    //     id = id_;
+    //     nTriplesPerInstance = nTriplesPerInstance_; 
+    //     instanceSets = instanceSets_;
+    // }
 };
 
 Pattern decodePatternName(string name);

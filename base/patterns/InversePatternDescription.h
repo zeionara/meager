@@ -102,7 +102,7 @@ struct InversePatternDescription: PatternDescription {
             // }
         }
 
-        id = none;
+        id = inverse;
         nTriplesPerInstance = 2; 
         instanceSets = instances;
     }

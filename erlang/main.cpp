@@ -42,6 +42,8 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     int nTriplesPerPatternInstance = patternDescription.nTriplesPerInstance;
 
+    // cout << nTriplesPerPatternInstance << endl;
+
     // unordered_map<string, PatternDescription>::const_iterator patternDescriptionIterator = patternDescriptions.find(pattern_name);
 
     // if (patternDescriptionIterator != patternDescriptions.end()) {

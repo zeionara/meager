@@ -13,6 +13,7 @@
 #include "../TripleEncoder.h"
 #include "../../patterns/InversePatternDescription.h"
 #include "../../patterns/symmetric/SymmetricPatternDescription.h"
+#include "../../patterns/none/NonePatternDescription.h"
 
 template <typename T>
 struct ThickTripleListWrapper {
@@ -136,12 +137,18 @@ struct ThickTripleListWrapper {
         // separateNoneTriples(this->content->items, this->length, verbose, true, enable_filters);
         // separateSymmetricTriples(this->content->items, this->length, verbose);
         // separateInverseTriples(this->content->items, this->length, this->index, verbose, true, enable_filters);
-        separateNoneTriples(this->content->items, content->length, verbose, true, enable_filters); // nTriples may be different from this->length if filters are enabled
-        separateSymmetricTriples(reader->path, this->content->items, content->length, this->index, verbose);
+        // separateNoneTriples(this->content->items, content->length, verbose, true, enable_filters); // nTriples may be different from this->length if filters are enabled
+        // separateSymmetricTriples(reader->path, this->content->items, content->length, this->index, verbose);
         // separateInverseTriples<INT>(reader->path, this->content->items, content->length, this->index, reader, verbose, true, enable_filters);
+        patternDescriptions[none] = NonePatternDescription(content, verbose, true);
+        // PatternDescription* patternDescription = new NonePatternDescription(content, verbose, true);
+        // cout << patternDescriptions[none].nTriplesPerInstance << endl;
+        // throw "WTF";
         patternDescriptions[inverse] = InversePatternDescription<T>(content, reader, index, verbose, true);
         patternDescriptions[symmetric] = SymmetricPatternDescription<T>(content, reader, index, verbose, true);
         // separateInverseTriples(reader->path, this->content->items, content->length, this->index, reader, verbose, true, enable_filters);
+
+        cout << patternDescriptions[inverse].nTriplesPerInstance << endl;
 
         if (verbose) {
             cout << "Separated all patterns" << endl;
