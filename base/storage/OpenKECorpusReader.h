@@ -38,16 +38,23 @@ struct OpenKECorpusReader: CorpusReader<INT> {
     }
 
     TripleList* readTriples(SubsetType subsetType, TripleIndex* tripleIndex, TripleElement tripleElement, TripleFilter<INT>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose) {
-        File* file = readNumberOfTriples(path + (subsetType == train ? TRAIN_FILENAME : subsetType == test ? TEST_FILENAME : VALID_FILENAME), verbose);
+        File* file = readNumberOfTriples(
+            path + (
+                subsetType == train ? TRAIN_FILENAME :
+                subsetType == test ? TEST_FILENAME :
+                subsetType == valid ? VALID_FILENAME :
+                throw invalidArgument("Unknown subset type")
+            ), verbose
+        );
 
         TripleList* triples = new TripleList(file->length, tripleElement);
         Triple* items = triples->items;
 
         INT j = 0;
 
-        cout << "For each of " << file->length << " triples" << endl;
-        // cout << "Filter including empty: " << filter->including->empty << endl;
-        // cout << "Filter excluding empty: " << filter->excluding->empty << endl;
+        if (verbose) {
+            cout << "For each of " << file->length << " triples" << endl;
+        }
 
         for (INT i = 0; i < file->length; i++) { // Reading train samples
             INT h, r, t;
@@ -56,14 +63,11 @@ struct OpenKECorpusReader: CorpusReader<INT> {
             fscanf(file->file, "%ld", &t);
             fscanf(file->file, "%ld", &r);
 
-            // cout << "Filter allows: " << filter->allows(Triple(h, r, t)) << endl;
-
             if (!enableFilters || filter->allows(Triple(h, r, t))) {
                 if (enableFilters) {
                     items[j].h = encoder->entity->encode(h);
                     items[j].t = encoder->entity->encode(t);
                     items[j].r = encoder->relation->encode(r);
-                    // cout << "Encoded " << r << endl;
                 } else {
                     items[j].h = h;
                     items[j].t = t;
@@ -76,11 +80,9 @@ struct OpenKECorpusReader: CorpusReader<INT> {
             }
         }
 
-        if (enableFilters) {
+        if (enableFilters && verbose) {
             cout << "Current entity id in encoder = " << encoder->entity->nEncodedValues << endl;
         }
-
-        cout << "STOP" << endl;
 
         triples->length = j;
 
