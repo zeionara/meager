@@ -15,11 +15,12 @@ long k = 0;
 extern "C"
 void randReset(INT nWorkers) { // Generate random numbers for each thread
 	// next_random = (unsigned long long *)calloc(nWorkers, sizeof(unsigned long long));
-	randomizationStates = (RandomizationState**)calloc(nWorkers, sizeof(RandomizationState*));
-	for (INT i = 0; i < nWorkers; i++) {
-		// next_random[i] = rand();
-		randomizationStates[i] = new JavaLikeLcgRandomizationState(rand());
-    }
+	// randomizationStates = (RandomizationState**)calloc(nWorkers, sizeof(RandomizationState*));
+	// for (INT i = 0; i < nWorkers; i++) {
+	// 	// next_random[i] = rand();
+	// 	// randomizationStates[i] = new JavaLikeLcgRandomizationState(rand());
+	// 	randomizationStates[i] = new JavaLikeLcgRandomizationState(18);
+    // }
 }
 
 unsigned long long randd(INT id) { // Generate sequential random numbers
@@ -30,6 +31,15 @@ unsigned long long randd(INT id) { // Generate sequential random numbers
 
 INT rand_max(INT id, INT x) {
 	INT res = randd(id) % x;
+	while (res < 0)
+		res += x;
+	return res;
+}
+
+INT rand_max(RandomizationState* randomizer, INT x) {
+    unsigned long long sampledNumber = randomizer->sample();
+	INT res = sampledNumber % x;
+	// INT res = randd(id) % x;
 	while (res < 0)
 		res += x;
 	return res;

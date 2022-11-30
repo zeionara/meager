@@ -4,7 +4,7 @@
 
 extern ERL_NIF_TERM
 rand_reset(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    randReset(8);
+    // randReset(8);
 
     return enif_make_int(env, 0);
 }

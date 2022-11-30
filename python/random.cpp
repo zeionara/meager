@@ -2,6 +2,6 @@
 
 extern "C"
 void rand_reset() {
-    randReset(4);
+    // randReset(8);
 }
 

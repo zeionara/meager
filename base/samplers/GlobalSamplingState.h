@@ -3,6 +3,7 @@
 
 #include "../triple/main.h"
 #include "../patterns/main.h"
+#include "../patterns/PatternDescription.h"
 
 
 struct GlobalSamplingState {

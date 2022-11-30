@@ -5,6 +5,7 @@
 #include "../triple/list/ThinTripleListWrapper.h"
 
 #include "../storage/LocalTsvCorpus.h"
+#include "state/RandomizationState.h"
 
 struct CorruptionStrategy {
     // ThickTripleListWrapper* triples;
@@ -25,11 +26,11 @@ struct CorruptionStrategy {
         // this->validTriples = validTriples;
     }
 
-    virtual Triple corruptHead(Triple triple) = 0;
-    virtual Triple corruptTail(Triple triple) = 0;
-    virtual Triple corruptRelation(Triple triple) = 0;
+    virtual Triple corruptHead(Triple triple, RandomizationState* randomizer) = 0;
+    virtual Triple corruptTail(Triple triple, RandomizationState* randomizer) = 0;
+    virtual Triple corruptRelation(Triple triple, RandomizationState* randomizer) = 0;
 
-    virtual Triple corrupt(Triple triple) = 0;
+    virtual Triple corrupt(Triple triple, RandomizationState* randomizer) = 0;
 };
 
 #endif
