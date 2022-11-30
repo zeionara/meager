@@ -47,9 +47,15 @@ struct LocalTsvCorpus: LocalCorpus<T> {
     };
 
     void importTrain(bool verbose) {
-        cout << "started reading train subset for corpus from " << endl;
-        this->train = new ThickTripleListWrapper<T>(::SubsetType::train, this->reader, filter, encoder, this->enableFilters, verbose);
-        cout << "finished reading train subset for corpus" << endl;
+        if (verbose) {
+            cout << "started reading train subset" << endl;
+        }
+
+        this->train = new ThickTripleListWrapper<T>(::SubsetType::train, this->reader, filter, encoder, this->enableFilters, true, verbose);
+
+        if (verbose) {
+            cout << "finished reading train subset" << endl;
+        }
     }
 
     void importTest(bool verbose) {

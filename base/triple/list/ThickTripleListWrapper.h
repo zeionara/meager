@@ -19,6 +19,7 @@
 
 template <typename T>
 struct ThickTripleListWrapper {
+
     TripleList* content;
 
     INT length;
@@ -33,32 +34,18 @@ struct ThickTripleListWrapper {
 
     PatternDescriptions<T>* patterns;
 
-    ThickTripleListWrapper(SubsetType subset, bool enable_filters = false, bool verbose = false) {
-        File* file = readNumberOfTriples(subset, "", verbose);
-
-        this->content = new TripleList(file->length, ::TripleElement::head);
-        this->head = new TripleList(file->length, ::TripleElement::head);
-        this->relation = new TripleList(file->length, rel);
-        this->tail = new TripleList(file->length, ::TripleElement::tail);
-
-        this->length = file->length;
-        this->index = new TripleIndex();
-
-        // this->read(file, enable_filters, verbose);
-    }
-
-    ThickTripleListWrapper(SubsetType subset, CorpusReader<T>* reader, TripleFilter<T>* filter, TripleEncoder<T>* encoder, bool enable_filters, bool verbose = false) {
+    ThickTripleListWrapper(SubsetType subset, CorpusReader<T>* reader, TripleFilter<T>* filter, TripleEncoder<T>* encoder, bool enableFilters, bool dropPatternDuplicates = true, bool verbose = false) {
 
         index = new TripleIndex();
 
-        this->content = reader->readTriples(subset, index, ::TripleElement::head, filter, encoder, enable_filters, verbose);
+        this->content = reader->readTriples(subset, index, ::TripleElement::head, filter, encoder, enableFilters, verbose);
         this->head = new TripleList(content->length, ::TripleElement::head);
         this->relation = new TripleList(content->length, rel);
         this->tail = new TripleList(content->length, ::TripleElement::tail);
 
         this->length = content->length;
 
-        this->read(filter, encoder, reader, enable_filters, verbose);
+        this->read(filter, encoder, reader, enableFilters, dropPatternDuplicates, verbose);
     }
 
     void dropDuplicates(INT nEntities, INT nRelations) {
@@ -101,85 +88,73 @@ struct ThickTripleListWrapper {
         this->frequencies = frequencies;
     }
 
-    void sort() {
-        cout << "Sorting content" << endl;
+    void sort(bool verbose = false) {
+        if (verbose) {
+            cout << "started sorting content" << endl;
+        }
+
         this->content->sort(this->frequencies->nEntities);
-        cout << "Sorted content" << endl;
+
+        if (verbose) {
+            cout << "finished sorting content" << endl;
+        }
+
         this->head->sort(this->frequencies->nEntities);
-        cout << "Sorted head" << endl;
 
-        // for (INT i = 0; i < this->head->length; i++) {
-        //     if (this->head->left[i] == -1) {
-        //         cout << i << endl;
-        //     }
-        // }
+        if (verbose) {
+            cout << "finished sorting head, started sorting tail" << endl;
+        }
 
-        // throw "stop";
-
-        cout << this->tail << endl;
-        cout << this->frequencies->nEntities << endl;
         this->tail->sort(this->frequencies->nEntities);
-        cout << "Sorted tail" << endl;
+
+        if (verbose) {
+            cout << "finished sorting tail, started sorting relation" << endl;
+        }
+
         this->relation->sort(this->frequencies->nEntities);
-        cout << "Sorted relation" << endl;
-        // this->relation->sort(this->frequencies->nRelations);
+
+        if (verbose) {
+            cout << "finished sorting relation" << endl;
+        }
     }
 
-    void read(TripleFilter<T>* filter, TripleEncoder<T>* encoder, CorpusReader<T>* reader, bool enable_filters, bool verbose = false) {
-        // cout << "Before reading triples" << endl;
-        // TripleIds tripleIds = readTriples(file, enable_filters, filter, encoder, this->content->items, this->index);
-        // INT nTriples = readTriples(file, enable_filters, filter, encoder, this->content->items, this->index);
-        // cout << "After reading triples" << endl;
-
+    void read(TripleFilter<T>* filter, TripleEncoder<T>* encoder, CorpusReader<T>* reader, bool enableFilters, bool dropPatternDuplicates = true, bool verbose = false) {
         if (verbose) {
-            // printf("n train triples: %ld", tripleIds.last_triple);
-            printf("n train triples before dropping duplicates: %ld\n", this->length);
+            cout << "n train triples before dropping duplicates:" << this->length << ", started reading patterns" << endl;
         }
 
-        // file->close();
-
-        // separateNoneTriples(this->content->items, this->length, verbose, true, enable_filters);
-        // separateSymmetricTriples(this->content->items, this->length, verbose);
-        // separateInverseTriples(this->content->items, this->length, this->index, verbose, true, enable_filters);
-        // separateNoneTriples(this->content->items, content->length, verbose, true, enable_filters); // nTriples may be different from this->length if filters are enabled
-        // separateSymmetricTriples(reader->path, this->content->items, content->length, this->index, verbose);
-        // separateInverseTriples<INT>(reader->path, this->content->items, content->length, this->index, reader, verbose, true, enable_filters);
-        // patternDescriptions[none] = NonePatternDescription(content, verbose, true);
-        // PatternDescription* patternDescription = new NonePatternDescription(content, verbose, true);
-        // cout << patternDescriptions[none].nTriplesPerInstance << endl;
-        // throw "WTF";
-        // patternDescriptions[inverse] = InversePatternDescription<T>(content, reader, index, verbose, true);
-        // patternDescriptions[symmetric] = SymmetricPatternDescription<T>(content, reader, index, verbose, true);
-        // separateInverseTriples(reader->path, this->content->items, content->length, this->index, reader, verbose, true, enable_filters);
-
-        patterns = new PatternDescriptions<T>(content, reader, index, encoder, true, enable_filters, verbose);
-
-        cout << patterns->get(inverse).nTriplesPerInstance << endl;
+        patterns = new PatternDescriptions<T>(content, reader, index, encoder, dropPatternDuplicates, enableFilters, verbose);
 
         if (verbose) {
-            cout << "Separated all patterns" << endl;
+            cout << "finished reading patterns" << endl;
         }
 
-        // Maybe do this before sampling patterns?
-        if (enable_filters) {
-            // this->dropDuplicates(tripleIds.last_entity, tripleIds.last_relation);
-            cout << "There are " << encoder->entity->nEncodedValues << " entities" << endl;
+        if (enableFilters) {
+            if (verbose) {
+                cout << "there are " << encoder->entity->nEncodedValues << " entities" << endl;
+            }
             this->dropDuplicates(encoder->entity->nEncodedValues, encoder->relation->nEncodedValues);
         } else {
             this->dropDuplicates(reader->readVocabularySize(entity), reader->readVocabularySize(::TripleComponent::relation));
         }
 
         if (verbose) {
-            // printf("n train triples: %ld", tripleIds.last_triple);
-            printf("n train triples after dropping duplicates: %ld\n", this->length);
+            cout << "n train triples after dropping duplicates: " << this->length << endl;
         }
         
         this->sort();
 
-        cout << "Making relation score" << endl;
+        if (verbose) {
+            cout << "started making relation score" << endl;
+        }
+
         this->relationScore = new RelationScore(this->head, this->tail, this->frequencies);
-        cout << "Made relation score" << endl;
+
+        if (verbose) {
+            cout << "finished making relation score" << endl;
+        }
     }
+
 };
 
 #endif

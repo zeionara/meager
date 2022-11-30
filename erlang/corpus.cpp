@@ -23,3 +23,10 @@ importFilter_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     return enif_make_int(env, 0);
 }
+
+extern ERL_NIF_TERM
+importTrain_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    importTrain(enif_get_bool(env, argv[0]));
+
+    return enif_make_int(env, 0);
+}

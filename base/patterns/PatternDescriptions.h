@@ -11,6 +11,8 @@
 #include "inverse/InversePatternDescription.h"
 #include "symmetric/SymmetricPatternDescription.h"
 
+#define invalidArgument invalid_argument
+
 template <typename T>
 struct PatternDescriptions {
     unordered_map<Pattern, PatternDescription> content;
@@ -25,8 +27,8 @@ struct PatternDescriptions {
         auto mapIterator = content.find(pattern);
 
         if (mapIterator == content.end()) {
-            cout << "Pattern " << pattern << " is not set" << endl;
-            throw "Pattern is not set";
+            cout << "Cannot get pattern " << pattern << " because it is not set" << endl;
+            throw invalidArgument("pattern is not set");
         }
 
         return mapIterator->second;
