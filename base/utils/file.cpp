@@ -13,7 +13,7 @@ File* readHeader(std::string absolutePath, bool verbose, std::function<void(INT)
 
 	if (input_file == nullptr) {
 	 	cerr << "file " << absolutePath << " does not exist" << endl;
-        throw invalidArgument("File does not exist");
+        throw invalidArgument("File " + absolutePath + " does not exist");
 	}
 
 	fscanf(input_file, "%ld", &length);
