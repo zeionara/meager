@@ -166,18 +166,22 @@ struct OpenKECorpusReader: CorpusReader<INT> {
                 relativePath = INVERSE_PATTERNS_FILENAME;
                 break;
             default:
-                cout << "Pattern is not binary" << endl;
-                throw "Pattern is not binary";
+                cerr << "Pattern is not binary" << endl;
+                throw invalidArgument("Pattern is not binary");
         }
 
-        ifstream in_file(path + relativePath);
+        ifstream inFile(path + relativePath);
+
+        if (!inFile.good()) {
+            throw invalidArgument("cannot find file with binary pattern relations list on disk");
+        }
 
         INT firstRelation, secondRelation;
 
         unordered_map<INT, INT> firstRelationToSecond;
         unordered_map<INT, INT> secondRelationToFirst;
 
-        while (in_file >> firstRelation >> secondRelation) {
+        while (inFile >> firstRelation >> secondRelation) {
             if (verbose) {
                 printf("Read relations %ld and %ld.\n", firstRelation, secondRelation);
             }
@@ -190,7 +194,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
             printf("Number of relations in binary pattern = %d.\n", (int)firstRelationToSecond.size());
         }
 
-        in_file.close();
+        inFile.close();
 
         return new BinaryPatternRelationMap<INT>(firstRelationToSecond, secondRelationToFirst);
     }
@@ -203,16 +207,20 @@ struct OpenKECorpusReader: CorpusReader<INT> {
                 relativePath = SYMMETRIC_PATTERNS_FILENAME;
                 break;
             default:
-                cout << "Pattern is not unary" << endl;
-                throw "Pattern is not unary";
+                cerr << "Pattern is not unary" << endl;
+                throw invalidArgument("Pattern is not unary");
         }
 
-        ifstream in_file(path + relativePath);
+        ifstream inFile(path + relativePath);
+
+        if (!inFile.good()) {
+            throw invalidArgument("cannot find file with unary pattern relations list on disk");
+        }
 
         INT relation;
         unordered_set<INT> relations;
 
-        while (in_file >> relation) {
+        while (inFile >> relation) {
             if (verbose) {
                 printf("Read relation %ld.\n", relation);
             }
@@ -224,7 +232,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
             printf("Number of symmetric relations = %d.\n", (int)relations.size());
         }
 
-        in_file.close();
+        inFile.close();
 
         if (verbose) {
             cout << "Symmetric triples" << endl;

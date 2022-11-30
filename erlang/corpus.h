@@ -10,6 +10,9 @@ extern ERL_NIF_TERM
 importFilter_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 
 extern ERL_NIF_TERM
+importPattern_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+
+extern ERL_NIF_TERM
 importTrain_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 
 #endif

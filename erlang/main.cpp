@@ -156,7 +156,8 @@ static ErlNifFunc meager_nif_funcs[] = {
 
     {"_init_corpus", 4, initCorpus_},
     {"_import_filter", 2, importFilter_},
-    {"_import_train", 1, importTrain_},
+    {"_import_pattern", 1, importPattern_},
+    {"_import_train", 2, importTrain_},
 
     //
     //  Settings

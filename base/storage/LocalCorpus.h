@@ -17,7 +17,7 @@ struct LocalCorpus: Corpus {
         this->enableFilters = enableFilters;
     }
 
-    virtual void importTrain(bool verbose = false) = 0;
+    virtual void importTrain(bool dropPatternDuplicates = true, bool verbose = false) = 0;
     virtual void importTest(bool verbose = false) = 0;
     virtual void importValid(bool verbose = false) = 0;
     virtual void importTypes(bool verbose = false) = 0;

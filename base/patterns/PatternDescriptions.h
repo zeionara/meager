@@ -10,6 +10,7 @@
 #include "none/NonePatternDescription.h"
 #include "inverse/InversePatternDescription.h"
 #include "symmetric/SymmetricPatternDescription.h"
+#include "PatternDescriptionTemplates.h"
 
 #define invalidArgument invalid_argument
 
@@ -17,10 +18,14 @@ template <typename T>
 struct PatternDescriptions {
     unordered_map<Pattern, PatternDescription> content;
 
-    PatternDescriptions(TripleList* triples, CorpusReader<T>* reader, TripleIndex* index, TripleEncoder<T>* encoder, bool dropDuplicates = true, bool enableFilters = false, bool verbose = false) {
+    PatternDescriptions(TripleList* triples, PatternDescriptionTemplates<T>* templates, TripleIndex* index, TripleEncoder<T>* encoder, bool dropDuplicates = true, bool enableFilters = false, bool verbose = false) {
         content[none] = NonePatternDescription(triples, verbose, true);
-        content[inverse] = InversePatternDescription<T>(triples, reader, index, encoder, true, enableFilters, verbose);
-        content[symmetric] = SymmetricPatternDescription<T>(triples, reader, index, encoder, true, enableFilters, verbose);
+        if (!templates->inverse->empty) {
+            content[inverse] = InversePatternDescription<T>(triples, templates->inverse, index, encoder, dropDuplicates, enableFilters, verbose);
+        }
+        if (!templates->symmetric->empty) {
+            content[symmetric] = SymmetricPatternDescription<T>(triples, templates->symmetric, index, encoder, dropDuplicates, enableFilters, verbose);
+        }
     }
 
     PatternDescription get(Pattern pattern) {

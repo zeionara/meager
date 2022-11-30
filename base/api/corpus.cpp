@@ -18,8 +18,12 @@ void importFilter(bool dropDuplicates = true, bool verbose = false) {
     corpus->importFilter(dropDuplicates, verbose); 
 }
 
-void importTrain(bool verbose = false) {
-    corpus->importTrain(verbose); 
+void importPattern(bool verbose = false) {
+    corpus->importPattern(verbose); 
+}
+
+void importTrain(bool dropPatternDuplicates = true, bool verbose = false) {
+    corpus->importTrain(dropPatternDuplicates, verbose); 
 }
 
 void importTest(bool verbose = false) {

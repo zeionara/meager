@@ -8,6 +8,7 @@
 #include "../triple/list/ThinTripleListWrapper.h"
 #include "../filters/TripleFilter.h"
 #include "../triple/TripleEncoder.h"
+#include "../patterns/PatternDescriptionTemplates.h"
 
 using namespace std;
 
@@ -33,6 +34,7 @@ struct LocalTsvCorpus: LocalCorpus<T> {
     RelationTypes<T>* types;
     TripleFilter<T>* filter;
     TripleEncoder<T>* encoder;
+    PatternDescriptionTemplates<T>* patterns;
 
     LocalTsvCorpus(CorpusReader<T>* reader, bool enableFilters = false, bool verbose = false): LocalCorpus<T>(reader, enableFilters) {
         if (enableFilters) {
@@ -46,12 +48,24 @@ struct LocalTsvCorpus: LocalCorpus<T> {
         }
     };
 
-    void importTrain(bool verbose) {
+    void importPattern(bool verbose) {
+        if (verbose) {
+            cout << "started reading pattern description templates" << endl;
+        }
+
+        this->patterns = new PatternDescriptionTemplates<T>(this->reader, encoder, this->enableFilters, verbose);
+
+        if (verbose) {
+            cout << "finished reading pattern description templates" << endl;
+        }
+    }
+
+    void importTrain(bool dropPatternDuplicates, bool verbose) {
         if (verbose) {
             cout << "started reading train subset" << endl;
         }
 
-        this->train = new ThickTripleListWrapper<T>(::SubsetType::train, this->reader, filter, encoder, this->enableFilters, true, verbose);
+        this->train = new ThickTripleListWrapper<T>(::SubsetType::train, this->reader, filter, encoder, patterns, this->enableFilters, dropPatternDuplicates, verbose);
 
         if (verbose) {
             cout << "finished reading train subset" << endl;

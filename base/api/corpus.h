@@ -38,7 +38,10 @@ extern
 void importFilter(bool dropDuplicates = true, bool verbose = false);
 
 extern
-void importTrain(bool verbose = false);
+void importPattern(bool verbose = false);
+
+extern
+void importTrain(bool dropPatternDuplicates = true, bool verbose = false);
 
 extern
 void importTest(bool verbose = false);

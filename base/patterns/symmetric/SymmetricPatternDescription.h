@@ -7,12 +7,13 @@
 #include "../PatternDescription.h"
 
 #include "SymmetricPatternInstance.h"
+#include "../PatternDescriptionTemplates.h"
 
 template <typename T>
 struct SymmetricPatternDescription: PatternDescription {
 
     SymmetricPatternDescription(
-        TripleList* triples, CorpusReader<T>* reader, TripleIndex* index, TripleEncoder<T>* encoder,
+        TripleList* triples, UnaryPatternDescriptionTemplate<T>* descriptionTemplate, TripleIndex* index, TripleEncoder<T>* encoder,
         bool dropDuplicates = true, bool enableFilters = false, bool verbose = false
     ) {
 
@@ -22,7 +23,7 @@ struct SymmetricPatternDescription: PatternDescription {
 
         initInstanceLists();
 
-        UnaryPatternRelationSet<T>* relationSet = reader->readUnaryPatterns(symmetric, encoder, enableFilters, verbose);
+        UnaryPatternRelationSet<T>* relationSet = descriptionTemplate->content;
         
         auto relations = relationSet->relations;
 

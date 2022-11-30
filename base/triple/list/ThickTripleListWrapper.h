@@ -16,6 +16,7 @@
 #include "../../patterns/none/NonePatternDescription.h"
 
 #include "../../patterns/PatternDescriptions.h"
+#include "../../patterns/PatternDescriptionTemplates.h"
 
 template <typename T>
 struct ThickTripleListWrapper {
@@ -34,7 +35,10 @@ struct ThickTripleListWrapper {
 
     PatternDescriptions<T>* patterns;
 
-    ThickTripleListWrapper(SubsetType subset, CorpusReader<T>* reader, TripleFilter<T>* filter, TripleEncoder<T>* encoder, bool enableFilters, bool dropPatternDuplicates = true, bool verbose = false) {
+    ThickTripleListWrapper(
+        SubsetType subset, CorpusReader<T>* reader, TripleFilter<T>* filter, TripleEncoder<T>* encoder, PatternDescriptionTemplates<T>* patterns,
+        bool enableFilters, bool dropPatternDuplicates = true, bool verbose = false
+    ) {
 
         index = new TripleIndex();
 
@@ -45,7 +49,7 @@ struct ThickTripleListWrapper {
 
         this->length = content->length;
 
-        this->read(filter, encoder, reader, enableFilters, dropPatternDuplicates, verbose);
+        this->read(filter, encoder, reader, patterns, enableFilters, dropPatternDuplicates, verbose);
     }
 
     void dropDuplicates(INT nEntities, INT nRelations) {
@@ -118,12 +122,15 @@ struct ThickTripleListWrapper {
         }
     }
 
-    void read(TripleFilter<T>* filter, TripleEncoder<T>* encoder, CorpusReader<T>* reader, bool enableFilters, bool dropPatternDuplicates = true, bool verbose = false) {
+    void read(
+        TripleFilter<T>* filter, TripleEncoder<T>* encoder, CorpusReader<T>* reader, PatternDescriptionTemplates<T>* patterns,
+        bool enableFilters, bool dropPatternDuplicates = true, bool verbose = false
+    ) {
         if (verbose) {
             cout << "n train triples before dropping duplicates:" << this->length << ", started reading patterns" << endl;
         }
 
-        patterns = new PatternDescriptions<T>(content, reader, index, encoder, dropPatternDuplicates, enableFilters, verbose);
+        this->patterns = new PatternDescriptions<T>(content, patterns, index, encoder, dropPatternDuplicates, enableFilters, verbose);
 
         if (verbose) {
             cout << "finished reading patterns" << endl;

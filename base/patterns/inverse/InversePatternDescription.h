@@ -7,12 +7,13 @@
 #include "../PatternDescription.h"
 
 #include "InversePatternInstance.h"
+#include "../PatternDescriptionTemplates.h"
 
 template <typename T>
 struct InversePatternDescription: PatternDescription {
 
     InversePatternDescription(
-        TripleList* triples, CorpusReader<T>* reader, TripleIndex* index, TripleEncoder<T>* encoder,
+        TripleList* triples, BinaryPatternDescriptionTemplate<T>* descriptionTemplate, TripleIndex* index, TripleEncoder<T>* encoder,
         bool dropDuplicates = true, bool enableFilters = false, bool verbose = false
     ) {
 
@@ -22,7 +23,7 @@ struct InversePatternDescription: PatternDescription {
 
         initInstanceLists();
 
-        BinaryPatternRelationMap<T>* relationMap = reader->readBinaryPatterns(inverse, encoder, enableFilters, verbose);
+        BinaryPatternRelationMap<T>* relationMap = descriptionTemplate->content;
         
         auto inverseForwardRelationToBackward = relationMap->firstToSecond;
         auto inverseBackwardRelationToForward = relationMap->secondToFirst;

@@ -33,9 +33,23 @@ importFilter_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 }
 
 extern ERL_NIF_TERM
+importPattern_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    try {
+        importPattern(enif_get_bool(env, argv[0]));
+    } catch (invalid_argument& e) {
+        return completed_with_error(env, e.what());
+    }
+
+    return completed_with_success(env);
+}
+
+extern ERL_NIF_TERM
 importTrain_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
-        importTrain(enif_get_bool(env, argv[0]));
+        importTrain(
+            enif_get_bool(env, argv[0]),
+            enif_get_bool(env, argv[1])
+        );
     } catch (invalid_argument& e) {
         return completed_with_error(env, e.what());
     }
