@@ -35,6 +35,9 @@ extern
 long countValidTriples(); 
 
 extern
+void importFilter(bool dropDuplicates = true, bool verbose = false);
+
+extern
 void importTrain(bool verbose = false);
 
 extern
@@ -45,8 +48,5 @@ void importValid(bool verbose = false);
 
 extern
 void importTypes(bool verbose = false);
-
-extern
-void importFilter(bool verbose = false, bool dropDuplicates = true);
 
 #endif

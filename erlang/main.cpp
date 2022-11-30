@@ -154,7 +154,8 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 static ErlNifFunc meager_nif_funcs[] = {
     // Corpus
 
-    {"init_corpus", 4, initCorpus_},
+    {"_init_corpus", 4, initCorpus_},
+    {"_import_filter", 2, importFilter_},
 
     //
     //  Settings

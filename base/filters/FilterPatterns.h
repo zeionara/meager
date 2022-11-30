@@ -18,9 +18,9 @@ struct FilterPatterns {
 	bool empty;
     vector<regex> items;
 
-    FilterPatterns(CorpusReader<T>* reader, bool excluding = false, bool verbose = false, bool drop_duplicates = true) {
+    FilterPatterns(CorpusReader<T>* reader, bool excluding = false, bool dropDuplicates = true, bool verbose = false) {
         try {
-            items = reader->readFilterPatterns(excluding, verbose, drop_duplicates); 
+            items = reader->readFilterPatterns(excluding, dropDuplicates, verbose); 
             empty = false;
         } catch (invalid_argument& e) {
             empty = true;
@@ -36,37 +36,6 @@ struct FilterPatterns {
         return false;
     }
 
-    // vector<regex> readFilterPatterns(string path, bool verbose, bool drop_duplicates) {
-    //     if (verbose) {
-    //         cout << "Reading " << path << " triple patterns..." << endl;
-    //     }
-
-    //     ifstream in_file(path);
-
-    //     if (!in_file.good()) {
-    //         throw invalid_argument("Cannot find file " + path + " on disk");
-    //     }
-
-    //     vector<regex> patterns;
-
-    //     for (string line; getline(in_file, line);) {
-    //         if (drop_duplicates) {
-    //             unordered_set<string> seenPatterns;
-
-    //             if (seenPatterns.find(line) == seenPatterns.end()) {
-    //                 seenPatterns.insert(line);
-    //                 regex line_regex(line);
-    //                 patterns.push_back(line_regex); 
-    //                 cout << "Read filtering pattern " << line << endl;
-    //             }
-    //         } else {
-    //             regex line_regex(line);
-    //             patterns.push_back(line_regex); 
-    //         }
-    //     }
-
-    //     return patterns;
-    // }
 };
 
 #endif

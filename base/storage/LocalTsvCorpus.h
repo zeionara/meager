@@ -34,10 +34,10 @@ struct LocalTsvCorpus: LocalCorpus<T> {
     TripleFilter<T>* filter;
     TripleEncoder<T>* encoder;
 
-    LocalTsvCorpus(CorpusReader<T>* reader, bool enableFilters = false, bool verbose = false): LocalCorpus<T>(reader, enableFilters, verbose) {
+    LocalTsvCorpus(CorpusReader<T>* reader, bool enableFilters = false, bool verbose = false): LocalCorpus<T>(reader, enableFilters) {
         if (enableFilters) {
             if (verbose) {
-                cout << "FILTERS ARE ENABLED" << endl;
+                cout << "filters are enabled" << endl;
             }
             encoder = new TripleEncoder<INT>();
         } else {
@@ -72,9 +72,13 @@ struct LocalTsvCorpus: LocalCorpus<T> {
         }
     }
 
-    void importFilter(bool verbose, bool dropDuplicates) {
+    void importFilter(bool dropDuplicates, bool verbose) {
         if (this->enableFilters) {
-            this->filter = new TripleFilter<T>(this->reader, verbose, dropDuplicates);
+            this->filter = new TripleFilter<T>(this->reader, dropDuplicates, verbose);
+        } else {
+            if (verbose) {
+                cout << "skip reading filter because filters are disabled" << endl;
+            }
         }
     }
 

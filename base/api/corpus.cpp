@@ -1,15 +1,40 @@
 #include "../storage/LocalTsvCorpus.h"
 #include "../storage/OpenKECorpusReader.h"
 
-LocalTsvCorpus<long>* corpus;
+// Init
+
+LocalTsvCorpus<INT>* corpus;
 
 void initCorpus(char *path, bool enableFilters, bool verbose) {
-    // corpus = new LocalTsvCorpus<INT>(new OpenKECorpusReader(path), false);
     corpus = new LocalTsvCorpus<INT>(new OpenKECorpusReader(path), enableFilters, verbose);
     if (verbose) {
-        printf("corpus path : %s\n", path);
+        printf("corpus path is set to %s\n", path);
     }
 }
+
+// Read
+
+void importFilter(bool dropDuplicates = true, bool verbose = false) {
+    corpus->importFilter(dropDuplicates, verbose); 
+}
+
+void importTrain(bool verbose = false) {
+    corpus->importTrain(verbose); 
+}
+
+void importTest(bool verbose = false) {
+    corpus->importTest(verbose); 
+}
+
+void importValid(bool verbose = false) {
+    corpus->importValid(verbose); 
+}
+
+void importTypes(bool verbose = false) {
+    corpus->importTypes(verbose); 
+}
+
+// Get
 
 long countEntities() {
     return corpus->countEntities();
@@ -33,24 +58,4 @@ long countValidTriples() {
 
 long countTriples() {
     return countTrainTriples() + countTestTriples() + countValidTriples();
-}
-
-void importTrain(bool verbose = false) {
-    corpus->importTrain(verbose); 
-}
-
-void importTest(bool verbose = false) {
-    corpus->importTest(verbose); 
-}
-
-void importValid(bool verbose = false) {
-    corpus->importValid(verbose); 
-}
-
-void importTypes(bool verbose = false) {
-    corpus->importTypes(verbose); 
-}
-
-void importFilter(bool verbose = false, bool dropDuplicates = true) {
-    corpus->importFilter(verbose, dropDuplicates); 
 }

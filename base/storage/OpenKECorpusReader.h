@@ -2,8 +2,16 @@
 #define STORAGE_OPENKE_CORPUS_READER_H
 
 #include <string>
+#include <fstream>
+
+#include "../filters/TripleFilter.h"
 
 #include "CorpusReader.h"
+
+#define getLine getline
+#define unorderedSet unordered_set
+#define pushBack push_back
+#define invalidArgument invalid_argument
 
 using namespace std;
 
@@ -31,7 +39,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
 
     TripleList* readTriples(SubsetType subsetType, TripleIndex* tripleIndex, TripleElement tripleElement, TripleFilter<INT>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose) {
         File* file = readNumberOfTriples(path + (subsetType == train ? TRAIN_FILENAME : subsetType == test ? TEST_FILENAME : VALID_FILENAME), verbose);
-        
+
         TripleList* triples = new TripleList(file->length, tripleElement);
         Triple* items = triples->items;
 
@@ -79,33 +87,37 @@ struct OpenKECorpusReader: CorpusReader<INT> {
         return triples;
     }
 
-    vector<regex> readFilterPatterns(bool excluding = false, bool verbose = false, bool drop_duplicates = true) {
+    vector<regex> readFilterPatterns(bool excluding = false, bool verbose = false, bool dropDuplicates = true) {
         if (verbose) {
-            cout << "Reading " << path << " triple patterns..." << endl;
+            cout << "started reading filter patterns" << endl;
         }
 
-        ifstream in_file(path + (excluding ? EXCLUDING_FILTERS_FILENAME : INCLUDING_FILTERS_FILENAME));
+        ifstream inFile(path + (excluding ? EXCLUDING_FILTERS_FILENAME : INCLUDING_FILTERS_FILENAME));
 
-        if (!in_file.good()) {
-            throw invalid_argument("Cannot find file " + path + " on disk");
+        if (!inFile.good()) {
+            throw invalidArgument("cannot find file with filter on disk");
         }
 
         vector<regex> patterns;
 
-        for (string line; getline(in_file, line);) {
-            if (drop_duplicates) {
-                unordered_set<string> seenPatterns;
+        for (string line; getLine(inFile, line);) {
+            if (dropDuplicates) {
+                unorderedSet<string> seenPatterns;
 
                 if (seenPatterns.find(line) == seenPatterns.end()) {
                     seenPatterns.insert(line);
-                    regex line_regex(line);
-                    patterns.push_back(line_regex); 
-                    cout << "Read filtering pattern " << line << endl;
+                    regex lineRegex(line);
+                    patterns.pushBack(lineRegex);
+                    cout << "read filter pattern " << line << endl;
                 }
             } else {
-                regex line_regex(line);
-                patterns.push_back(line_regex); 
+                regex lineRegex(line);
+                patterns.pushBack(lineRegex);
             }
+        }
+
+        if (verbose) {
+            cout << "finished reading filter patterns" << endl;
         }
 
         return patterns;
@@ -171,7 +183,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
             firstRelationToSecond[firstRelation] = enableFilters ? encoder->relation->encode(secondRelation) : secondRelation;
             secondRelationToFirst[secondRelation] = enableFilters ? encoder->relation->encode(firstRelation) : firstRelation;
         }
-        
+
         if (verbose) {
             printf("Number of relations in binary pattern = %d.\n", (int)firstRelationToSecond.size());
         }
@@ -205,7 +217,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
 
             relations.insert(enableFilters ? encoder->relation->encode(relation) : relation);
         }
-        
+
         if (verbose) {
             printf("Number of symmetric relations = %d.\n", (int)relations.size());
         }

@@ -9,13 +9,17 @@ struct TripleFilter {
     FilterPatterns<T>* excluding;
     FilterPatterns<T>* including;
 
-    // bool enabled;
+    TripleFilter(CorpusReader<T>* reader, bool dropDuplicates, bool verbose) {
+        if (verbose) {
+            cout << "started initializing filter" << endl;
+        }
 
-    // TripleFilter(bool enable, bool verbose, bool drop_duplicates, string includingPath = "", string excludingPath = "") {
-    TripleFilter(CorpusReader<T>* reader, bool verbose, bool drop_duplicates) {
-        cout << "Initializing filter" << endl;
-        including = new FilterPatterns<T>(reader, false, verbose, drop_duplicates); // readFilterPatterns("excluding");
-        excluding = new FilterPatterns<T>(reader, true, verbose, drop_duplicates); // readFilterPatterns("excluding");
+        including = new FilterPatterns<T>(reader, false, dropDuplicates, verbose);
+        excluding = new FilterPatterns<T>(reader, true, dropDuplicates, verbose);
+
+        if (verbose) {
+            cout << "finished initializing filter" << endl;
+        }
     }
 
     bool allows(Triple triple) {
