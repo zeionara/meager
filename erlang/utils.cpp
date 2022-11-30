@@ -128,7 +128,7 @@ ERL_NIF_TERM enif_make_string(ErlNifEnv *env, const char* string) {
     return enif_make_string(env, string, ERL_NIF_LATIN1);
 }
 
-ERL_NIF_TERM make_result(ErlNifEnv *env, ERL_NIF_TERM result, char* status) {
+ERL_NIF_TERM make_result(ErlNifEnv *env, char* status, ERL_NIF_TERM result) {
     return enif_make_tuple2(
         env,
         enif_make_atom(env, status),
@@ -137,14 +137,17 @@ ERL_NIF_TERM make_result(ErlNifEnv *env, ERL_NIF_TERM result, char* status) {
 }
 
 ERL_NIF_TERM completed_with_success(ErlNifEnv *env, ERL_NIF_TERM result) {
-    return make_result(env, result, (char*)"ok");
+    return make_result(env, (char*)"ok", result);
+}
+
+ERL_NIF_TERM completed_with_success(ErlNifEnv *env) {
+    return make_result(env, (char*)"ok", enif_make_atom(env, "nil"));
 }
 
 ERL_NIF_TERM completed_with_error(ErlNifEnv *env, const char* result) {
-    return make_result(env, enif_make_string(env, result), (char*)"error");
+    return make_result(env, (char*)"error", enif_make_string(env, result));
 }
 
 ERL_NIF_TERM completed_with_error(ErlNifEnv *env, stringstream* result) {
     return completed_with_error(env, result->str().c_str());
 }
-

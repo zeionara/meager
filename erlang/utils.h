@@ -40,6 +40,8 @@ void encode_array_of_float(ErlNifEnv *env, ERL_NIF_TERM source, float* destinati
 
 ERL_NIF_TERM completed_with_success(ErlNifEnv *env, ERL_NIF_TERM result);
 
+ERL_NIF_TERM completed_with_success(ErlNifEnv *env);
+
 ERL_NIF_TERM completed_with_error(ErlNifEnv *env, const char* result);
 
 ERL_NIF_TERM completed_with_error(ErlNifEnv *env, std::stringstream* result);
