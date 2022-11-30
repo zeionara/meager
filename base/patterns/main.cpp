@@ -1,5 +1,7 @@
 #include "main.h"
 
+#define invalidArgument
+
 Pattern decodePatternName(string name) {
 
     if (name == "none" || name == "nil") {
@@ -14,6 +16,6 @@ Pattern decodePatternName(string name) {
         return symmetric;
     }
 
-    cout << "Pattern name " << name << " is unknown" << endl;
-    throw "Unknown triple pattern provided";
+    cerr << "Pattern name " << name << " is unknown" << endl;
+    throw invalidArgument("Unknown triple pattern provided");
 }

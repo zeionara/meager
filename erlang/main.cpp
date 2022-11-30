@@ -14,8 +14,10 @@
 
 #include "../base/samplers/PatternSampler.h"
 #include "../base/api/corpus.h"
+#include "../base/api/sampler.h"
 
 #include "corpus.h"
+#include "sampler.h"
 
 using namespace std;
 
@@ -102,7 +104,7 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         return completed_with_error(env, &message);
     }
 
-    PatternSampler<long>* sampler = new PatternSampler<INT>(pattern, n_observed_triples_per_pattern_instance, false, false, 8);
+    // PatternSampler<long>* sampler = new PatternSampler<INT>(pattern, n_observed_triples_per_pattern_instance, false, false, 8);
 
     // cout << "Created sampler" << endl;
 
@@ -164,6 +166,10 @@ static ErlNifFunc meager_nif_funcs[] = {
     {"_import_valid", 1, importValid_},
 
     {"_import_types", 1, importTypes_},
+
+    // Sampler
+
+    {"_init_sampler", 6, initSampler_},
 
     //
     //  Settings
