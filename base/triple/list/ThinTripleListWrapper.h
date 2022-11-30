@@ -18,41 +18,30 @@ struct ThinTripleListWrapper {
 
     TripleIndex* index;
 
-    // INT nEntities;
-    // INT nRelations;
-
-    ThinTripleListWrapper(SubsetType subset, INT startInternalEntityId, INT startInternalRelationId, bool enable_filters = false, bool verbose = false) {
-        File* file = readNumberOfTriples(subset, "", verbose);
-
-        this->content = new TripleList(file->length, ::TripleElement::rel);
-
-        this->length = file->length;
+    ThinTripleListWrapper(SubsetType subset, CorpusReader<T>* reader, TripleFilter<T>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose = false) {
         this->index = new TripleIndex;
 
-        // this->read(file, startInternalEntityId, startInternalRelationId, enable_filters, verbose);
-    }
+        if (verbose) {
+            cout << "started reading triples" << endl;
+        }
 
-    ThinTripleListWrapper(SubsetType subset, CorpusReader<T>* reader, TripleFilter<T>* filter, TripleEncoder<INT>* encoder, bool enable_filters, bool verbose = false) {
-        this->index = new TripleIndex;
+        this->content = reader->readTriples(subset, index, ::TripleElement::rel, filter, encoder, enableFilters, verbose);
 
-        cout << "reading triples" << endl;
-        this->content = reader->readTriples(subset, index, ::TripleElement::rel, filter, encoder, enable_filters, verbose);
-        cout << "finished reading triples" << endl;
+        if (verbose) {
+            cout << "finished reading triples" << endl;
+        }
 
         this->length = content->length;
 
-        this->read(reader, filter, encoder, enable_filters, verbose);
+        this->read(reader, filter, encoder, enableFilters, verbose);
     }
 
     void sort(INT nRelations) {
-        this->content->sort(nRelations, Triple::cmp_rel2); // Sort by relation, then by head, then by tail
+        this->content->sort(nRelations); // Sort by relation, then by head, then by tail
     }
 
-    // void read(File* file, INT startInternalEntityId, INT startInternalRelationId, bool enable_filters = false, bool verbose = false) {
-    void read(CorpusReader<T>* reader, TripleFilter<T>* filter, TripleEncoder<INT>* encoder, bool enable_filters, bool verbose = false) {
-        // INT nTriples = readTriples(file, enable_filters, filter, encoder, this->content->items, this->index);
-
-        if (enable_filters) {
+    void read(CorpusReader<T>* reader, TripleFilter<T>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose = false) {
+        if (enableFilters) {
             this->sort(encoder->relation->nEncodedValues);
         } else {
             this->sort(reader->readVocabularySize(::TripleComponent::relation));

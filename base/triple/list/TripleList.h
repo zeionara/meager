@@ -35,7 +35,7 @@ struct TripleList {
         std::sort(
             this->items, this->items + this->length,
             // this->element == rel ? Triple::cmp_rel2 : this->element == ::TripleElement::head ? Triple::cmp_head : Triple::cmp_tail
-            compareTriples == nullptr ? this->element == rel ? Triple::cmp_rel : this->element == ::TripleElement::head ? Triple::cmp_head : Triple::cmp_tail : compareTriples
+            compareTriples == nullptr ? this->element == rel ? Triple::cmp_rel2 : this->element == ::TripleElement::head ? Triple::cmp_head : Triple::cmp_tail : compareTriples
         );
 
         INT* left = (INT *)calloc(nItems, sizeof(INT));

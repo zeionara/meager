@@ -111,7 +111,7 @@ struct ThickTripleListWrapper {
             cout << "finished sorting tail, started sorting relation" << endl;
         }
 
-        this->relation->sort(this->frequencies->nEntities);
+        this->relation->sort(this->frequencies->nEntities, Triple::cmp_rel); // Sort by head, then by tail, then by relation
 
         if (verbose) {
             cout << "finished sorting relation" << endl;
