@@ -44,8 +44,13 @@ struct LocalTsvCorpus: LocalCorpus<T> {
             encoder = new TripleEncoder<INT>();
         } else {
             encoder = nullptr;
-            filter = nullptr;
         }
+        train = nullptr;
+        test = nullptr;
+        valid = nullptr;
+        filter = nullptr;
+        types = nullptr;
+        patterns = nullptr;
     };
 
     void importPattern(bool verbose) {
@@ -73,22 +78,38 @@ struct LocalTsvCorpus: LocalCorpus<T> {
     }
 
     void importTest(bool verbose) {
-        cout << "started reading test subset for corpus from " << endl;
+        if (verbose) {
+            cout << "started reading test subset" << endl;
+        }
+
         this->test = new ThinTripleListWrapper<T>(::SubsetType::test, this->reader, filter, encoder, this->enableFilters, verbose);
-        cout << "finished reading test subset for corpus" << endl;
+
+        if (verbose) {
+            cout << "finished reading test subset" << endl;
+        }
     }
 
     void importValid(bool verbose) {
+        if (verbose) {
+            cout << "started reading valid subset" << endl;
+        }
+
         this->valid = new ThinTripleListWrapper<T>(::SubsetType::valid, this->reader, filter, encoder, this->enableFilters, verbose);
+
+        if (verbose) {
+            cout << "finished reading valid subset" << endl;
+        }
     }
 
     void importTypes(bool verbose) {
-        // cout << encoder->relation->contains(5) << endl;
-        // cout << encoder->relation->contains(6) << endl;
-        // cout << encoder->relation->contains(7) << endl;
-        this->types = new RelationTypes<T>(this->enableFilters, encoder, this->reader, verbose);
         if (verbose) {
-            cout << "Imported types for " << types->length << " relations" << endl;
+            cout << "started reading relation types" << endl;
+        }
+
+        this->types = new RelationTypes<T>(this->enableFilters, encoder, this->reader, verbose);
+
+        if (verbose) {
+            cout << "finished reading " << types->length << " relation types" << endl;
         }
     }
 
@@ -103,7 +124,16 @@ struct LocalTsvCorpus: LocalCorpus<T> {
     }
 
     bool contains(Triple triple) {
-        return train->index->contains(triple) || test->index->contains(triple) || valid->index->contains(triple);
+        return (
+            train != nullptr &&
+            train->index->contains(triple)
+        ) || (
+            test != nullptr &&
+            test->index->contains(triple)
+        ) || (
+            valid != nullptr &&
+            valid->index->contains(triple)
+        );
     }
 
     bool allowsHead(Triple triple) {

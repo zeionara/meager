@@ -56,3 +56,42 @@ importTrain_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     return completed_with_success(env);
 }
+
+extern ERL_NIF_TERM
+importTest_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    try {
+        importTest(
+            enif_get_bool(env, argv[0])
+        );
+    } catch (invalid_argument& e) {
+        return completed_with_error(env, e.what());
+    }
+
+    return completed_with_success(env);
+}
+
+extern ERL_NIF_TERM
+importValid_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    try {
+        importValid(
+            enif_get_bool(env, argv[0])
+        );
+    } catch (invalid_argument& e) {
+        return completed_with_error(env, e.what());
+    }
+
+    return completed_with_success(env);
+}
+
+extern ERL_NIF_TERM
+importTypes_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    try {
+        importTypes(
+            enif_get_bool(env, argv[0])
+        );
+    } catch (invalid_argument& e) {
+        return completed_with_error(env, e.what());
+    }
+
+    return completed_with_success(env);
+}

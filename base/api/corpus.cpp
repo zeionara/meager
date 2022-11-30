@@ -61,5 +61,6 @@ long countValidTriples() {
 }
 
 long countTriples() {
-    return countTrainTriples() + countTestTriples() + countValidTriples();
+    // return countTrainTriples() + countTestTriples() + countValidTriples();
+    return corpus->getLength();
 }

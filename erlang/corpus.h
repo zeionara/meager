@@ -15,4 +15,13 @@ importPattern_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 extern ERL_NIF_TERM
 importTrain_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 
+extern ERL_NIF_TERM
+importTest_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+
+extern ERL_NIF_TERM
+importValid_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+
+extern ERL_NIF_TERM
+importTypes_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+
 #endif

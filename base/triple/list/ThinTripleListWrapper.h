@@ -19,7 +19,7 @@ struct ThinTripleListWrapper {
     TripleIndex* index;
 
     ThinTripleListWrapper(SubsetType subset, CorpusReader<T>* reader, TripleFilter<T>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose = false) {
-        this->index = new TripleIndex;
+        this->index = new TripleIndex();
 
         if (verbose) {
             cout << "started reading triples" << endl;

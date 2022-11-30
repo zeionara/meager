@@ -1,12 +1,11 @@
 #ifndef TRIPLE_RELATION_TYPE_H
 #define TRIPLE_RELATION_TYPE_H
+
 #include "main.h"
 #include "TripleIndex.h"
 #include "reader.h"
 
-// #include "../patterns/none/reader.h"
-// #include "../patterns/symmetric/reader.h"
-// #include "../patterns/inverse/reader.h"
+#define invalidArgument invalid_argument
 
 template <typename T>
 struct AllowedTripleElements {
@@ -20,9 +19,9 @@ struct AllowedTripleElements {
         std::sort(items, items + length);
     }
 
-    bool contains(INT value) {
-        for (INT i = 0; i < this->length; i++) {
-            if (this->items[i] == value) {
+    bool contains(INT value) {  // TODO: implement binary search
+        for (INT i = 0; i < length; i++) {
+            if (items[i] == value) {
                 return true;
             }
         }
@@ -31,12 +30,14 @@ struct AllowedTripleElements {
 
     void encode(TripleComponentEncoder<INT>* encoder) {
         INT j = 0;
-        for (INT i = 0; i < this->length; i++) {
-            if (encoder->contains(this->items[i])) {
-                items[j++] = encoder->encode(this->items[i]);
+        for (INT i = 0; i < length; i++) {
+            if (encoder->contains(items[i])) {
+                items[j++] = encoder->encode(items[i]);
             }
         }
         length = j;
+
+        std::sort(items, items + length);
     }
 };
 
@@ -48,15 +49,11 @@ struct RelationType {
 
     RelationType(RelationTypeContents<T>* headContents, RelationTypeContents<T>* tailContents) {
 
-        // cout << "Handling heads for relation " << headRelation << endl;
-
         heads = new AllowedTripleElements<T>(headContents);
 
         if (headContents->relation != tailContents->relation) {
-            throw "Relation type can be created only for one relation";
+            throw invalidArgument("Relation type can be created only for one relation");
         }
-
-        // cout << "Handling tails for relation " << headRelation << endl;
 
         tails = new AllowedTripleElements<T>(tailContents);
 
@@ -75,23 +72,6 @@ struct RelationTypes {
     RelationType<T>** relations;
     INT length;
 
-    RelationTypes(bool verbose = false) {
-        File* file = readNumberOfTypeConstrainedRelations("", verbose);
-
-        FILE* f_type = file->file;
-        INT nTypeConstrainedRelations = file->length;
-
-        relations = (RelationType<T>**)calloc(file->length, sizeof(RelationType<T>*));
-
-        this->length = file->length;
-
-        // for (INT i = 0; i < file->length; i++) {
-        //     relations[i] = new RelationType(file->file);
-        // }
-
-        fclose(f_type);
-    }
-
     RelationTypes(bool enableFilters, TripleEncoder<T>* encoder, CorpusReader<T>* reader, bool verbose = false) {
         RelationTypesContents<T>* contents = reader->readRelationTypesContents(verbose);
 
@@ -99,38 +79,22 @@ struct RelationTypes {
 
         this->length = contents->length;
 
-        // cout << encoder->relation->contains(5) << endl;
-        // cout << encoder->relation->contains(6) << endl;
-        // cout << encoder->relation->contains(7) << endl;
-
         INT j = 0;
         for (INT i = 0; i < contents->length; i += 2) {
             RelationTypeContents<T>* head = contents->relations[i];
-            RelationTypeContents<T>* tail = contents->relations[i + 1];
-
-            INT notEncodedRelation = head->relation;
-
-            // cout << "Checking relation " << head->relation << endl;
 
             if (!enableFilters || encoder->relation->contains(head->relation)) {
+                RelationTypeContents<T>* tail = contents->relations[i + 1];
+
                 if (enableFilters) {
                     head->encode(encoder);
                     tail->encode(encoder);
                 }
-            }
 
-            RelationType<T>* relation = new RelationType<T>(head, tail);
-
-            if (!enableFilters || encoder->relation->contains(notEncodedRelation)) {
-                //if (enableFilters) {
-                //    relation->encode(encoder);
-                //}
-                relations[j++] = relation;
+                relations[j++] = new RelationType<T>(head, tail);
             }
         }
         length = j;
-
-        cout << "Passed " << length << " relations" << endl;
     }
 
     RelationType<T>* get(INT relation) {

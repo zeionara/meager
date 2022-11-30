@@ -51,7 +51,6 @@ struct EntityEvaluator {
         // cout << state->unconstrained->unfiltered->value;
         state->resetScore();
         //
-        // cout << "Looping" << endl;
 
         for (INT hypothesis = 0; hypothesis < this->corpus->countEntities(); hypothesis++) {
             if (hypothesis != getTripleComponent(reference)) { 

@@ -110,7 +110,10 @@ struct OpenKECorpusReader: CorpusReader<INT> {
                     seenPatterns.insert(line);
                     regex lineRegex(line);
                     patterns.pushBack(lineRegex);
-                    cout << "read filter pattern " << line << endl;
+
+                    if (verbose) {
+                        cout << "read filter pattern " << line << endl;
+                    }
                 }
             } else {
                 regex lineRegex(line);
