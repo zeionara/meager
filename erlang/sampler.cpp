@@ -31,6 +31,9 @@ initSampler_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 extern ERL_NIF_TERM
 sample_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try{
+        // if (verbose) {
+        //     cout << "Sampling batch" << endl;
+        // }
         INT batchSize = enif_get_long_(env, argv[0]); 
 
         INT entityNegativeRate = enif_get_long_(env, argv[1]); 
@@ -39,13 +42,19 @@ sample_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         bool headBatchFlag = enif_get_bool(env, argv[3]);
         bool verbose = enif_get_bool(env, argv[4]);
 
-        TripleBatch* tripleBatch = sampler->sample(corpus, batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag);
+        TripleBatch* tripleBatch = sampler->sample(corpus, batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, verbose);
 
         // if (verbose) {
         //     cout << "Sampled batch" << endl;
         // }
 
-        return completed_with_success(env, encodeTripleBatch(env, tripleBatch));
+        ERL_NIF_TERM encoded = encodeTripleBatch(env, tripleBatch);
+
+        // if (verbose) {
+        //     cout << "Encoded batch" << endl;
+        // }
+
+        return completed_with_success(env, encoded);
     } catch (invalidArgument& e) {
         return completed_with_error(env, e.what());
     }
@@ -76,6 +85,8 @@ INT validateNobservedTriplesPerPatternInstance(Pattern pattern, INT nObservedTri
 ERL_NIF_TERM encodeTripleBatch(ErlNifEnv* env, TripleBatch* tripleBatch) {
 
     INT batchSize = tripleBatch->length;
+
+    // cout << "Batch size = " << batchSize << endl;
 
     ERL_NIF_TERM* batch_h = new ERL_NIF_TERM[batchSize]();
     ERL_NIF_TERM* batch_t = new ERL_NIF_TERM[batchSize]();

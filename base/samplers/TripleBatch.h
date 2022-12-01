@@ -3,6 +3,8 @@
 
 #include "../triple/main.h"
 
+using namespace std;
+
 struct TripleBatch {
     Triple* triples;
     REAL* labels;
@@ -27,12 +29,14 @@ struct TripleBatch {
     }
 
     ~TripleBatch() {
+        // cout << "Releasing memory occupied by triple batch" << endl;
         delete [] triples;
         delete [] labels;
 
         delete [] head;
         delete [] relation;
         delete [] tail;
+        // cout << "Released memory occupied by triple batch" << endl;
     }
 
     void init(Triple* triples, REAL* labels, INT length) {

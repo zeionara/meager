@@ -4,5 +4,5 @@
 PatternSampler<INT>* sampler;
 
 void initSampler(Pattern pattern, INT nObservedTriplesPerPatternInstance, bool bern, bool crossSampling, INT nWorkers, bool verbose) {
-    sampler = new PatternSampler<INT>(pattern, nObservedTriplesPerPatternInstance, bern, crossSampling, nWorkers);
+    sampler = new PatternSampler<INT>(pattern, nObservedTriplesPerPatternInstance, bern, crossSampling, nWorkers, verbose);
 }

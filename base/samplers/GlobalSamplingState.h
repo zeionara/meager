@@ -30,12 +30,16 @@ struct GlobalSamplingState {
     GlobalSamplingState(
         PatternDescription patternDescription,
         INT batchSize, INT entityNegativeRate, INT relationNegativeRate, bool headBatchFlag, INT nObservedTriplesPerPatternInstance, INT headCorruptionThreshold,
-        bool bern = false, bool crossSampling = false, INT nWorkers = 1
+        bool bern = false, bool crossSampling = false, INT nWorkers = 1, bool verbose = false
     ) {
         // PatternDescription patternDescription = patternDescriptions[pattern];
 
         INT nTriplesPerPatternInstance = patternDescription.nTriplesPerInstance;
         INT nTriplesToSample = (nTriplesPerPatternInstance + nObservedTriplesPerPatternInstance) * batchSize * (1 + entityNegativeRate + relationNegativeRate);
+
+        // if (verbose) {
+        //     cout << "n triples to sample = " << nTriplesToSample << endl;
+        // }
 
         triples = (Triple*) malloc(nTriplesToSample * sizeof(Triple));
         labels = (REAL*) malloc(nTriplesToSample * sizeof(REAL));

@@ -32,20 +32,31 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
     bool bern;
     bool crossSampling;
 
-    PatternSampler(Pattern pattern, INT nObservedTriplesPerPatternInstance, bool bern = false, bool crossSampling = false, INT nWorkers = 1) {
+    PatternSampler(Pattern pattern, INT nObservedTriplesPerPatternInstance, bool bern = false, bool crossSampling = false, INT nWorkers = 1, bool verbose = false) {
         this->pattern = pattern;
         this->nObservedTriplesPerPatternInstance = nObservedTriplesPerPatternInstance;
         this->bern = bern;
         this->crossSampling = crossSampling;
         this->nWorkers = nWorkers;
+
+        if (verbose) {
+            cout << "finished initializing pattern sampler, number of observed triples per pattern instance = " << nObservedTriplesPerPatternInstance << endl;
+        }
     }
 
-    TripleBatch* sample(LocalTsvCorpus<INT>* corpus, INT batchSize, INT entityNegativeRate, INT relationNegativeRate, bool headBatchFlag) {
-        // cout << "Creating sampler" << endl;
+    TripleBatch* sample(LocalTsvCorpus<INT>* corpus, INT batchSize, INT entityNegativeRate, INT relationNegativeRate, bool headBatchFlag, bool verbose = false) {
+        // if (verbose) {
+        //     cout << "started initializing global state, number of observed triples per pattern instance = " << nObservedTriplesPerPatternInstance << endl;
+        // }
+
         GlobalSamplingState* globalState = new GlobalSamplingState(
             corpus->train->patterns->get(pattern),
-            batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, nObservedTriplesPerPatternInstance, 500, false, false, nWorkers
+            batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, nObservedTriplesPerPatternInstance, 500, false, false, nWorkers, verbose
         );
+
+        // if (verbose) {
+        //     cout << "finished initializing global state, number of observed triples per pattern instance = " << nObservedTriplesPerPatternInstance << endl;
+        // }
 
         pthread_t* threads = (pthread_t*) malloc(nWorkers * sizeof(pthread_t));
         DefaultLocalSamplingState<T>* localStates = (DefaultLocalSamplingState<T>*) malloc(nWorkers * sizeof(DefaultLocalSamplingState<T>));
@@ -68,7 +79,11 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
 
         // TODO: free memory
 
-        return new TripleBatch(globalState->triples, globalState->labels, globalState->nTriplesToSample);
+        TripleBatch* tripleBatch = new TripleBatch(globalState->triples, globalState->labels, globalState->nTriplesToSample);
+
+        // cout << "Sampled triple batch" << endl;
+
+        return tripleBatch;
     }
 
     static void* run(void* con) {
@@ -111,6 +126,8 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
         INT patternComponentOffset = batchSize * (1 + entityNegativeRate + relationNegativeRate);
 
         // cout << "init run" << endl;
+        
+        // cout << "Start sampling loop" << endl;
 
         for (INT batchWiseTripleIndex = first_triple_index; batchWiseTripleIndex < last_triple_index; batchWiseTripleIndex++) {
             // cout << "foo" << (*(patternInstanceSets[nObservedTriplesPerPatternInstance])).size() << endl;
@@ -199,23 +216,29 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
                     break;
                 }
 
-                triples[patternComponentOffset * (patternComponentIndex + observedTripleIndexCounter) + batchWiseTripleIndex] =
-                    triples[patternComponentOffset * observedTripleIndex + batchWiseTripleIndex];
-                labels[patternComponentOffset * (patternComponentOffset + observedTripleIndexCounter) + batchWiseTripleIndex] = 1;
+                INT positiveTripleIndex         = patternComponentOffset * observedTripleIndex                                  + batchWiseTripleIndex;
+                INT positiveObservedTripleIndex = patternComponentOffset * (patternComponentIndex + observedTripleIndexCounter) + batchWiseTripleIndex;
+
+                triples[positiveObservedTripleIndex] = triples[positiveTripleIndex];
+                labels [positiveObservedTripleIndex] = 1;
                 // labels[patternComponentOffset * observedTripleIndex + batchWiseTripleIndex];
 
                 // INT last = batchSize;
 
                 for (INT negativeTripleOffset = 1; negativeTripleOffset <= entityNegativeRate + relationNegativeRate; negativeTripleOffset++) {
-                    triples[patternComponentOffset * (patternComponentIndex + observedTripleIndexCounter) + batchWiseTripleIndex + negativeTripleOffset * batchSize] =
-                        triples[patternComponentOffset * observedTripleIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize];
-                    labels[patternComponentOffset * (patternComponentIndex + observedTripleIndexCounter) + batchWiseTripleIndex + negativeTripleOffset * batchSize] = -1;
+
+                    INT negativeTripleIndex         = positiveTripleIndex         + negativeTripleOffset * batchSize;
+                    INT negativeObservedTripleIndex = positiveObservedTripleIndex + negativeTripleOffset * batchSize;
+
+                    triples[negativeObservedTripleIndex] = triples[negativeTripleIndex];
+                    labels [negativeObservedTripleIndex] = -1;
                     // last += batchSize;
                 }
 
                 observedTripleIndexCounter++;
             }
         } // end loop for each positive triple in the batch which should be processed by the thread
+        // cout << "Stop sampling loop" << endl;
         pthread_exit(NULL);
     }
 };
