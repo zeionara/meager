@@ -26,6 +26,15 @@ struct TripleBatch {
         init(triples, labels, length);
     }
 
+    ~TripleBatch() {
+        delete [] triples;
+        delete [] labels;
+
+        delete [] head;
+        delete [] relation;
+        delete [] tail;
+    }
+
     void init(Triple* triples, REAL* labels, INT length) {
         head = (INT*) malloc(length * sizeof(INT));
         relation = (INT*) malloc(length * sizeof(INT));

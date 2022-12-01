@@ -17,7 +17,7 @@ struct GlobalSamplingState {
     INT relationNegativeRate;
 
     INT nObservedTriplesPerPatternInstance;
-    INT headBatchFlag;
+    bool headBatchFlag;
 
     INT headCorruptionThreshold;
     INT nTriplesToSample;
@@ -29,7 +29,7 @@ struct GlobalSamplingState {
 
     GlobalSamplingState(
         PatternDescription patternDescription,
-        INT batchSize, INT entityNegativeRate, INT relationNegativeRate, INT headBatchFlag, INT nObservedTriplesPerPatternInstance, INT headCorruptionThreshold,
+        INT batchSize, INT entityNegativeRate, INT relationNegativeRate, bool headBatchFlag, INT nObservedTriplesPerPatternInstance, INT headCorruptionThreshold,
         bool bern = false, bool crossSampling = false, INT nWorkers = 1
     ) {
         // PatternDescription patternDescription = patternDescriptions[pattern];

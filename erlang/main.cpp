@@ -170,6 +170,7 @@ static ErlNifFunc meager_nif_funcs[] = {
     // Sampler
 
     {"_init_sampler", 6, initSampler_},
+    {"_sample", 5, sample_},
 
     //
     //  Settings

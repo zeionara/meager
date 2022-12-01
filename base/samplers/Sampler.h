@@ -13,7 +13,7 @@ using namespace std;
 
 template <typename T>
 struct Sampler {
-    virtual TripleBatch* sample(T* corpus, INT batchSize, INT entityNegativeRate, INT relationNegativeRate, INT headBatchFlag) = 0;
+    virtual TripleBatch* sample(T* corpus, INT batchSize, INT entityNegativeRate, INT relationNegativeRate, bool headBatchFlag) = 0;
 };
 
 #endif

@@ -24,7 +24,7 @@ typedef void * (*PTR)(void *);
 
 
 template <typename T>
-struct PatternSampler: Sampler<LocalTsvCorpus<long>> {
+struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
     Pattern pattern;
     INT nObservedTriplesPerPatternInstance;
     INT nWorkers;
@@ -40,7 +40,7 @@ struct PatternSampler: Sampler<LocalTsvCorpus<long>> {
         this->nWorkers = nWorkers;
     }
 
-    TripleBatch* sample(LocalTsvCorpus<long>* corpus, INT batchSize, INT entityNegativeRate, INT relationNegativeRate, INT headBatchFlag) {
+    TripleBatch* sample(LocalTsvCorpus<INT>* corpus, INT batchSize, INT entityNegativeRate, INT relationNegativeRate, bool headBatchFlag) {
         // cout << "Creating sampler" << endl;
         GlobalSamplingState* globalState = new GlobalSamplingState(
             corpus->train->patterns->get(pattern),
@@ -82,7 +82,7 @@ struct PatternSampler: Sampler<LocalTsvCorpus<long>> {
         INT batchSize = state->batchSize;
         INT entityNegativeRate = state->entityNegativeRate;
         INT relationNegativeRate = state->relationNegativeRate;
-        INT headBatchFlag = state->headBatchFlag;
+        bool headBatchFlag = state->headBatchFlag;
         // std::vector<PatternInstance>** patternInstanceSets = para -> patternInstanceSets;
         vector<PatternInstance>* patternInstances = state->patternInstances;
         INT nObservedTriplesPerPatternInstance = state->nObservedTriplesPerPatternInstance;
