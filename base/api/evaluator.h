@@ -7,6 +7,9 @@ extern
 Evaluator<INT>* evaluator;
 
 void initEvaluator(MetricSetTrackerMaker makeMetricSetTracker, SubsetType subset = test, bool verbose = false);
-TripleBatch* trial(TripleElement element, bool verbose);
+
+TripleBatch* trial(TripleElement element, bool verbose = false);
+
+void evaluate(TripleElement element, REAL* predictions, bool reverse, bool verbose = false);
 
 #endif

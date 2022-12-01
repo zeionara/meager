@@ -38,7 +38,7 @@ struct EntityEvaluator {
         return new TripleBatch(triples, this->corpus->countEntities());
     }
 
-    void evaluate(REAL *probabilities, bool reverse) {
+    void evaluate(REAL *probabilities, bool reverse, bool verbose = false) {
         // cout << "Test triples @ " << currentTripleIndex << endl;
         // cout << testTriples << endl;
 

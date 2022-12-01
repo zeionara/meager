@@ -20,9 +20,6 @@ void initEvaluator(MetricSetTrackerMaker makeMetricSetTracker, SubsetType subset
 }
 
 TripleBatch* trial(TripleElement element, bool verbose) {
-    if (element == rel) {
-    }
-
     switch (element) {
         case head:
             return evaluator->head->makeBatch();
@@ -30,5 +27,18 @@ TripleBatch* trial(TripleElement element, bool verbose) {
             return evaluator->tail->makeBatch();
         default:
             throw invalidArgument("Cannot trial passed triple element");
+    }
+}
+
+void evaluate(TripleElement element, REAL* predictions, bool reverse, bool verbose) {
+    switch (element) {
+        case head:
+            evaluator->head->evaluate(predictions, reverse, verbose);
+            break;
+        case tail:
+            evaluator->tail->evaluate(predictions, reverse, verbose);
+            break;
+        default:
+            throw invalidArgument("Cannot evaluate passed triple element");
     }
 }

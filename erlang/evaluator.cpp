@@ -70,3 +70,25 @@ trial_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         return completed_with_error(env, e.what());
     }
 }
+
+extern ERL_NIF_TERM
+evaluate_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    try {
+        List<REAL>* predictions = decodeList<REAL>(env, argv[1], [](ErlNifEnv* env, ERL_NIF_TERM prediction){
+            double decodedPrediction;
+            enif_get_double(env, prediction, &decodedPrediction);
+            return (REAL)decodedPrediction;
+        });
+
+        evaluate(
+            decodeTripleElement(enif_get_atom_(env, argv[0])),
+            predictions->items,
+            enif_get_bool(env, argv[2]),
+            enif_get_bool(env, argv[2])
+        );
+    } catch (invalidArgument& e) {
+        return completed_with_error(env, e.what());
+    }
+
+    return completed_with_success(env);
+}
