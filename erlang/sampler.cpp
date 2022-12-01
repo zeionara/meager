@@ -6,7 +6,7 @@
 
 INT validateNobservedTriplesPerPatternInstance(Pattern pattern, INT nObservedTriplesPerPatternInstance);
 
-ERL_NIF_TERM encodeTripleBatch(ErlNifEnv* env, TripleBatch* tripleBatch);
+ERL_NIF_TERM encodeTripleBatch(ErlNifEnv* env, TripleBatch* tripleBatch, bool verbose = false);
 
 extern ERL_NIF_TERM
 initSampler_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
@@ -82,7 +82,9 @@ INT validateNobservedTriplesPerPatternInstance(Pattern pattern, INT nObservedTri
     return nObservedTriplesPerPatternInstance;
 }
 
-ERL_NIF_TERM encodeTripleBatch(ErlNifEnv* env, TripleBatch* tripleBatch) {
+ERL_NIF_TERM encodeTripleBatch(ErlNifEnv* env, TripleBatch* tripleBatch, bool encodeLabels) {
+
+    int nElements = encodeLabels ? 4 : 3;
 
     INT batchSize = tripleBatch->length;
 
@@ -91,28 +93,36 @@ ERL_NIF_TERM encodeTripleBatch(ErlNifEnv* env, TripleBatch* tripleBatch) {
     ERL_NIF_TERM* batch_h = new ERL_NIF_TERM[batchSize]();
     ERL_NIF_TERM* batch_t = new ERL_NIF_TERM[batchSize]();
     ERL_NIF_TERM* batch_r = new ERL_NIF_TERM[batchSize]();
-    ERL_NIF_TERM* batch_y = new ERL_NIF_TERM[batchSize]();
+    ERL_NIF_TERM* batch_y;
+
+    if (encodeLabels) {
+        batch_y = new ERL_NIF_TERM[batchSize]();
+        enif_encode_array_of_float(env, tripleBatch->labels, batch_y, batchSize);
+    }
 
     enif_encode_array_of_long(env, tripleBatch->head, batch_h, batchSize);
     enif_encode_array_of_long(env, tripleBatch->tail, batch_t, batchSize);
     enif_encode_array_of_long(env, tripleBatch->relation, batch_r, batchSize);
-    enif_encode_array_of_float(env, tripleBatch->labels, batch_y, batchSize);
 
     delete tripleBatch;
 
-    ERL_NIF_TERM* batch = new ERL_NIF_TERM[4]();
+
+    ERL_NIF_TERM* batch = new ERL_NIF_TERM[nElements]();
 
     batch[0] = enif_make_list_from_array(env, batch_h, batchSize);
     batch[1] = enif_make_list_from_array(env, batch_t, batchSize);
     batch[2] = enif_make_list_from_array(env, batch_r, batchSize);
-    batch[3] = enif_make_list_from_array(env, batch_y, batchSize);
+
+    if (encodeLabels) {
+        batch[3] = enif_make_list_from_array(env, batch_y, batchSize);
+        delete [] batch_y;
+    }
 
     delete [] batch_h;
     delete [] batch_t;
     delete [] batch_r;
-    delete [] batch_y;
     
-    ERL_NIF_TERM result = enif_make_list_from_array(env, batch, 4);
+    ERL_NIF_TERM result = enif_make_list_from_array(env, batch, nElements);
 
     delete [] batch;
 

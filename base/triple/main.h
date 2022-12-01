@@ -18,6 +18,8 @@ enum TripleComponent { entity, relation };
 std::string getPluralTripleComponentName(TripleComponent component);
 INT external_to_internal_id(INT external_id, INT* internal_id, std::unordered_map<INT, INT>* external_to_internal, std::vector<INT>* internal_to_external);
 
+TripleElement decodeTripleElement(std::string name);
+
 struct Triple {
 
 	INT h, r, t;

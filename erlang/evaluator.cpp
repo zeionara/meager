@@ -5,6 +5,8 @@
 #include "../base/api/evaluator.h"
 #include "../base/evaluation/metric/Metric.h"
 
+#include "sampler.h"
+
 extern ERL_NIF_TERM
 initEvaluator_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
@@ -51,4 +53,20 @@ initEvaluator_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     }
 
     return completed_with_success(env);
+}
+
+extern ERL_NIF_TERM
+trial_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    try {
+        TripleBatch* tripleBatch = trial(
+            decodeTripleElement(enif_get_atom_(env, argv[0])),
+            enif_get_bool(env, argv[1])
+        );
+
+        ERL_NIF_TERM encoded = encodeTripleBatch(env, tripleBatch, false);
+
+        return completed_with_success(env, encoded);
+    } catch (invalidArgument& e) {
+        return completed_with_error(env, e.what());
+    }
 }

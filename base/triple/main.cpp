@@ -2,6 +2,8 @@
 #include "main.h"
 #include "TripleIndex.h"
 
+#define invalidArgument invalid_argument
+
 vector<INT> internal_to_external_entity_id;
 vector<INT> internal_to_external_relation_id;
 
@@ -17,6 +19,23 @@ string getPluralTripleComponentName(TripleComponent component) {
         default:
             return "unknown";
     }
+}
+
+TripleElement decodeTripleElement(string name) {
+
+    if (name == "head") {
+        return head;
+    }
+
+    if (name == "tail") {
+        return tail;
+    }
+
+    if (name == "relation") {
+        return rel;
+    }
+
+    throw invalidArgument("Unknown triple element name: " + name);
 }
 
 Frequencies* dropDuplicates(Triple* main, Triple* heads, Triple* tails, Triple* relations, INT length, INT nEntities, INT nRelations) {

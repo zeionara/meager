@@ -176,6 +176,7 @@ static ErlNifFunc meager_nif_funcs[] = {
     // Evaluator
 
     {"_init_evaluator", 3, initEvaluator_},
+    {"_trial", 2, trial_},
 
     //
     //  Settings

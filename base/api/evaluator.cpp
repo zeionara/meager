@@ -18,3 +18,17 @@ void initEvaluator(MetricSetTrackerMaker makeMetricSetTracker, SubsetType subset
         makeMetricSetTracker
     );
 }
+
+TripleBatch* trial(TripleElement element, bool verbose) {
+    if (element == rel) {
+    }
+
+    switch (element) {
+        case head:
+            return evaluator->head->makeBatch();
+        case tail:
+            return evaluator->tail->makeBatch();
+        default:
+            throw invalidArgument("Cannot trial passed triple element");
+    }
+}

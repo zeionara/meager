@@ -6,4 +6,7 @@
 extern ERL_NIF_TERM
 initEvaluator_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 
+extern ERL_NIF_TERM
+trial_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+
 #endif
