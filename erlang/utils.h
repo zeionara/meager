@@ -48,5 +48,18 @@ ERL_NIF_TERM completed_with_error(ErlNifEnv *env, std::stringstream* result);
 
 ERL_NIF_TERM enif_make_string(ErlNifEnv *env, const char* result);
 
+template <typename T>
+void decodeList(ErlNifEnv *env, ERL_NIF_TERM encoded, T* decoded, int length, T (*postProcess)(ErlNifEnv*, ERL_NIF_TERM)) {
+    ERL_NIF_TERM head;
+    ERL_NIF_TERM tail = encoded;
+
+    double current_value;
+
+    for (int i = 0; i < length; i++) {
+        enif_get_list_cell(env, tail, &head, &tail);  // Fetch next element from tail and save it to head
+        decoded[i] = postProcess(env, head);
+    }
+}
+
 #endif
 

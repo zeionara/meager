@@ -13,7 +13,7 @@
 //  Test
 //
 
-Evaluator<INT>* evaluator;
+Evaluator<INT>* evaluatorr;
 
 extern ERL_NIF_TERM
 get_head_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
@@ -32,7 +32,7 @@ get_head_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     // cout << "Making head batch" << endl;
 
-    TripleBatch* tripleBatch = evaluator->head->makeBatch();
+    TripleBatch* tripleBatch = evaluatorr->head->makeBatch();
 
     // cout << "Made head batch" << endl;
 
@@ -82,7 +82,7 @@ test_head(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     // cout << "Testing head" << endl;
 
-    evaluator->head->evaluate(predictions_encoded, enif_get_bool(env, argv[1]));
+    evaluatorr->head->evaluate(predictions_encoded, enif_get_bool(env, argv[1]));
 
     // cout << "Tested head" << endl;
 
@@ -107,7 +107,7 @@ get_tail_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     // cout << "Making tail batch" << endl;
 
-    TripleBatch* tripleBatch = evaluator->tail->makeBatch();
+    TripleBatch* tripleBatch = evaluatorr->tail->makeBatch();
 
     // cout << "Made tail batch" << endl;
 
@@ -151,7 +151,7 @@ test_tail(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     // testTail(predictions_encoded, enif_get_bool(env, argv[1]));
 
-    evaluator->tail->evaluate(predictions_encoded, enif_get_bool(env, argv[1]));
+    evaluatorr->tail->evaluate(predictions_encoded, enif_get_bool(env, argv[1]));
 
     return enif_make_int(env, 0);
 }
@@ -270,7 +270,7 @@ ERL_NIF_TERM test_link_prediction_(ErlNifEnv *env, int argc, const ERL_NIF_TERM 
     //     enif_get_bool(env, argv[0], argv[1])
     // );
 
-    evaluator->printMetrics();
+    evaluatorr->printMetrics();
 
     return enif_make_int(env, 0);
 }
@@ -278,9 +278,9 @@ ERL_NIF_TERM test_link_prediction_(ErlNifEnv *env, int argc, const ERL_NIF_TERM 
 ERL_NIF_TERM init_test(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     // initTest();
 
-    // cout << "Initializing evaluator" << endl;
+    // cout << "Initializing evaluatorr" << endl;
 
-    evaluator = new Evaluator<INT>(
+    evaluatorr = new Evaluator<INT>(
         // new DefaultCorpus(trainList, testList, validList, types),
         corpus,
         corpus->train,

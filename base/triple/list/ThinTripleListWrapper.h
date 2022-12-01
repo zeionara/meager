@@ -4,7 +4,7 @@
 #include "../main.h"
 #include "../reader.h"
 #include "../TripleIndex.h"
-#include "../../utils/main.h"
+// #include "../../utils/main.h"
 
 #include "TripleList.h"
 #include "../TripleEncoder.h"

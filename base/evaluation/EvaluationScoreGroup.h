@@ -1,12 +1,15 @@
 #ifndef EVALUATION_EVALUATION_SCORE_GROUP
 #define EVALUATION_EVALUATION_SCORE_GROUP
 
+#include <functional>
+
 #include "EvaluationScore.h"
 #include "EvaluationScoreContainer.h"
 
 #include "metric/MetricSetTracker.h"
 
-typedef MetricSetTracker* (*MetricSetTrackerMaker)();
+// typedef MetricSetTracker* (*MetricSetTrackerMaker)();
+typedef function<MetricSetTracker*()> MetricSetTrackerMaker;
 
 struct EvaluationScoreGroup: EvaluationScoreContainer {
 

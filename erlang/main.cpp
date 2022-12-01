@@ -18,6 +18,7 @@
 
 #include "corpus.h"
 #include "sampler.h"
+#include "evaluator.h"
 
 using namespace std;
 
@@ -171,6 +172,10 @@ static ErlNifFunc meager_nif_funcs[] = {
 
     {"_init_sampler", 6, initSampler_},
     {"_sample", 5, sample_},
+
+    // Evaluator
+
+    {"_init_evaluator", 4, initEvaluator_},
 
     //
     //  Settings

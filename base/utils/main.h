@@ -3,7 +3,13 @@
 
 #include "../triple/main.h"
 
+#define invalidArgument invalid_argument
+
+using namespace std;
+
 enum SubsetType { train, test, valid };
+
+SubsetType decodeSubsetType(string name);
 
 struct File {
     FILE* file;
