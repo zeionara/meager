@@ -49,27 +49,28 @@ struct MetricConfig {
 extern ERL_NIF_TERM
 initEvaluator_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
-        // cout << "Initializing evaluator" << endl;
+        // unsigned nMetrics;
 
-        INT nMetrics = enif_get_long_(env, argv[1]);
+        // enif_get_list_length(env, argv[0], &nMetrics);
        
         // cout << "N metrics = " << nMetrics << endl;
 
-        MetricConfig* metrics = (MetricConfig*)malloc(nMetrics * sizeof(MetricConfig));
+        // MetricConfig* metrics = (MetricConfig*)malloc(nMetrics * sizeof(MetricConfig));
 
-        decodeList<MetricConfig>(env, argv[0], metrics, nMetrics, [](ErlNifEnv* env, ERL_NIF_TERM metric) {
+        List<MetricConfig>* metrics = decodeList<MetricConfig>(env, argv[0], [](ErlNifEnv* env, ERL_NIF_TERM metric) {
+        // decodeList<MetricConfig>(env, argv[0], metrics, nMetrics, [](ErlNifEnv* env, ERL_NIF_TERM metric) {
             // cout << "Started decoding metric" << endl;
 
-            INT const descriptionLength = 2;
+            // INT const descriptionLength = 2;
 
             // cout << "Set arity" << endl;
 
-            int arity = descriptionLength;
+            int arity; // = descriptionLength;
 
             // cout << "Preparing array" << endl;
 
             // const ERL_NIF_TERM** metricDescription = (const ERL_NIF_TERM**)malloc(descriptionLength * sizeof(ERL_NIF_TERM*));
-            const ERL_NIF_TERM* metricDescription = (const ERL_NIF_TERM*)malloc(descriptionLength * sizeof(ERL_NIF_TERM));
+            const ERL_NIF_TERM* metricDescription; // = (const ERL_NIF_TERM*)malloc(descriptionLength * sizeof(ERL_NIF_TERM));
 
             // cout << "Getting tuple..." << endl;
 
@@ -93,14 +94,16 @@ initEvaluator_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         SubsetType subset = decodeSubsetType(enif_get_atom_(env, argv[2]));
         bool verbose = enif_get_bool(env, argv[3]);
 
-        initEvaluator([nMetrics, metrics](){
-            INT const length = nMetrics;
+        // initEvaluator([nMetrics, metrics](){
+        initEvaluator([metrics](){
+            // INT const length = nMetrics;
             // INT i = 0;
 
-            MetricTrackerBase** trackers = (MetricTrackerBase**) malloc(length * sizeof(MetricTrackerBase*));
+            // MetricTrackerBase** trackers = (MetricTrackerBase**) malloc(length * sizeof(MetricTrackerBase*));
+            MetricTrackerBase** trackers = (MetricTrackerBase**) malloc(metrics->length * sizeof(MetricTrackerBase*));
 
-            for (INT i = 0; i < nMetrics; i++) {
-                MetricConfig metric = metrics[i];
+            for (INT i = 0; i < metrics->length; i++) {
+                MetricConfig metric = metrics->items[i];
 
                 switch (metric.metric) {
                     case Count:
@@ -115,7 +118,7 @@ initEvaluator_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
                 }
             }
 
-            return new MetricSetTracker(trackers, length);
+            return new MetricSetTracker(trackers, metrics->length);
         }, subset, verbose);
 
     } catch (invalidArgument& e) {

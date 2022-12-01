@@ -47,6 +47,12 @@ char* enif_get_atom_(ErlNifEnv *env, ERL_NIF_TERM atom) {
     return decoded_atom;
 }
 
+long getListLength(ErlNifEnv* env, ERL_NIF_TERM list) {
+    unsigned length;
+    enif_get_list_length(env, list, &length);
+    return length;
+}
+
 bool enif_get_bool(ErlNifEnv *env, ERL_NIF_TERM atom, ERL_NIF_TERM length) {
     char* decoded_atom = enif_get_atom_(env, atom, length);
     

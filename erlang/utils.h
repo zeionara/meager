@@ -61,5 +61,38 @@ void decodeList(ErlNifEnv *env, ERL_NIF_TERM encoded, T* decoded, int length, T 
     }
 }
 
+long getListLength(ErlNifEnv* env, ERL_NIF_TERM list);
+
+template <typename T>
+struct List {
+    T* items;
+    long length;
+
+    List(T* items, long length) {
+        this->items = items;
+        this->length = length;
+    }
+};
+
+template <typename T>
+List<T>* decodeList(ErlNifEnv *env, ERL_NIF_TERM encoded, T (*postProcess)(ErlNifEnv*, ERL_NIF_TERM)) {
+    ERL_NIF_TERM head;
+    ERL_NIF_TERM tail = encoded;
+
+    long length = getListLength(env, encoded);
+
+    T* decoded = (T*)malloc(length * sizeof(T));
+
+    double current_value;
+
+    for (int i = 0; i < length; i++) {
+        enif_get_list_cell(env, tail, &head, &tail);  // Fetch next element from tail and save it to head
+        decoded[i] = postProcess(env, head);
+    }
+
+    return new List<T>(decoded, length);
+}
+
+
 #endif
 

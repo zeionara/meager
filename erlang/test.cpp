@@ -8,12 +8,15 @@
 #include "../base/samplers/TripleBatch.h"
 
 #include "../base/api/corpus.h"
+#include "../base/api/evaluator.h"
+
+#define evaluatorr evaluator
 
 //
 //  Test
 //
 
-Evaluator<INT>* evaluatorr;
+// Evaluator<INT>* evaluatorr;
 
 extern ERL_NIF_TERM
 get_head_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
@@ -280,49 +283,49 @@ ERL_NIF_TERM init_test(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     // cout << "Initializing evaluatorr" << endl;
 
-    evaluatorr = new Evaluator<INT>(
-        // new DefaultCorpus(trainList, testList, validList, types),
-        corpus,
-        corpus->train,
-        corpus->test,
-        []() {
-            // INT const length = 7;
-            INT const length = 7;
-            INT i = 0;
+    // evaluatorr = new Evaluator<INT>(
+    //     // new DefaultCorpus(trainList, testList, validList, types),
+    //     corpus,
+    //     corpus->train,
+    //     corpus->test,
+    //     []() {
+    //         // INT const length = 7;
+    //         INT const length = 7;
+    //         INT i = 0;
 
-            MetricTrackerBase** trackers = (MetricTrackerBase**) malloc(length * sizeof(MetricTrackerBase*));
+    //         MetricTrackerBase** trackers = (MetricTrackerBase**) malloc(length * sizeof(MetricTrackerBase*));
 
-            // trackers[i++] = new CountMetricTracker(1);
-            // trackers[i++] = new CountMetricTracker(3);
-            // trackers[i++] = new CountMetricTracker(10);
-            // trackers[i++] = new RankMetricTracker();
-            // trackers[i++] = new ReciprocalRankMetricTracker();
+    //         // trackers[i++] = new CountMetricTracker(1);
+    //         // trackers[i++] = new CountMetricTracker(3);
+    //         // trackers[i++] = new CountMetricTracker(10);
+    //         // trackers[i++] = new RankMetricTracker();
+    //         // trackers[i++] = new ReciprocalRankMetricTracker();
 
-            trackers[i++] = new CountMetricTracker(1);
-            trackers[i++] = new CountMetricTracker(3);
-            trackers[i++] = new CountMetricTracker(10);
-            trackers[i++] = new CountMetricTracker(100);
-            trackers[i++] = new CountMetricTracker(1000);
-            trackers[i++] = new RankMetricTracker();
-            trackers[i++] = new ReciprocalRankMetricTracker();
+    //         trackers[i++] = new CountMetricTracker(1);
+    //         trackers[i++] = new CountMetricTracker(3);
+    //         trackers[i++] = new CountMetricTracker(10);
+    //         trackers[i++] = new CountMetricTracker(100);
+    //         trackers[i++] = new CountMetricTracker(1000);
+    //         trackers[i++] = new RankMetricTracker();
+    //         trackers[i++] = new ReciprocalRankMetricTracker();
 
-            // cout << "Making new metric set tracker" << endl;
+    //         // cout << "Making new metric set tracker" << endl;
 
-            // return new MetricSetTracker(trackers, length);
+    //         // return new MetricSetTracker(trackers, length);
 
-            // MetricTrackerBase (*trackerss)[length] = {
-            // trackers = {
-            //     new CountMetricTracker(1),
-            //     new CountMetricTracker(3),
-            //     new CountMetricTracker(10),
-            //     new RankMetricTracker(),
-            //     new ReciprocalRankMetricTracker()
-            // };
+    //         // MetricTrackerBase (*trackerss)[length] = {
+    //         // trackers = {
+    //         //     new CountMetricTracker(1),
+    //         //     new CountMetricTracker(3),
+    //         //     new CountMetricTracker(10),
+    //         //     new RankMetricTracker(),
+    //         //     new ReciprocalRankMetricTracker()
+    //         // };
 
-            // return new MetricSetTracker();
-            return new MetricSetTracker(trackers, length);
-        }
-    );
+    //         // return new MetricSetTracker();
+    //         return new MetricSetTracker(trackers, length);
+    //     }
+    // );
 
     return enif_make_int(env, 0);
 }
