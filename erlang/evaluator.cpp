@@ -11,8 +11,9 @@ extern ERL_NIF_TERM
 initEvaluator_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
 
-        SubsetType subset = decodeSubsetType(enif_get_atom_(env, argv[1]));
-        bool verbose = enif_get_bool(env, argv[2]);
+        EvaluationTask task = decodeEvaluationTask(enif_get_atom_(env, argv[1]));
+        SubsetType subset = decodeSubsetType(enif_get_atom_(env, argv[2]));
+        bool verbose = enif_get_bool(env, argv[3]);
 
         initEvaluator([env, argv](string label){
             List<MetricTrackerBase*>* trackers = decodeList<MetricTrackerBase*>(env, argv[0], [](ErlNifEnv* env, ERL_NIF_TERM metric) -> MetricTrackerBase* {
@@ -46,7 +47,7 @@ initEvaluator_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
             });
 
             return new MetricSetTracker(trackers->items, trackers->length, label);
-        }, subset, verbose);
+        }, task, subset, verbose);
 
     } catch (invalidArgument& e) {
         return completed_with_error(env, e.what());

@@ -2,11 +2,12 @@
 #define API_EVALUATOR_H
 
 #include "../evaluation/Evaluator.h"
+#include "../evaluation/main.h"
 
 extern
 Evaluator<INT>* evaluator;
 
-void initEvaluator(MetricSetTrackerMaker makeMetricSetTracker, SubsetType subset = test, bool verbose = false);
+void initEvaluator(MetricSetTrackerMaker makeMetricSetTracker, EvaluationTask task, SubsetType subset = test, bool verbose = false);
 
 TripleBatch* trial(TripleElement element, bool verbose = false);
 

@@ -3,6 +3,8 @@
 
 #include "MetricTracker.h"
 
+string const RANK = "rank";
+
 struct RankMetricTracker: MetricTracker<INT> {
 
     RankMetricTracker(): MetricTracker() {};
@@ -14,11 +16,11 @@ struct RankMetricTracker: MetricTracker<INT> {
     }
 
     string getLabel() {
-        return "rank";
+        return RANK;
     }
 
     string getName() {
-        return getLabel();
+        return RANK;
     }
 
     Metric getId() {

@@ -3,6 +3,8 @@
 
 #include "MetricTracker.h"
 
+string const RECIPROCAL_RANK = "reciprocal_rank";
+
 struct ReciprocalRankMetricTracker: MetricTracker<REAL> {
 
     /// ReciprocalRankMetricTracker(string label): MetricTracker(label) {};
@@ -14,11 +16,11 @@ struct ReciprocalRankMetricTracker: MetricTracker<REAL> {
     }
 
     string getLabel() {
-        return "reciprocal-rank";
+        return RECIPROCAL_RANK;
     }
 
     string getName() {
-        return "reciprocal_rank";
+        return RECIPROCAL_RANK;
     }
 
     Metric getId() {

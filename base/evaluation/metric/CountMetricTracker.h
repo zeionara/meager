@@ -7,6 +7,8 @@
 
 using namespace std;
 
+string const COUNT = "top_n";
+
 struct CountMetricTracker: MetricTracker<INT> {
 
     INT n;
@@ -26,11 +28,11 @@ struct CountMetricTracker: MetricTracker<INT> {
     }
 
     string getLabel() {
-        return "top-n@" + to_string(n);
+        return COUNT + "@" + to_string(n);
     }
 
     string getName() {
-        return "top_n";
+        return COUNT;
     }
 
     Metric getId() {

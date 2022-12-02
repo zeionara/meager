@@ -1,4 +1,5 @@
 #include "../evaluation/Evaluator.h"
+#include "../evaluation/main.h"
 
 #include "corpus.h"
 
@@ -6,9 +7,13 @@
 
 Evaluator<INT>* evaluator;
 
-void initEvaluator(MetricSetTrackerMaker makeMetricSetTracker, SubsetType subset, bool verbose) {
+
+void initEvaluator(MetricSetTrackerMaker makeMetricSetTracker, EvaluationTask task, SubsetType subset, bool verbose) {
     if (subset == train) {
         throw invalidArgument("Cannot use train subset for evaluation");
+    }
+    if (task != LINK_PREDICTION) {
+        throw invalidArgument("Only link prediction task is supported");
     }
 
     evaluator = new Evaluator<INT>(

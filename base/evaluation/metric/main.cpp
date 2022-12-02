@@ -2,17 +2,21 @@
 
 #include "Metric.h"
 
+#include "CountMetricTracker.h"
+#include "RankMetricTracker.h"
+#include "ReciprocalRankMetricTracker.h"
+
 Metric decodeMetric(string name) {
 
-    if (name == "count") {
+    if (name == COUNT) {
         return Count;
     }
 
-    if (name == "rank") {
+    if (name == RANK) {
         return Rank;
     }
 
-    if (name == "reciprocal_rank") {
+    if (name == RECIPROCAL_RANK) {
         return ReciprocalRank;
     }
 

@@ -40,5 +40,4 @@ template<typename T> struct MetricTracker: MetricTrackerBase {
 };
 
 
-
 #endif
