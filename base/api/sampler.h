@@ -8,5 +8,6 @@ extern
 PatternSampler<INT>* sampler;
 
 void initSampler(Pattern pattern, INT nObservedTriplesPerPatternInstance, bool bern = false, bool crossSampling = false, INT nWorkers = 8, bool verbose = false);
+TripleBatch* sample(INT batchSize, INT entityNegativeRate, INT relationNegativeRate, bool headBatchFlag, bool verbose);
 
 #endif

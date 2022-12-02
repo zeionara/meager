@@ -1,10 +1,7 @@
 #include "erl_nif.h"
 #include "utils.h"
 
-#include "../base/api/corpus.h"
 #include "../base/api/sampler.h"
-
-INT validateNobservedTriplesPerPatternInstance(Pattern pattern, INT nObservedTriplesPerPatternInstance);
 
 ERL_NIF_TERM encodeTripleBatch(ErlNifEnv* env, TripleBatch* tripleBatch, bool verbose = false);
 
@@ -15,7 +12,7 @@ initSampler_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
         initSampler(
             pattern,  // pattern
-            validateNobservedTriplesPerPatternInstance(pattern, enif_get_long_(env, argv[1])),  // nObservedTriplesPerPatternInstance
+            enif_get_long_(env, argv[1]),  // nObservedTriplesPerPatternInstance
             enif_get_bool(env, argv[2]),  // bern
             enif_get_bool(env, argv[3]),  // crossSampling
             enif_get_long_(env, argv[4]),  // nWorkers
@@ -31,9 +28,6 @@ initSampler_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 extern ERL_NIF_TERM
 sample_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try{
-        // if (verbose) {
-        //     cout << "Sampling batch" << endl;
-        // }
         INT batchSize = enif_get_long_(env, argv[0]); 
 
         INT entityNegativeRate = enif_get_long_(env, argv[1]); 
@@ -42,44 +36,14 @@ sample_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         bool headBatchFlag = enif_get_bool(env, argv[3]);
         bool verbose = enif_get_bool(env, argv[4]);
 
-        TripleBatch* tripleBatch = sampler->sample(corpus, batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, verbose);
-
-        // if (verbose) {
-        //     cout << "Sampled batch" << endl;
-        // }
+        TripleBatch* tripleBatch = sample(batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, verbose);
 
         ERL_NIF_TERM encoded = encodeTripleBatch(env, tripleBatch);
-
-        // if (verbose) {
-        //     cout << "Encoded batch" << endl;
-        // }
 
         return completed_with_success(env, encoded);
     } catch (invalidArgument& e) {
         return completed_with_error(env, e.what());
     }
-}
-
-INT validateNobservedTriplesPerPatternInstance(Pattern pattern, INT nObservedTriplesPerPatternInstance) {
-    PatternDescription patternDescription = corpus->train->patterns->get(pattern);
-
-    INT nTriplesPerPatternInstance = patternDescription.nTriplesPerInstance;
-
-    if (nObservedTriplesPerPatternInstance > nTriplesPerPatternInstance) {
-        cout << 
-            "Requested number of observed triples exceeds number of triples per instance of the selected pattern (" <<
-            nObservedTriplesPerPatternInstance << " > " << nTriplesPerPatternInstance <<
-            "); using the highest available value (" << nTriplesPerPatternInstance << ")" <<
-        endl;
-        return nTriplesPerPatternInstance;
-    }
-
-    if (nObservedTriplesPerPatternInstance < 0) {
-        cout << "Requested number of observed triples is negative; using the lowest available value (0)" << endl;
-        return 0;
-    }
-
-    return nObservedTriplesPerPatternInstance;
 }
 
 ERL_NIF_TERM encodeTripleBatch(ErlNifEnv* env, TripleBatch* tripleBatch, bool encodeLabels) {
