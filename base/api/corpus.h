@@ -47,10 +47,13 @@ extern
 void importTrain(bool dropPatternDuplicates = true, bool verbose = false);
 
 extern
-void importTest(bool verbose = false);
+void importTriples(SubsetType subset, bool verbose = false);
 
-extern
-void importValid(bool verbose = false);
+// extern
+// void importTest(bool verbose = false);
+// 
+// extern
+// void importValid(bool verbose = false);
 
 extern
 void importTypes(bool verbose = false);

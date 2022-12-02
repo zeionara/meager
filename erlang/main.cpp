@@ -163,8 +163,9 @@ static ErlNifFunc meager_nif_funcs[] = {
     {"_import_pattern", 1, importPattern_},
 
     {"_import_train", 2, importTrain_},
-    {"_import_test", 1, importTest_},
-    {"_import_valid", 1, importValid_},
+    {"_import_triples", 2, importTriples_},
+    // {"_import_test", 1, importTest_},
+    // {"_import_valid", 1, importValid_},
 
     {"_import_types", 1, importTypes_},
 

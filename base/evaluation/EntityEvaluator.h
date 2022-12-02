@@ -26,14 +26,22 @@ struct EntityEvaluator {
         this->triples = triples;
         this->testTriples = testTriples;
         this->state = new EvaluationScoreCluster(makeMetricSetTracker);
+        this->currentTripleIndex = 0;
     }
 
     TripleBatch* makeBatch() { // Generate all possible triples for every entity which may be used as a triple head
+        // cout << "make batch" << endl;
         Triple* triples = (Triple*) malloc(this->corpus->countEntities() * sizeof(Triple));
+        // cout << "made batch" << endl;
 
-        for (INT i = 0; i < this->corpus->countEntities(); i++) {
+        INT nEntities = this->corpus->countEntities();
+        // cout << "counted entities" << endl;
+
+        for (INT i = 0; i < nEntities; i++) {
+            // cout << i << endl;
             triples[i] = makeTriple(i);
         }
+        // cout << "made triples" << endl;
 
         return new TripleBatch(triples, this->corpus->countEntities());
     }

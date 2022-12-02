@@ -5,6 +5,8 @@
 
 LocalTsvCorpus<INT>* corpus;
 
+bool constexpr DROP_PATTERN_DUPLICATES = true;
+
 void initCorpus(char *path, bool enableFilters, bool verbose) {
     corpus = new LocalTsvCorpus<INT>(new OpenKECorpusReader(path), enableFilters, verbose);
     if (verbose) {
@@ -25,13 +27,29 @@ void importPattern(bool verbose = false) {
 void importTrain(bool dropPatternDuplicates = true, bool verbose = false) {
     corpus->importTrain(dropPatternDuplicates, verbose); 
 }
+// 
+// void importTest(bool verbose = false) {
+//     corpus->importTest(verbose); 
+// }
+// 
+// void importValid(bool verbose = false) {
+//     corpus->importValid(verbose); 
+// }
 
-void importTest(bool verbose = false) {
-    corpus->importTest(verbose); 
-}
-
-void importValid(bool verbose = false) {
-    corpus->importValid(verbose); 
+void importTriples(SubsetType subset, bool verbose) {
+    switch (subset) {
+        case train:
+            corpus->importTrain(DROP_PATTERN_DUPLICATES, verbose); 
+            return;
+        case test:
+            corpus->importTest(verbose); 
+            return;
+        case valid:
+            corpus->importValid(verbose); 
+            return;
+        default:
+            throw invalidArgument("Unsupported subset type given. Cannot import triples");
+    }
 }
 
 void importTypes(bool verbose = false) {
@@ -47,27 +65,6 @@ long countEntities(bool verbose) {
 long countRelations(bool verbose) {
     return corpus->countRelations();
 }
-
-// long countTrainTriples() {
-//     if (corpus->train == nullptr) {
-//         throw invalidArgument(TRAIN_IS_NOT_INITIALIZED);
-//     }
-//     return corpus->train->length;
-// }
-// 
-// long countTestTriples() {
-//     if (corpus->test == nullptr) {
-//         throw invalidArgument(TEST_IS_NOT_INITIALIZED);
-//     }
-//     return corpus->test->length;
-// }
-// 
-// long countValidTriples() {
-//     if (corpus->valid == nullptr) {
-//         throw invalidArgument(VALID_IS_NOT_INITIALIZED);
-//     }
-//     return corpus->valid->length;
-// }
 
 long countTriples(SubsetType subset, bool verbose) {
     switch (subset) {

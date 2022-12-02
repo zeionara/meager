@@ -25,11 +25,16 @@ string const _INCLUDING_FILTERS_FILENAME = "filters/including.txt";
 string const _EXCLUDING_FILTERS_FILENAME = "filters/excluding.txt";
 
 string const IS_NOT_INITIALIZED = "is not initialized";
+string const IS_ALREADY_INITIALIZED = "is already initialized";
 
 string const ENCODER_IS_NOT_INITIALIZED = "Encoder " + IS_NOT_INITIALIZED;
 string const TRAIN_IS_NOT_INITIALIZED = "Train subset " + IS_NOT_INITIALIZED;
 string const TEST_IS_NOT_INITIALIZED = "Test subset " + IS_NOT_INITIALIZED;
 string const VALID_IS_NOT_INITIALIZED = "Valid subset " + IS_NOT_INITIALIZED;
+
+string const TRAIN_IS_ALREADY_INITIALIZED = "Train subset " + IS_ALREADY_INITIALIZED;
+string const TEST_IS_ALREADY_INITIALIZED = "Test subset " + IS_ALREADY_INITIALIZED;
+string const VALID_IS_ALREADY_INITIALIZED = "Valid subset " + IS_ALREADY_INITIALIZED;
 
 template <typename T>
 struct LocalTsvCorpus: LocalCorpus<T> {
@@ -77,6 +82,10 @@ struct LocalTsvCorpus: LocalCorpus<T> {
             cout << "started reading train subset" << endl;
         }
 
+        if (train != nullptr) {
+            throw invalidArgument(TRAIN_IS_ALREADY_INITIALIZED);
+        }
+
         this->train = new ThickTripleListWrapper<T>(::SubsetType::train, this->reader, filter, encoder, patterns, this->enableFilters, dropPatternDuplicates, verbose);
 
         if (verbose) {
@@ -89,6 +98,10 @@ struct LocalTsvCorpus: LocalCorpus<T> {
             cout << "started reading test subset" << endl;
         }
 
+        if (test != nullptr) {
+            throw invalidArgument(TEST_IS_ALREADY_INITIALIZED);
+        }
+
         this->test = new ThinTripleListWrapper<T>(::SubsetType::test, this->reader, filter, encoder, this->enableFilters, verbose);
 
         if (verbose) {
@@ -99,6 +112,10 @@ struct LocalTsvCorpus: LocalCorpus<T> {
     void importValid(bool verbose) {
         if (verbose) {
             cout << "started reading valid subset" << endl;
+        }
+
+        if (valid != nullptr) {
+            throw invalidArgument(VALID_IS_ALREADY_INITIALIZED);
         }
 
         this->valid = new ThinTripleListWrapper<T>(::SubsetType::valid, this->reader, filter, encoder, this->enableFilters, verbose);
