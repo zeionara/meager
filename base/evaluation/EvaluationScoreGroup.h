@@ -2,40 +2,34 @@
 #define EVALUATION_EVALUATION_SCORE_GROUP
 
 #include <functional>
+#include <unordered_map>
 
 #include "EvaluationScore.h"
 #include "EvaluationScoreContainer.h"
 
 #include "metric/MetricSetTracker.h"
 
-// typedef MetricSetTracker* (*MetricSetTrackerMaker)();
-typedef function<MetricSetTracker*()> MetricSetTrackerMaker;
+typedef function<MetricSetTracker*(string)> MetricSetTrackerMaker;
+
+string const UNFILTERED = "unfiltered";
+string const FILTERED = "filtered";
+string const SEPARATOR = "_";
 
 struct EvaluationScoreGroup: EvaluationScoreContainer {
 
     EvaluationScore* filtered;
     EvaluationScore* unfiltered;
 
-    EvaluationScoreGroup(MetricSetTrackerMaker makeMetricSetTracker) {
-        // MetricSetTracker* tracker = new MetricSetTracker();
-        // cout << "Created metric set tracker " << tracker << endl;
-        // filtered = new EvaluationScore(new MetricSetTracker());
-        // cout << "foo" << endl;
-        filtered = new EvaluationScore(makeMetricSetTracker());
-        // cout << "bar" << endl;
-        // cout << "Written metric set tracker " << filtered->metrics << endl;
-        // unfiltered = new EvaluationScore(new MetricSetTracker());
-        unfiltered = new EvaluationScore(makeMetricSetTracker());
-        // cout << "baz" << endl;
+    string label;
+
+    EvaluationScoreGroup(MetricSetTrackerMaker makeMetricSetTracker, string label) {
+        unfiltered = new EvaluationScore(makeMetricSetTracker(label + SEPARATOR + UNFILTERED));
+        filtered = new EvaluationScore(makeMetricSetTracker(label + SEPARATOR + FILTERED));
+        this->label = label;
     }
 
     void updateMetrics() {
-        // cout << "Updating metrics in group" << endl;
         filtered->updateMetrics();
-        // cout << filtered->metrics << endl;
-        // cout << filtered->metrics->trackers << endl;
-        // filtered->metrics->update(filtered);
-        // cout << "Updating metrics in group" << endl;
         unfiltered->updateMetrics();
     }
 
@@ -54,9 +48,14 @@ struct EvaluationScoreGroup: EvaluationScoreContainer {
         unfiltered->reset();
     }
 
-    void printMetrics(string prefix, INT nTriples) {
-        filtered->metrics->printMetrics(prefix + " unfiltered", nTriples);
-        filtered->metrics->printMetrics(prefix + " filtered", nTriples);
+    void printMetrics(INT nTriples) {
+        unfiltered->metrics->printMetrics(label + SEPARATOR + UNFILTERED, nTriples);
+        filtered->metrics->printMetrics(label + SEPARATOR + FILTERED, nTriples);
+    }
+
+    MetricTree* getTree() {
+        unordered_map<string, MetricTree*> subtrees = {{UNFILTERED, unfiltered->getTree()}, {FILTERED, filtered->getTree()}};
+        return new MetricTree(subtrees);
     }
 
 };

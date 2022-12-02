@@ -13,6 +13,19 @@
 #include "HeadEvaluator.h"
 #include "TailEvaluator.h"
 
+// struct MetricTree {
+//     unordered_map<string, MetricTree*> children;
+//     MetricSetTracker* metrics;
+// 
+//     MetricTree(unordered_map<string, MetricTree*> children, MetricSetTracker* metrics) {
+//         this->children = children;
+//         this->metrics = metrics;
+//     }
+// };
+
+string const HEAD = "head";
+string const TAIL = "tail";
+
 template <typename T>
 struct Evaluator {
 
@@ -38,9 +51,15 @@ struct Evaluator {
     void printMetrics() {
         // this->head->state->printMetrics("head", this->testTriples->length);
         this->head->state->unconstrained->unfiltered->metrics->printHeader();
-        this->head->state->printMetrics("head", this->testTriples->length);
-        this->tail->state->printMetrics("tail", this->testTriples->length);
+        this->head->state->printMetrics(this->testTriples->length);
+        this->tail->state->printMetrics(this->testTriples->length);
     }
+
+    MetricTree* getMetricTree() {
+        unordered_map<string, MetricTree*> subtrees = {{HEAD, head->state->getTree()}, {TAIL, tail->state->getTree()}};
+        return new MetricTree(subtrees);
+    }
+
 };
 
 #endif

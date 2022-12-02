@@ -10,6 +10,7 @@
 
 template <typename T>
 struct EntityEvaluator {
+
     INT currentTripleIndex;
 
     EvaluationScoreCluster* state;
@@ -18,15 +19,18 @@ struct EntityEvaluator {
     ThickTripleListWrapper<T>* triples;
     ThinTripleListWrapper<T>* testTriples;
 
+    string label;
+
     // virtual bool isTripleFromDataset(Triple triple) = 0;
     // virtual bool isCorrectTriple(Triple triple) = 0;
    
-    EntityEvaluator(Corpus* corpus, ThickTripleListWrapper<T>* triples, ThinTripleListWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker) {
+    EntityEvaluator(Corpus* corpus, ThickTripleListWrapper<T>* triples, ThinTripleListWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker, string label) {
         this->corpus = corpus;
         this->triples = triples;
         this->testTriples = testTriples;
-        this->state = new EvaluationScoreCluster(makeMetricSetTracker);
+        this->state = new EvaluationScoreCluster(makeMetricSetTracker, label);
         this->currentTripleIndex = 0;
+        this->label = label;
     }
 
     TripleBatch* makeBatch() { // Generate all possible triples for every entity which may be used as a triple head

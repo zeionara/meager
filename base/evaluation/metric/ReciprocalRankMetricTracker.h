@@ -16,6 +16,10 @@ struct ReciprocalRankMetricTracker: MetricTracker<REAL> {
     string getLabel() {
         return "reciprocal-rank";
     }
+
+    string getName() {
+        return "reciprocal_rank";
+    }
 };
 
 #endif

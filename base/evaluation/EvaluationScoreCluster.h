@@ -4,14 +4,20 @@
 #include "EvaluationScoreGroup.h"
 #include "EvaluationScoreContainer.h"
 
+string const CONSTRAINED = "constrained";
+string const UNCONSTRAINED = "unconstrained";
+
 struct EvaluationScoreCluster: EvaluationScoreContainer {
 
     EvaluationScoreGroup* constrained;
     EvaluationScoreGroup* unconstrained;
 
-    EvaluationScoreCluster(MetricSetTrackerMaker makeMetricSetTracker) {
-        constrained = new EvaluationScoreGroup(makeMetricSetTracker);
-        unconstrained = new EvaluationScoreGroup(makeMetricSetTracker);
+    string label;
+
+    EvaluationScoreCluster(MetricSetTrackerMaker makeMetricSetTracker, string label) {
+        unconstrained = new EvaluationScoreGroup(makeMetricSetTracker, label + SEPARATOR + UNCONSTRAINED);
+        constrained = new EvaluationScoreGroup(makeMetricSetTracker, label + SEPARATOR + CONSTRAINED);
+        this->label = label;
     }
 
     void updateMetrics() {
@@ -36,9 +42,14 @@ struct EvaluationScoreCluster: EvaluationScoreContainer {
         unconstrained->reset();
     }
 
-    void printMetrics(string prefix, INT nTriples) {
-        unconstrained->printMetrics(prefix + " unconstrained", nTriples);
-        constrained->printMetrics(prefix + " constrained", nTriples);
+    void printMetrics(INT nTriples) {
+        unconstrained->printMetrics(nTriples);
+        constrained->printMetrics(nTriples);
+    }
+
+    MetricTree* getTree() {
+        unordered_map<string, MetricTree*> subtrees = {{UNCONSTRAINED, unconstrained->getTree()}, {CONSTRAINED, constrained->getTree()}};
+        return new MetricTree(subtrees);
     }
 
 };

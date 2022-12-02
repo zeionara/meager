@@ -14,7 +14,7 @@ initEvaluator_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         SubsetType subset = decodeSubsetType(enif_get_atom_(env, argv[1]));
         bool verbose = enif_get_bool(env, argv[2]);
 
-        initEvaluator([env, argv](){
+        initEvaluator([env, argv](string label){
             List<MetricTrackerBase*>* trackers = decodeList<MetricTrackerBase*>(env, argv[0], [](ErlNifEnv* env, ERL_NIF_TERM metric) -> MetricTrackerBase* {
                 int length;
                 const ERL_NIF_TERM* metricDescription;
@@ -45,7 +45,7 @@ initEvaluator_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
                 }
             });
 
-            return new MetricSetTracker(trackers->items, trackers->length);
+            return new MetricSetTracker(trackers->items, trackers->length, label);
         }, subset, verbose);
 
     } catch (invalidArgument& e) {
@@ -85,11 +85,24 @@ evaluate_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
             decodeTripleElement(enif_get_atom_(env, argv[0])),
             predictions->items,
             enif_get_bool(env, argv[2]),
-            enif_get_bool(env, argv[2])
+            enif_get_bool(env, argv[3])
         );
     } catch (invalidArgument& e) {
         return completed_with_error(env, e.what());
     }
 
     return completed_with_success(env);
+}
+
+extern ERL_NIF_TERM
+computeMetrics_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    try {
+        MetricTree* tree = computeMetrics(
+            enif_get_bool(env, argv[0])
+        );
+    } catch (invalidArgument& e) {
+        return completed_with_error(env, e.what());
+    }
+
+    return completed_with_success(env, enif_make_long(env, 17));
 }

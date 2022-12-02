@@ -14,11 +14,13 @@ using namespace std;
 struct MetricSetTracker {
     MetricTrackerBase** trackers;
     INT length;
+    string label;
 
-    MetricSetTracker(MetricTrackerBase** trackers, INT length) {
+    MetricSetTracker(MetricTrackerBase** trackers, INT length, string label) {
     // MetricSetTracker() {
         this->trackers = trackers;
         this->length = length;
+        this->label = label;
         // trackers = (MetricTrackerBase**) malloc(5 * sizeof(MetricTrackerBase*));
 
         // trackers[0] = new CountMetricTracker(1);

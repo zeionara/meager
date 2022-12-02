@@ -16,6 +16,10 @@ struct RankMetricTracker: MetricTracker<INT> {
     string getLabel() {
         return "rank";
     }
+
+    string getName() {
+        return getLabel();
+    }
 };
 
 #endif

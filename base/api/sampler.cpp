@@ -36,4 +36,3 @@ INT validateNobservedTriplesPerPatternInstance(Pattern pattern, INT nObservedTri
 
     return nObservedTriplesPerPatternInstance;
 }
-

@@ -42,3 +42,7 @@ void evaluate(TripleElement element, REAL* predictions, bool reverse, bool verbo
             throw invalidArgument("Cannot evaluate passed triple element");
     }
 }
+
+MetricTree* computeMetrics(bool verbose) {
+    return evaluator->getMetricTree();
+}

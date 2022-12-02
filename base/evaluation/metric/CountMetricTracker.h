@@ -28,6 +28,10 @@ struct CountMetricTracker: MetricTracker<INT> {
     string getLabel() {
         return "top-n@" + to_string(n);
     }
+
+    string getName() {
+        return "top_n";
+    }
 };
 
 #endif

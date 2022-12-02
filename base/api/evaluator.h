@@ -12,4 +12,6 @@ TripleBatch* trial(TripleElement element, bool verbose = false);
 
 void evaluate(TripleElement element, REAL* predictions, bool reverse, bool verbose = false);
 
+MetricTree* computeMetrics(bool verbose);
+
 #endif
