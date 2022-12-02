@@ -94,15 +94,58 @@ evaluate_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     return completed_with_success(env);
 }
 
+ERL_NIF_TERM encodeMetric(ErlNifEnv* env, MetricTrackerBase* metric) {
+    switch (metric->getId()) {
+        case Count:
+            return enif_make_tuple2(env, enif_make_atom(env, metric->getName().c_str()), enif_make_long(env, ((CountMetricTracker*)metric)->n));
+        default:
+            return enif_make_atom(env, metric->getName().c_str());
+    }
+}
+
+ERL_NIF_TERM encodeMetricTree(ErlNifEnv* env, MetricTree* tree, INT normalizationCoefficient) {
+    if (tree->children) {
+        ERL_NIF_TERM* encodedChildren = new ERL_NIF_TERM[tree->children.value().size()]();
+        INT i = 0;
+
+        for (auto child: tree->children.value()) {
+            string label = child.first;
+            MetricTree* subtree = child.second;
+
+            ERL_NIF_TERM encodedChild = enif_make_tuple2(env, enif_make_atom(env, label.c_str()), encodeMetricTree(env, subtree, normalizationCoefficient));
+            encodedChildren[i++] = encodedChild;
+        }
+
+        return enif_make_list_from_array(env, encodedChildren, i);
+    } else {
+        ERL_NIF_TERM* encodedMetrics = new ERL_NIF_TERM[tree->metrics.value()->length]();
+
+        if (tree->metrics) {
+            for (INT i = 0; i < tree->metrics.value()->length; i++) {
+                MetricTrackerBase* metric = tree->metrics.value()->trackers[i];
+
+                Metric id = metric->getId();
+
+                encodedMetrics[i] = enif_make_tuple2(env, encodeMetric(env, metric), enif_make_double(env, metric->divide(normalizationCoefficient)));
+            }
+        }
+
+
+        return enif_make_list_from_array(env, encodedMetrics, tree->metrics.value()->length);
+    }
+    throw invalidArgument("Each metric tree node must either contain links to other nodes either contain a list of metrics");
+}
+
 extern ERL_NIF_TERM
 computeMetrics_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
-        MetricTree* tree = computeMetrics(
+        MetricTreeRoot* root = computeMetrics(
             enif_get_bool(env, argv[0])
         );
+        return completed_with_success(env, encodeMetricTree(env, root->tree, root->normalizationCoefficient));
     } catch (invalidArgument& e) {
         return completed_with_error(env, e.what());
     }
 
-    return completed_with_success(env, enif_make_long(env, 17));
+    // return completed_with_success(env, enif_make_long(env, 17));
 }

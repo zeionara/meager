@@ -20,6 +20,10 @@ struct RankMetricTracker: MetricTracker<INT> {
     string getName() {
         return getLabel();
     }
+
+    Metric getId() {
+        return Rank;
+    }
 };
 
 #endif

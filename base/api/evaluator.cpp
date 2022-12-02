@@ -43,6 +43,6 @@ void evaluate(TripleElement element, REAL* predictions, bool reverse, bool verbo
     }
 }
 
-MetricTree* computeMetrics(bool verbose) {
+MetricTreeRoot* computeMetrics(bool verbose) {
     return evaluator->getMetricTree();
 }

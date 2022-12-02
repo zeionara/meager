@@ -32,6 +32,10 @@ struct CountMetricTracker: MetricTracker<INT> {
     string getName() {
         return "top_n";
     }
+
+    Metric getId() {
+        return Count;
+    }
 };
 
 #endif

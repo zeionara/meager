@@ -20,6 +20,10 @@ struct ReciprocalRankMetricTracker: MetricTracker<REAL> {
     string getName() {
         return "reciprocal_rank";
     }
+
+    Metric getId() {
+        return ReciprocalRank;
+    }
 };
 
 #endif

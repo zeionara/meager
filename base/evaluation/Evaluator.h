@@ -26,6 +26,18 @@
 string const HEAD = "head";
 string const TAIL = "tail";
 
+struct MetricTreeRoot {
+
+    MetricTree* tree;
+    INT normalizationCoefficient;
+
+    MetricTreeRoot(MetricTree* tree, INT normalizationCoefficient) {
+        this->tree = tree;
+        this->normalizationCoefficient = normalizationCoefficient;
+    }
+
+};
+
 template <typename T>
 struct Evaluator {
 
@@ -55,9 +67,9 @@ struct Evaluator {
         this->tail->state->printMetrics(this->testTriples->length);
     }
 
-    MetricTree* getMetricTree() {
+    MetricTreeRoot* getMetricTree() {
         unordered_map<string, MetricTree*> subtrees = {{HEAD, head->state->getTree()}, {TAIL, tail->state->getTree()}};
-        return new MetricTree(subtrees);
+        return new MetricTreeRoot(new MetricTree(subtrees), testTriples->length);
     }
 
 };

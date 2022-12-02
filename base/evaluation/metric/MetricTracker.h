@@ -4,6 +4,7 @@
 #include <string>
 
 #include "../EvaluationScore.h"
+#include "Metric.h"
 
 using namespace std;
 
@@ -14,7 +15,8 @@ struct MetricTrackerBase {
     virtual void reset() = 0;
     virtual string getLabel() = 0;
     virtual string getName() = 0;
-    virtual REAL divide(INT divisor) = 0;
+    virtual double divide(INT divisor) = 0;
+    virtual Metric getId() = 0;
 };
 
 template<typename T> struct MetricTracker: MetricTrackerBase {
@@ -31,7 +33,7 @@ template<typename T> struct MetricTracker: MetricTrackerBase {
         value = 0;
     }
 
-    REAL divide(INT divisor) {
+    double divide(INT divisor) {
         return double(value) / divisor;
     }
 
