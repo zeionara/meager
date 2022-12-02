@@ -168,6 +168,11 @@ static ErlNifFunc meager_nif_funcs[] = {
 
     {"_import_types", 1, importTypes_},
 
+    {"_count_entities", 1, countEntities_},
+    {"_count_relations", 1, countRelations_},
+    {"_count_triples", 1, countTriples_1},
+    {"_count_triples", 2, countTriples_2},
+
     // Sampler
 
     {"_init_sampler", 6, initSampler_},

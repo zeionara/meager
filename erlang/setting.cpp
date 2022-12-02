@@ -42,17 +42,17 @@ get_entity_total(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
 extern ERL_NIF_TERM
 get_train_total(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    return enif_make_int(env, countTrainTriples());
+    return enif_make_int(env, countTriples(train));
 }
 
 extern ERL_NIF_TERM
 get_test_total(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    return enif_make_int(env, countTestTriples());
+    return enif_make_int(env, countTriples(test));
 }
 
 extern ERL_NIF_TERM
 get_valid_total(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    return enif_make_int(env, countValidTriples());
+    return enif_make_int(env, countTriples(valid));
 }
 
 extern ERL_NIF_TERM

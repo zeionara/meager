@@ -24,6 +24,13 @@ string const _RELATIONS_FILENAME = "relation2id.txt";
 string const _INCLUDING_FILTERS_FILENAME = "filters/including.txt";
 string const _EXCLUDING_FILTERS_FILENAME = "filters/excluding.txt";
 
+string const IS_NOT_INITIALIZED = "is not initialized";
+
+string const ENCODER_IS_NOT_INITIALIZED = "Encoder " + IS_NOT_INITIALIZED;
+string const TRAIN_IS_NOT_INITIALIZED = "Train subset " + IS_NOT_INITIALIZED;
+string const TEST_IS_NOT_INITIALIZED = "Test subset " + IS_NOT_INITIALIZED;
+string const VALID_IS_NOT_INITIALIZED = "Valid subset " + IS_NOT_INITIALIZED;
+
 template <typename T>
 struct LocalTsvCorpus: LocalCorpus<T> {
     ThickTripleListWrapper<T>* train;
@@ -150,20 +157,43 @@ struct LocalTsvCorpus: LocalCorpus<T> {
 
     INT countEntities() {
         if (this->enableFilters) {
+            if (encoder == nullptr) {
+                throw invalidArgument(ENCODER_IS_NOT_INITIALIZED);
+            }
             return encoder->entity->nEncodedValues;
+        }
+        if (train == nullptr) {
+            throw invalidArgument(TRAIN_IS_NOT_INITIALIZED);
         }
         return train->frequencies->nEntities;
     }
 
     INT countRelations() {
         if (this->enableFilters) {
+            if (encoder == nullptr) {
+                throw invalidArgument(ENCODER_IS_NOT_INITIALIZED);
+            }
             return encoder->relation->nEncodedValues;
+        }
+        if (train == nullptr) {
+            throw invalidArgument(TRAIN_IS_NOT_INITIALIZED);
         }
         return train->frequencies->nRelations;
     }
 
     INT getLength() {
-        return train->length + test->length + valid->length;
+        INT length = 0;
+
+        if (train != nullptr) {
+            length += train->length;
+        }
+        if (test != nullptr) {
+            length += test->length;
+        }
+        if (valid != nullptr) {
+            length += valid->length;
+        }
+        return length;
     }
 };
 

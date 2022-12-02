@@ -40,27 +40,58 @@ void importTypes(bool verbose = false) {
 
 // Get
 
-long countEntities() {
+long countEntities(bool verbose) {
     return corpus->countEntities();
 }
 
-long countRelations() {
+long countRelations(bool verbose) {
     return corpus->countRelations();
 }
 
-long countTrainTriples() {
-    return corpus->train->length;
+// long countTrainTriples() {
+//     if (corpus->train == nullptr) {
+//         throw invalidArgument(TRAIN_IS_NOT_INITIALIZED);
+//     }
+//     return corpus->train->length;
+// }
+// 
+// long countTestTriples() {
+//     if (corpus->test == nullptr) {
+//         throw invalidArgument(TEST_IS_NOT_INITIALIZED);
+//     }
+//     return corpus->test->length;
+// }
+// 
+// long countValidTriples() {
+//     if (corpus->valid == nullptr) {
+//         throw invalidArgument(VALID_IS_NOT_INITIALIZED);
+//     }
+//     return corpus->valid->length;
+// }
+
+long countTriples(SubsetType subset, bool verbose) {
+    switch (subset) {
+        case train:
+            if (corpus->train == nullptr) {
+                throw invalidArgument(TRAIN_IS_NOT_INITIALIZED);
+            }
+            return corpus->train->length;
+        case test:
+            if (corpus->test == nullptr) {
+                throw invalidArgument(TEST_IS_NOT_INITIALIZED);
+            }
+            return corpus->test->length;
+        case valid:
+            if (corpus->valid == nullptr) {
+                throw invalidArgument(VALID_IS_NOT_INITIALIZED);
+            }
+            return corpus->valid->length;
+        default:
+            throw invalidArgument("Unsupported subset type given. Cannot count triples");
+    }
 }
 
-long countTestTriples() {
-    return corpus->test->length;
-}
-
-long countValidTriples() {
-    return corpus->valid->length;
-}
-
-long countTriples() {
+long countTriples(bool verbose) {
     // return countTrainTriples() + countTestTriples() + countValidTriples();
     return corpus->getLength();
 }

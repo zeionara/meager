@@ -28,16 +28,16 @@ INT get_entity_total() {
 
 extern "C"
 INT get_train_total() {
-    return countTrainTriples();
+    return countTriples(train);
 }
 
 extern "C"
 INT get_test_total() {
-    return countTestTriples();
+    return countTriples(test);
 }
 
 extern "C"
 INT get_valid_total() {
-    return countValidTriples();
+    return countTriples(valid);
 }
 

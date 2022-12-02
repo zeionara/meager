@@ -17,22 +17,25 @@ extern
 void initCorpus(char *path, bool enableFilters = false, bool verbose = false);
 
 extern
-long countEntities(); 
+long countEntities(bool verbose = false); 
 
 extern
-long countRelations(); 
+long countRelations(bool verbose = false); 
 
 extern
-long countTriples(); 
+long countTriples(SubsetType subset, bool verbose = false);
 
 extern
-long countTrainTriples(); 
+long countTriples(bool verbose = false); 
 
-extern
-long countTestTriples(); 
-
-extern
-long countValidTriples(); 
+// extern
+// long countTrainTriples(); 
+// 
+// extern
+// long countTestTriples(); 
+// 
+// extern
+// long countValidTriples(); 
 
 extern
 void importFilter(bool dropDuplicates = true, bool verbose = false);

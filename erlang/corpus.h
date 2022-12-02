@@ -24,4 +24,16 @@ importValid_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 extern ERL_NIF_TERM
 importTypes_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 
+extern ERL_NIF_TERM
+countEntities_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+
+extern ERL_NIF_TERM
+countRelations_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+
+extern ERL_NIF_TERM
+countTriples_1(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+
+extern ERL_NIF_TERM
+countTriples_2(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+
 #endif

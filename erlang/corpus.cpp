@@ -95,3 +95,78 @@ importTypes_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     return completed_with_success(env);
 }
+
+extern ERL_NIF_TERM
+countEntities_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    try {
+        return completed_with_success(
+            env,
+            enif_make_long(
+                env,
+                countEntities(
+                    enif_get_bool(env, argv[0])
+                )
+            )
+        );
+    } catch (invalid_argument& e) {
+        return completed_with_error(env, e.what());
+    }
+}
+
+extern ERL_NIF_TERM
+countRelations_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    try {
+        return completed_with_success(
+            env,
+            enif_make_long(
+                env,
+                countRelations(
+                    enif_get_bool(env, argv[0])
+                )
+            )
+        );
+    } catch (invalid_argument& e) {
+        return completed_with_error(env, e.what());
+    }
+
+    return completed_with_success(env);
+}
+
+extern ERL_NIF_TERM
+countTriples_1(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    try {
+        return completed_with_success(
+            env,
+            enif_make_long(
+                env,
+                countTriples(
+                    enif_get_bool(env, argv[0])
+                )
+            )
+        );
+    } catch (invalid_argument& e) {
+        return completed_with_error(env, e.what());
+    }
+
+    return completed_with_success(env);
+}
+
+extern ERL_NIF_TERM
+countTriples_2(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
+    try {
+        return completed_with_success(
+            env,
+            enif_make_long(
+                env,
+                countTriples(
+                    decodeSubsetType(enif_get_atom_(env, argv[0])),
+                    enif_get_bool(env, argv[1])
+                )
+            )
+        );
+    } catch (invalid_argument& e) {
+        return completed_with_error(env, e.what());
+    }
+
+    return completed_with_success(env);
+}

@@ -14,5 +14,5 @@ SubsetType decodeSubsetType(string name) {
         return valid;
     }
 
-    throw invalidArgument("Unknown triple pattern provided");
+    throw invalidArgument("Unknown corpus subset provided: " + name);
 }
