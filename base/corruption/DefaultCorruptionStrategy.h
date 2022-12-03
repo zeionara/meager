@@ -5,8 +5,9 @@
 #include "../triple/list/ThinTripleListWrapper.h"
 #include "CorruptionStrategy.h"
 #include "../Random.h"
-#include "state/RandomizationState.h"
+// #include "state/RandomizationState.h"
 // #include "../Reader.h"
+
 
 template <typename T>
 struct DefaultCorruptionStrategy: CorruptionStrategy {
@@ -23,7 +24,7 @@ struct DefaultCorruptionStrategy: CorruptionStrategy {
     INT corruptEntity(
         TripleList* list, Triple triple, INT maxId,
         INT (*getPrimaryTripleComponent)(Triple triple), INT (*getSecondaryTripleComponent)(Triple triple), INT (*getCorruptableTripleComponent)(Triple triple),
-        RandomizationState* randomizer
+        Randomizer<INT>* randomizer
     ) {
 
         // cout << "Corrupting..." << endl;
@@ -61,7 +62,8 @@ struct DefaultCorruptionStrategy: CorruptionStrategy {
 
         // cout << "Finishing corruption" << endl;
 
-        INT tmp = rand_max(randomizer, maxId - (rr - ll + 2)); // Generate random entity index in the interval [0; nEntities - (nTailEntitiesForGivenHead + nHeadEntitiesForGivenHead)]
+        // INT tmp = rand_max(randomizer, maxId - (rr - ll + 2)); // Generate random entity index in the interval [0; nEntities - (nTailEntitiesForGivenHead + nHeadEntitiesForGivenHead)]
+        INT tmp = randomizer->state->sample(maxId - (rr - ll + 2)); // Generate random entity index in the interval [0; nEntities - (nTailEntitiesForGivenHead + nHeadEntitiesForGivenHead)]
         if (tmp < getCorruptableTripleComponent(list->items[ll])) return tmp; // If generated entity index is less than any other tail entity index (in other case the generated triple would probably not be unique) then return this
         // if (tmp + rr - ll + 1 > trainHead[rr].t) return tmp + rr - ll + 1;
         if (tmp > getCorruptableTripleComponent(list->items[rr]) - rr + ll - 1) return tmp + rr - ll + 1; // If generated entity index + max possible offset is larger than any other tail entity index then return this
@@ -80,7 +82,7 @@ struct DefaultCorruptionStrategy: CorruptionStrategy {
         return tmp + lef - ll + 1;
     }
 
-    Triple corruptHead(Triple triple, RandomizationState* randomizer) {
+    Triple corruptHead(Triple triple, Randomizer<INT>* randomizer) {
         INT corruptedHead = corruptEntity(
             corpus->train->tail, triple, corpus->train->frequencies->nEntities,
             [](Triple triple){return triple.t;}, [](Triple triple){return triple.r;}, [](Triple triple){return triple.h;},
@@ -89,7 +91,7 @@ struct DefaultCorruptionStrategy: CorruptionStrategy {
         return Triple(corruptedHead, triple.r, triple.t);
     }
 
-    Triple corruptTail(Triple triple, RandomizationState* randomizer) {
+    Triple corruptTail(Triple triple, Randomizer<INT>* randomizer) {
         INT corruptedTail = corruptEntity(
             corpus->train->head, triple, corpus->train->frequencies->nEntities,
             [](Triple triple){return triple.h;}, [](Triple triple){return triple.r;}, [](Triple triple){return triple.t;},
@@ -98,7 +100,7 @@ struct DefaultCorruptionStrategy: CorruptionStrategy {
         return Triple(triple.h, triple.r, corruptedTail);
     }
 
-    Triple corruptRelation(Triple triple, RandomizationState* randomizer) {
+    Triple corruptRelation(Triple triple, Randomizer<INT>* randomizer) {
         INT corruptedRelation = corruptEntity(
             corpus->train->relation, triple, corpus->train->frequencies->nRelations,
             [](Triple triple){return triple.h;}, [](Triple triple){return triple.t;}, [](Triple triple){return triple.r;},
@@ -107,11 +109,12 @@ struct DefaultCorruptionStrategy: CorruptionStrategy {
         return Triple(triple.h, corruptedRelation, triple.t);
     }
 
-    Triple corrupt(Triple triple, RandomizationState* randomizer){  // Corrupt tail
+    Triple corrupt(Triple triple, Randomizer<INT>* randomizer){  // Corrupt tail
         INT loop = 0;
         INT t;
         while(1) {
-            INT corruptedTail = corpus->types->get(triple.r)->tails->items[rand(0, corpus->types->get(triple.r)->tails->length)]; // Select random tail entity id for a given relation according to type mappings
+            // INT corruptedTail = corpus->types->get(triple.r)->tails->items[rand(0, corpus->types->get(triple.r)->tails->length)]; // Select random tail entity id for a given relation according to type mappings
+            INT corruptedTail = corpus->types->get(triple.r)->tails->items[randomizer->state->sample(corpus->types->get(triple.r)->tails->length)]; // Select random tail entity id for a given relation according to type mappings
             Triple corruptedTriple = Triple(triple.h, triple.r, corruptedTail);
             if (not isCorrectTriple(corruptedTriple)) { // If obtained triple does not exist, then it is a suitable negative sample which may be immediately returned
             //	printf("r:%ld\tt:%ld\n", r, t);

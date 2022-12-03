@@ -2,12 +2,13 @@
 
 #include "types.h"
 // #include "../../randeer/randeer/state/RandomizationState.h"
-#include "state/RandomizationState.h"
-#include "state/JavaLikeLcgRandomizationState.h"
+// #include "state/RandomizationState.h"
+#include "randomizer/Randomizer.h"
+// #include "state/JavaLikeLcgRandomizationState.h"
 
 using namespace std;
 
-RandomizationState** randomizationStates;
+// RandomizationState** randomizationStates;
 // unsigned long long* next_random;
 
 long k = 0;
@@ -23,29 +24,29 @@ void randReset(INT nWorkers) { // Generate random numbers for each thread
     // }
 }
 
-unsigned long long randd(INT id) { // Generate sequential random numbers
-    // next_random[id] = next_random[id] * (unsigned long long)25214903917 + 11;
-    // return next_random[id];
-    return randomizationStates[id]->sample();
-}
+// unsigned long long randd(INT id) { // Generate sequential random numbers
+//     // next_random[id] = next_random[id] * (unsigned long long)25214903917 + 11;
+//     // return next_random[id];
+//     return randomizationStates[id]->sample();
+// }
 
-INT rand_max(INT id, INT x) {
-	INT res = randd(id) % x;
-	while (res < 0)
-		res += x;
-	return res;
-}
+// INT rand_max(INT id, INT x) {
+// 	INT res = randd(id) % x;
+// 	while (res < 0)
+// 		res += x;
+// 	return res;
+// }
 
-INT rand_max(RandomizationState* randomizer, INT x) {
-    unsigned long long sampledNumber = randomizer->sample();
-	INT res = sampledNumber % x;
-	// INT res = randd(id) % x;
-	while (res < 0)
-		res += x;
-	return res;
-}
-
-INT rand(INT a, INT b){ // Sample a random integer in the interval [a, b)
-	return (rand() % (b-a))+ a;
-}
+// INT rand_max(Randomizer<INT>* randomizer, INT x) {
+//     unsigned long long sampledNumber = randomizer->state->sample();
+// 	INT res = sampledNumber % x;
+// 	// INT res = randd(id) % x;
+// 	while (res < 0)
+// 		res += x;
+// 	return res;
+// }
+// 
+// INT rand(INT a, INT b){ // Sample a random integer in the interval [a, b)
+// 	return (rand() % (b-a))+ a;
+// }
 

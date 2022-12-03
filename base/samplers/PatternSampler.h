@@ -15,6 +15,7 @@
 #include "DefaultLocalSamplingState.h"
 #include "state/RandomizationState.h"
 #include "state/JavaLikeLcgRandomizationState.h"
+#include "randomizer/LoopingRandomizer.h"
 #include "TripleBatch.h"
 #include "Sampler.h"
 
@@ -65,7 +66,7 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
             localStates[thread_index].id = thread_index;
             localStates[thread_index].globalState = globalState;
             localStates[thread_index].corruptionStrategy = new DefaultCorruptionStrategy<T>(corpus, thread_index);
-            localStates[thread_index].randomizer = new JavaLikeLcgRandomizationState(rand());
+            localStates[thread_index].randomizer = new LoopingRandomizer<INT>(new JavaLikeLcgRandomizationState<INT>(rand()));
             pthread_create(&threads[thread_index], NULL, run, (void*)(localStates + thread_index));
         }
 
@@ -89,7 +90,7 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
     static void* run(void* con) {
         DefaultLocalSamplingState<T>* localState = (DefaultLocalSamplingState<T> *)(con);
         GlobalSamplingState* state = localState->globalState;
-        RandomizationState* randomizer = localState->randomizer;
+        Randomizer<INT>* randomizer = localState->randomizer;
 
         INT threadIndex = localState->id;
         Triple* triples = state->triples;
@@ -131,7 +132,8 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
 
         for (INT batchWiseTripleIndex = first_triple_index; batchWiseTripleIndex < last_triple_index; batchWiseTripleIndex++) {
             // cout << "foo" << (*(patternInstanceSets[nObservedTriplesPerPatternInstance])).size() << endl;
-            INT sampled_triple_index = rand_max(randomizer, (*patternInstances).size());
+            // INT sampled_triple_index = rand_max(randomizer, (*patternInstances).size());
+            INT sampled_triple_index = randomizer->state->sample((*patternInstances).size());
             // cout << "Sampling " << batchWiseTripleIndex << " triple " << endl;
             PatternInstance sampledPatternInstance = (*patternInstances)[sampled_triple_index];
             INT patternComponentIndex = 0;
@@ -152,7 +154,7 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
                                 relationScore->tail[sampledTriple.r] + relationScore->head[sampledTriple.r]
                             );
                         // if (randd(threadIndex) % 1000 < headCorruptionThreshold) { // Corrupt TAIL by generating a random number
-                        if (randomizer->sample() % 1000 < headCorruptionThreshold) { // Corrupt TAIL by generating a random number
+                        if (randomizer->state->sample(1000) < headCorruptionThreshold) { // Corrupt TAIL by generating a random number
                             // if (batchWiseTripleIndex == 44)
                             //     cout << "Started corrupting tail" << endl;
                             // cout << "Started corrupting tail" << endl;
