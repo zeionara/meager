@@ -23,6 +23,8 @@ struct MetricTreeRoot {
         this->normalizationCoefficient = normalizationCoefficient;
     }
 
+    ~MetricTreeRoot();
+
 };
 
 struct MetricTreeNode {
@@ -35,18 +37,16 @@ struct MetricTreeNode {
         this->value = value;
     }
 
+    ~MetricTreeNode();
+
 };
 
 struct MetricTree {
-    // optional<unordered_map<string, MetricTree*>> children;
-    // optional<MetricSetTracker*> metrics;
 
     MetricTreeNode** nodes;
     INT length;
     MetricSetTracker* metrics;
 
-    // MetricTree(optional<unordered_map<string, MetricTree*>> children, optional<MetricSetTracker*> metrics = {}) {
-    // ok
     MetricTree(MetricTreeNode** nodes = nullptr, INT length = -1, MetricSetTracker* metrics = nullptr) {
         if (metrics == nullptr && nodes == nullptr || metrics != nullptr and nodes != nullptr) {
             throw invalidArgument("Either nodes list either metrics list must be specified");
@@ -62,6 +62,14 @@ struct MetricTree {
         this->length = length;
         this->metrics = metrics;
     }
+
+    ~MetricTree() {
+        if (metrics == nullptr) {
+            delete [] nodes;
+            // metrics may be still needed for other objects (e.g. Evaluator, that's why they are not deleted)
+        }
+    }
+
 };
 
 #endif

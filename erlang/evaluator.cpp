@@ -151,6 +151,7 @@ computeMetrics_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         );
         // cout << "Started encoding tree" << endl;
         ERL_NIF_TERM encodedTree = encodeMetricTree(env, root->tree, root->normalizationCoefficient);
+        delete root;
         // cout << "Finished encoding tree" << endl;
         return completed_with_success(env, encodedTree);
     } catch (invalidArgument& e) {
