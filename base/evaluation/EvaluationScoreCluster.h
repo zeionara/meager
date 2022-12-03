@@ -48,8 +48,15 @@ struct EvaluationScoreCluster: EvaluationScoreContainer {
     }
 
     MetricTree* getTree() {
-        unordered_map<string, MetricTree*> subtrees = {{UNCONSTRAINED, unconstrained->getTree()}, {CONSTRAINED, constrained->getTree()}};
-        return new MetricTree(subtrees);
+        INT const length = 2;
+        INT i = 0;
+
+        MetricTreeNode** nodes = new MetricTreeNode*[length];
+
+        nodes[i++] = new MetricTreeNode(UNCONSTRAINED, unconstrained->getTree());
+        nodes[i++] = new MetricTreeNode(CONSTRAINED, constrained->getTree());
+
+        return new MetricTree(nodes, length);
     }
 
 };

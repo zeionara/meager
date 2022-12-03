@@ -8,19 +8,9 @@
 #include "../types.h"
 #include "EvaluationScoreContainer.h"
 
+#include "metric/MetricTree.h"
+
 using namespace std;
-
-struct MetricSetTracker;
-
-struct MetricTree {
-    optional<unordered_map<string, MetricTree*>> children;
-    optional<MetricSetTracker*> metrics;
-
-    MetricTree(optional<unordered_map<string, MetricTree*>> children, optional<MetricSetTracker*> metrics = {}) {
-        this->children = children;
-        this->metrics = metrics;
-    }
-};
 
 struct EvaluationScore: EvaluationScoreContainer {
 
@@ -54,7 +44,7 @@ struct EvaluationScore: EvaluationScoreContainer {
     };
 
     MetricTree* getTree() {
-        return new MetricTree({}, optional<MetricSetTracker*>{metrics});
+        return new MetricTree(nullptr, -1, metrics);
     }
 
 };

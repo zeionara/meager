@@ -54,8 +54,15 @@ struct EvaluationScoreGroup: EvaluationScoreContainer {
     }
 
     MetricTree* getTree() {
-        unordered_map<string, MetricTree*> subtrees = {{UNFILTERED, unfiltered->getTree()}, {FILTERED, filtered->getTree()}};
-        return new MetricTree(subtrees);
+        INT const length = 2;
+        INT i = 0;
+
+        MetricTreeNode** nodes = new MetricTreeNode*[length];
+
+        nodes[i++] = new MetricTreeNode(UNFILTERED, unfiltered->getTree());
+        nodes[i++] = new MetricTreeNode(FILTERED, filtered->getTree());
+
+        return new MetricTree(nodes, length);
     }
 
 };
