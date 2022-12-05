@@ -15,3 +15,6 @@ base/utils.cpp
 base/utils.h
 
 .cache/
+
+test/Testing/
+test/Testing/
