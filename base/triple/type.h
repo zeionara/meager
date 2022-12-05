@@ -7,6 +7,27 @@
 
 #define invalidArgument invalid_argument
 
+template<typename T>
+bool binarySearch(T* items, T target, long start, long end) {
+  
+  if (start > end) {
+      return false;
+  }
+  
+  long middle = (start + end) >> 1;
+  // let middle = Math.floor((start + end) / 2)
+  T middleItem = items[middle];
+  if (middleItem == target) {
+      return true;
+  }
+  
+  if (target < middleItem) {
+    return binarySearch(items, target, start, middle - 1);
+  }
+
+  return binarySearch(items, target, middle + 1, end);  // target > items[middle]
+}
+
 template <typename T>
 struct AllowedTripleElements {
     INT* items;
@@ -20,12 +41,17 @@ struct AllowedTripleElements {
     }
 
     bool contains(INT value) {  // TODO: implement binary search
-        for (INT i = 0; i < length; i++) {
-            if (items[i] == value) {
-                return true;
-            }
-        }
-        return false;
+        return binarySearch(items, value, 0, length);
+        // T i = 0;
+        // while (i < length && items[i] < value) i++;
+        // cout << i << " | " << length << endl;
+        // return i < length;
+        // for (INT i = 0; i < length; i++) {
+        //     if (items[i] == value) {
+        //         return true;
+        //     }
+        // }
+        // return false;
     }
 
     void encode(TripleComponentEncoder<INT>* encoder) {

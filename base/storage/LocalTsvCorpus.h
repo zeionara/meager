@@ -9,6 +9,7 @@
 #include "../filters/TripleFilter.h"
 #include "../triple/TripleEncoder.h"
 #include "../patterns/PatternDescriptionTemplates.h"
+#include "../evaluation/Stopwatch.h"
 
 using namespace std;
 
@@ -161,6 +162,21 @@ struct LocalTsvCorpus: LocalCorpus<T> {
     }
 
     bool allowsHead(Triple triple) {
+        // auto typeStopWatch = Stopwatch(1);
+        // auto resultStopWatch = Stopwatch(1);
+
+        // typeStopWatch.start();
+        // auto type = types->get(triple.r);
+        // typeStopWatch.stop();
+        // resultStopWatch.start();
+        // auto result = type->heads->contains(triple.h);
+        // resultStopWatch.stop();
+
+        // cout << endl << endl;
+        // typeStopWatch.print("relation type search");
+        // resultStopWatch.print("entity search");
+        // cout << endl << endl;
+        // return result;
         return types->get(triple.r)->heads->contains(triple.h);
     }
 

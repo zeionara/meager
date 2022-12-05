@@ -10,61 +10,6 @@
 #include "EvaluationScoreCluster.h"
 #include "../storage/Corpus.h"
 
-using std::chrono::high_resolution_clock;
-using std::chrono::system_clock;
-using std::chrono::duration_cast;
-using std::chrono::duration;
-using std::chrono::milliseconds;
-
-struct Stopwatch {
-
-    double* times;
-    long length;
-
-    // system_clock::time_point currentTime;
-    system_clock::time_point currentTime;
-    bool started;
-    long i;
-
-    Stopwatch(long length) {
-        times = new double[length];
-        started = false;
-        i = -1;
-    }
-
-    void start() {
-        currentTime = high_resolution_clock::now();
-        started = true;
-    }
-
-    void stop() {
-        if (!started) {
-            throw invalidArgument("Cannot measure execution time because stopwatch was not started");
-        }
-        currentTime = high_resolution_clock::now();
-        times[++i] = (high_resolution_clock::now() - currentTime).count();
-        started = false;
-    }
-
-    void reset() {
-        i = 0;
-        started = false;
-    }
-
-    double mean() {
-        double sum = 0;
-        for (long j = 0; j <= i; j++) {
-            sum += times[j];
-        }
-        return sum / (i + 1);
-    }
-
-    ~Stopwatch() {
-        delete [] times;
-    }
-
-};
-
 template <typename T>
 struct EntityEvaluator {
 
@@ -121,18 +66,30 @@ struct EntityEvaluator {
         state->resetScore();
         //
 
-        auto tripleMakingStopWatch = new Stopwatch(this->corpus->countEntities());
+        // auto tripleMakingStopWatch = new Stopwatch(this->corpus->countEntities());
+        // auto unconstrainedStopwatch = new Stopwatch(this->corpus->countEntities());
+        // auto constrainedStopwatch = new Stopwatch(this->corpus->countEntities());
+        // auto tripleComponentStopwatch = new Stopwatch(this->corpus->countEntities());
+        // auto loopStopwatch = new Stopwatch(1);
 
-        cout << "Start evaluation loop" << endl;
+        // cout << "Start evaluation loop" << endl;
         // for (INT hypothesis = 0; hypothesis < this->corpus->countEntities(); hypothesis++) {
+        // loopStopwatch->start();
         for (INT hypothesis = 0; hypothesis < this->corpus->countEntities(); hypothesis++) {
-            if (hypothesis != getTripleComponent(reference)) { 
 
-                tripleMakingStopWatch->start();
+            // tripleComponentStopwatch->start();
+            auto tripleComponent = getTripleComponent(reference);
+            // tripleComponentStopwatch->stop();
+
+            if (hypothesis != tripleComponent) { 
+
+                // tripleMakingStopWatch->start();
 
                 Triple sampledTriple = makeTriple(hypothesis);
 
-                tripleMakingStopWatch->stop();
+                // tripleMakingStopWatch->stop();
+
+                // unconstrainedStopwatch->start();
 
                 REAL hypothesis_distance = probabilities[hypothesis];
                 if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) {
@@ -141,7 +98,13 @@ struct EntityEvaluator {
                         state->unconstrained->filtered->value += 1; // Count incorrectly classified triples which are not present in the dataset (filtered score must be better than unfiltered concerning rank)
                 }
 
-                if (corpus->allows(sampledTriple)) {
+                // unconstrainedStopwatch->stop();
+
+                // constrainedStopwatch->start();
+                auto allows = corpus->allows(sampledTriple);
+                // constrainedStopwatch->stop();
+
+                if (allows) {
                     if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) {
                         state->constrained->unfiltered->value += 1; // Count incorrectly classified triples the head of which is presented in type constraint list for heads (constrained score must be better than unconstrained)
                         if (not corpus->contains(sampledTriple)) {
@@ -152,9 +115,20 @@ struct EntityEvaluator {
 
             }
         }
-        cout << "Stop evaluation loop" << endl;
+        // loopStopwatch->stop();
 
-        cout << "Making triple in " << tripleMakingStopWatch->mean() << " ms" << endl;
+        // cout << endl << endl;
+        // loopStopwatch->print("evaluation loop completion");
+        // tripleComponentStopwatch->print("triple component search");
+        // tripleMakingStopWatch->print("triple making");
+        // unconstrainedStopwatch->print("unconstrained triple check");
+        // constrainedStopwatch->print("constrained triple check");
+        // cout << endl << endl;
+
+        // cout << "Making triple in " << tripleMakingStopWatch->mean() << " sum = " << tripleMakingStopWatch->sum() << " ms" << endl;
+        // cout << "Handle unconstrained part in " << unconstrainedStopwatch->mean() << " ms" << endl;
+        // cout << "Handle constrained part in " << constrainedStopwatch->mean() << " ms" << endl;
+        // cout << "Found triple component " << tripleComponentStopwatch->mean() << " ms" << endl;
 
         // cout << "Updating metrics" << endl;
 
