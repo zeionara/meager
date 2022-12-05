@@ -76,11 +76,13 @@ trial_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 extern ERL_NIF_TERM
 evaluate_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
+        cout << "Encoding predictions" << endl;
         List<REAL>* predictions = decodeList<REAL>(env, argv[1], [](ErlNifEnv* env, ERL_NIF_TERM prediction){
             double decodedPrediction;
             enif_get_double(env, prediction, &decodedPrediction);
             return (REAL)decodedPrediction;
         });
+        cout << "Encoded predictions" << endl;
 
         evaluate(
             decodeTripleElement(enif_get_atom_(env, argv[0])),

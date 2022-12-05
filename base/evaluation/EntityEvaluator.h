@@ -1,12 +1,69 @@
 #ifndef EVALUATION_ENTITY_EVALUATOR_H
 #define EVALUATION_ENTITY_EVALUATOR_H
 
+#include <chrono>
+
 #include "../triple/list/ThickTripleListWrapper.h"
 #include "../triple/list/ThinTripleListWrapper.h"
 #include "../samplers/TripleBatch.h"
 #include "../corruption/CorruptionStrategy.h"
 #include "EvaluationScoreCluster.h"
 #include "../storage/Corpus.h"
+
+using std::chrono::high_resolution_clock;
+using std::chrono::system_clock;
+using std::chrono::duration_cast;
+using std::chrono::duration;
+using std::chrono::milliseconds;
+
+struct Stopwatch {
+
+    double* times;
+    long length;
+
+    // system_clock::time_point currentTime;
+    system_clock::time_point currentTime;
+    bool started;
+    long i;
+
+    Stopwatch(long length) {
+        times = new double[length];
+        started = false;
+        i = -1;
+    }
+
+    void start() {
+        currentTime = high_resolution_clock::now();
+        started = true;
+    }
+
+    void stop() {
+        if (!started) {
+            throw invalidArgument("Cannot measure execution time because stopwatch was not started");
+        }
+        currentTime = high_resolution_clock::now();
+        times[++i] = (high_resolution_clock::now() - currentTime).count();
+        started = false;
+    }
+
+    void reset() {
+        i = 0;
+        started = false;
+    }
+
+    double mean() {
+        double sum = 0;
+        for (long j = 0; j <= i; j++) {
+            sum += times[j];
+        }
+        return sum / (i + 1);
+    }
+
+    ~Stopwatch() {
+        delete [] times;
+    }
+
+};
 
 template <typename T>
 struct EntityEvaluator {
@@ -64,10 +121,18 @@ struct EntityEvaluator {
         state->resetScore();
         //
 
+        auto tripleMakingStopWatch = new Stopwatch(this->corpus->countEntities());
+
+        cout << "Start evaluation loop" << endl;
+        // for (INT hypothesis = 0; hypothesis < this->corpus->countEntities(); hypothesis++) {
         for (INT hypothesis = 0; hypothesis < this->corpus->countEntities(); hypothesis++) {
             if (hypothesis != getTripleComponent(reference)) { 
 
+                tripleMakingStopWatch->start();
+
                 Triple sampledTriple = makeTriple(hypothesis);
+
+                tripleMakingStopWatch->stop();
 
                 REAL hypothesis_distance = probabilities[hypothesis];
                 if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) {
@@ -87,6 +152,9 @@ struct EntityEvaluator {
 
             }
         }
+        cout << "Stop evaluation loop" << endl;
+
+        cout << "Making triple in " << tripleMakingStopWatch->mean() << " ms" << endl;
 
         // cout << "Updating metrics" << endl;
 

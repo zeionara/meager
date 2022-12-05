@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -pthread -march=native -Wl,-z,defs")  # Fail if there are unresolved symbols
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -pthread -march=native")
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/release)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 file(
     GLOB_RECURSE SOURCES_FILES "base/*.cpp"
