@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/zeio/meager/test",
+  "command": "/usr/bin/c++   -std=gnu++20 -o CMakeFiles/stopwatch.dir/stopwatch.cpp.o -c /home/zeio/meager/test/stopwatch.cpp",
+  "file": "/home/zeio/meager/test/stopwatch.cpp"
+}
+]
