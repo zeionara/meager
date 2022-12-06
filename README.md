@@ -1,7 +1,7 @@
 # Meager
 
 <p align="center">
-    <img src="assets/images/logo.png"/>
+    <img src="data/images/logo.png"/>
 </p>
 
 Graph embeddings measurer - a tool for computing metrics for testing knowledge graph embedding models.
@@ -28,7 +28,7 @@ cd build/src
 Then build `Makefile`:
 
 ```sh
-cmake ../../
+cmake ../../src
 ```
 
 Then build and install `.so` libraries:
