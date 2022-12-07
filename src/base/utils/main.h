@@ -51,7 +51,7 @@ namespace meager::main::utils {
             stream.close();
         }
 
-        friend File operator>>(File file, long value);
+        friend File& operator>>(File& file, long value);
     };
 
     // File* readNumberOfElements(std::string path, bool verbose = false);

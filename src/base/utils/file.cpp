@@ -8,7 +8,7 @@ using namespace std;
 
 namespace meager::main::utils {
 
-    File operator>>(File file, long value) {
+    File& operator>>(File& file, long value) {
         file.stream >> value;
         return file;
     }
