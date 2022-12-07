@@ -1,6 +1,8 @@
 #include "../storage/LocalTsvCorpus.h"
 #include "../storage/OpenKECorpusReader.h"
 
+using namespace meager::main::utils;
+
 // Init
 
 LocalTsvCorpus<INT>* corpus;
@@ -38,13 +40,13 @@ void importTrain(bool dropPatternDuplicates = true, bool verbose = false) {
 
 void importTriples(SubsetType subset, bool verbose) {
     switch (subset) {
-        case train:
+        case SubsetType::train:
             corpus->importTrain(DROP_PATTERN_DUPLICATES, verbose); 
             return;
-        case test:
+        case SubsetType::test:
             corpus->importTest(verbose); 
             return;
-        case valid:
+        case SubsetType::valid:
             corpus->importValid(verbose); 
             return;
         default:
@@ -68,17 +70,17 @@ long countRelations(bool verbose) {
 
 long countTriples(SubsetType subset, bool verbose) {
     switch (subset) {
-        case train:
+        case SubsetType::train:
             if (corpus->train == nullptr) {
                 throw invalidArgument(TRAIN_IS_NOT_INITIALIZED);
             }
             return corpus->train->length;
-        case test:
+        case SubsetType::test:
             if (corpus->test == nullptr) {
                 throw invalidArgument(TEST_IS_NOT_INITIALIZED);
             }
             return corpus->test->length;
-        case valid:
+        case SubsetType::valid:
             if (corpus->valid == nullptr) {
                 throw invalidArgument(VALID_IS_NOT_INITIALIZED);
             }

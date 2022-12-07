@@ -1,54 +1,71 @@
 #include "../triple/main.h"
-#include "main.h"
 
-using namespace std;
+#include "main.h"
 
 #define invalidArgument invalid_argument
 
-File* readHeader(std::string absolutePath, bool verbose, std::function<void(INT)> printMessage) {
-	FILE *input_file;
-	INT length;
+using namespace std;
 
-	input_file = fopen(absolutePath.c_str(), "r");
+namespace meager::main::utils {
 
-	if (input_file == nullptr) {
-	 	cerr << "file " << absolutePath << " does not exist" << endl;
-        throw invalidArgument("File " + absolutePath + " does not exist");
-	}
-
-	fscanf(input_file, "%ld", &length);
-
-    if (verbose) {
-        printMessage(length);
+    File operator>>(File file, long value) {
+        file.stream >> value;
+        return file;
     }
 
-    return new File(input_file, length);
-}
+        // File* printFileLength(File* file) {
+        //     printf("The number of elements in file '%s' is %ld.\n", file->path.c_str(), file->length);
+        //     return file;
+        // }
+
+        // File* readHeader(std::string absolutePath, bool verbose, std::function<void(INT)> printMessage) {
+        //     // FILE *inputFile;
+        //     // INT length;
+
+        //     // ifstream stream(absolutePath.c_str(), ifstream::in);
+
+        //     // inputFile = fopen(absolutePath.c_str(), "r");
+
+        //     if (!stream.is_open()) {
+        //         cerr << "file " << absolutePath << " does not exist" << endl;
+        //         throw invalidArgument("File " + absolutePath + " does not exist");
+        //     }
+
+        //     stream >> length;
+
+        //     if (verbose) {
+        //         printMessage(length);
+        //     }
+
+        //     return new File(inputFile, length);
+        // }
 
 
-File* readNumberOfTriples(std::string path, bool verbose) {
-    return readHeader(
-        path, verbose,
-        [&](INT result){
-            printf("The total number of %s triples is %ld.\n", path.c_str(), result);
-        }
-    );
-}
+        // File* readNumberOfTriples(string path, bool verbose) {
+        //     File* file = new File(path);
 
-File* readNumberOfTypeConstrainedRelations(std::string path, bool verbose) {
-    return readHeader(
-        path, verbose,
-        [&](INT result){
-            printf("The total number of type constrained relations is %ld.\n", result);
-        }
-    );
-}
+        //     if (verbose)
+        //         printFileLength(file);
 
-File* readNumberOfElements(std::string path, bool verbose) {
-    return readHeader(
-        path, verbose,
-        [&](INT result){
-            printf("The total number of %s is %ld.\n", path.c_str(), result);
-        }
-    );
+        //     return file;
+        // }
+
+        // File* readNumberOfTypeConstrainedRelations(std::string path, bool verbose) {
+        //     File* file = new File(path);
+
+        //     if (verbose)
+        //         printf("The total number of type constrained relations is %ld.\n", file->length);
+
+        //     return file;
+        // }
+
+        // File* readNumberOfElements(std::string path, bool verbose) {
+        //     File* file = new File(path);
+
+        //     if (verbose)
+        //         printf("The total number of %s is %ld.\n", path.c_str(), file->length);
+
+        //     return file;
+        // }
+
 }

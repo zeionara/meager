@@ -7,6 +7,8 @@
 // #include "../base/api/read.h"
 #include "../base/api/corpus.h"
 
+using namespace meager::main::utils;
+
 extern ERL_NIF_TERM
 import_filter_patterns(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     // importFilterPatterns(
@@ -48,8 +50,8 @@ import_test_files(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     //     enif_get_bool(env, argv[2])
     // );
 
-    importTriples(test, enif_get_bool(env, argv[0], argv[1]));
-    importTriples(valid, enif_get_bool(env, argv[0], argv[1]));
+    importTriples(SubsetType::test, enif_get_bool(env, argv[0], argv[1]));
+    importTriples(SubsetType::valid, enif_get_bool(env, argv[0], argv[1]));
 
     return enif_make_int(env, 0);
 }

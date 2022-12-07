@@ -38,11 +38,11 @@ struct OpenKECorpusReader: CorpusReader<INT> {
     }
 
     TripleList* readTriples(SubsetType subsetType, TripleIndex* tripleIndex, TripleElement tripleElement, TripleFilter<INT>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose) {
-        File* file = readNumberOfTriples(
+        File* file = new File(
             path + (
-                subsetType == train ? TRAIN_FILENAME :
-                subsetType == test ? TEST_FILENAME :
-                subsetType == valid ? VALID_FILENAME :
+                subsetType == SubsetType::train ? TRAIN_FILENAME :
+                subsetType == SubsetType::test ? TEST_FILENAME :
+                subsetType == SubsetType::valid ? VALID_FILENAME :
                 throw invalidArgument("Unknown subset type")
             ), verbose
         );
@@ -57,11 +57,13 @@ struct OpenKECorpusReader: CorpusReader<INT> {
         }
 
         for (INT i = 0; i < file->length; i++) { // Reading train samples
-            INT h, r, t;
+            INT h = 0, r = 0, t = 0;
 
-            fscanf(file->file, "%ld", &h);
-            fscanf(file->file, "%ld", &t);
-            fscanf(file->file, "%ld", &r);
+            file->stream >> h >> t >> r;
+
+            // fscanf(file->file, "%ld", &h);
+            // fscanf(file->file, "%ld", &t);
+            // fscanf(file->file, "%ld", &r);
 
             if (!enableFilters || filter->allows(Triple(h, r, t))) {
                 if (enableFilters) {
@@ -129,29 +131,38 @@ struct OpenKECorpusReader: CorpusReader<INT> {
     }
 
     INT readVocabularySize(TripleComponent tripleComponent, bool verbose = false) {
-        File* file = readNumberOfElements(path + (tripleComponent == entity ? ENTITIES_FILENAME : RELATIONS_FILENAME), verbose);
+        File* file = new File(path + (tripleComponent == entity ? ENTITIES_FILENAME : RELATIONS_FILENAME), verbose);
         file->close();
         return file->length;
     }
 
     RelationTypesContents<INT>* readRelationTypesContents(bool verbose = false) {
-        File* file = readNumberOfTypeConstrainedRelations(path + TYPE_FILENAME, verbose);
+        File* file = new File(path + TYPE_FILENAME, verbose);
 
         RelationTypeContents<INT>** relations = (RelationTypeContents<INT>**)calloc(file->length * 2, sizeof(RelationTypeContents<INT>*));
 
         for (INT i = 0; i < file->length * 2; i++) {
-            INT relation;
+            INT relation = 0;
 
-            fscanf(file->file, "%ld", &relation);
+            // cout << file->length << endl;
+            // cout << "bar" << endl;
+            // cout << file->stream << endl;
+            file->stream >> relation;
+            // cout << "handling relation " << relation << endl;
+            // fscanf(file->file, "%ld", &relation);
 
-            INT length;
+            INT length = 0;
 
-            fscanf(file->file, "%ld", &length);
+            file->stream >> length;
+            // cout << "number of elements for relation = " << length << endl;
+            // cout << length << endl;
+            // fscanf(file->file, "%ld", &length);
 
             INT* items = (INT*)calloc(length, sizeof(INT));
 
             for (INT j = 0; j < length; j++) {
-                fscanf(file->file, "%ld", &items[j]);
+                // fscanf(file->file, "%ld", &items[j]);
+                file->stream >> items[j];
             }
 
             relations[i] = new RelationTypeContents<INT>(items, length, relation);

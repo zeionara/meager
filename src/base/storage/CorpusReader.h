@@ -14,6 +14,7 @@
 #include "../patterns/UnaryPatternRelationSet.h"
 
 using namespace std;
+using namespace meager::main::utils;
 
 template <typename T>
 struct RelationTypeContents {

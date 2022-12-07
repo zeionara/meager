@@ -70,7 +70,11 @@ struct ThickTripleListWrapper {
         frequencies->entity[main[0].h] += 1;
         frequencies->relation[main[0].r] += 1;
 
-        for (INT i = 1; i < length; i++) // Remove duplicated triples
+        for (INT i = 1; i < length; i++) { // Remove duplicated triples
+            // cout << i << endl;
+            // cout << main[i].h << endl;
+            // cout << main[i].r << endl;
+            // cout << main[i].t << endl;
             if (
                 main[i].h != main[i - 1].h ||
                 main[i].r != main[i - 1].r ||
@@ -82,6 +86,9 @@ struct ThickTripleListWrapper {
                 frequencies->entity[main[i].h]++;
                 frequencies->relation[main[i].r]++;
             }
+        }
+
+        cout << "FOO" << endl;
 
         this->length = nUniqueTriples;
         this->content->length = nUniqueTriples;

@@ -1,6 +1,8 @@
 // #include "../base/Setting.h"
 #include "../base/api/corpus.h"
 
+using namespace meager::main::utils;
+
 extern "C"
 void set_in_path(char *path, bool as_tsv = false) {
     initCorpus(path);
@@ -28,16 +30,16 @@ INT get_entity_total() {
 
 extern "C"
 INT get_train_total() {
-    return countTriples(train);
+    return countTriples(SubsetType::train);
 }
 
 extern "C"
 INT get_test_total() {
-    return countTriples(test);
+    return countTriples(SubsetType::test);
 }
 
 extern "C"
 INT get_valid_total() {
-    return countTriples(valid);
+    return countTriples(SubsetType::valid);
 }
 

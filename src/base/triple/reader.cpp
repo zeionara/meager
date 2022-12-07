@@ -31,9 +31,9 @@ INT readTriples(
         INT h, r, t;
 
 
-		fscanf(file->file, "%ld", &h);
-		fscanf(file->file, "%ld", &t);
-		fscanf(file->file, "%ld", &r);
+		// fscanf(file->file, "%ld", &h);
+		// fscanf(file->file, "%ld", &t);
+		// fscanf(file->file, "%ld", &r);
 
         // cout << "scanned" << h << "|" << t << "|" << r << endl;
 

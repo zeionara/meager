@@ -5,11 +5,13 @@
 
 #define invalidArgument invalid_argument
 
+using namespace meager::main::utils;
+
 Evaluator<INT>* evaluator;
 
 
 void initEvaluator(MetricSetTrackerMaker makeMetricSetTracker, EvaluationTask task, SubsetType subset, bool verbose) {
-    if (subset == train) {
+    if (subset == SubsetType::train) {
         throw invalidArgument("Cannot use train subset for evaluation");
     }
     if (task != LINK_PREDICTION) {
@@ -19,7 +21,7 @@ void initEvaluator(MetricSetTrackerMaker makeMetricSetTracker, EvaluationTask ta
     evaluator = new Evaluator<INT>(
         corpus,
         corpus->train,
-        subset == test ? corpus->test : subset == valid ? corpus->valid : throw invalidArgument("Unsupported subset type, cannot evaluate"),
+        subset == SubsetType::test ? corpus->test : subset == SubsetType::valid ? corpus->valid : throw invalidArgument("Unsupported subset type, cannot evaluate"),
         makeMetricSetTracker
     );
 }

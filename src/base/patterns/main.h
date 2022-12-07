@@ -23,7 +23,7 @@ struct PatternInstance {
 
     string getConciseDescription() {
         string result = "";
-        int i = 0;
+        // int i = 0;
         for (Triple triple: triples) {
             result += to_string(triple.h) + "|" + to_string(triple.r) + "|" + to_string(triple.t) + "\n";
         }

@@ -3,6 +3,8 @@
 // #include "../base/Setting.h"
 #include "../base/api/corpus.h"
 
+using namespace meager::main::utils;
+
 extern ERL_NIF_TERM
 set_in_path(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     initCorpus(
@@ -42,17 +44,17 @@ get_entity_total(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
 extern ERL_NIF_TERM
 get_train_total(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    return enif_make_int(env, countTriples(train));
+    return enif_make_int(env, countTriples(SubsetType::train));
 }
 
 extern ERL_NIF_TERM
 get_test_total(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    return enif_make_int(env, countTriples(test));
+    return enif_make_int(env, countTriples(SubsetType::test));
 }
 
 extern ERL_NIF_TERM
 get_valid_total(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    return enif_make_int(env, countTriples(valid));
+    return enif_make_int(env, countTriples(SubsetType::valid));
 }
 
 extern ERL_NIF_TERM

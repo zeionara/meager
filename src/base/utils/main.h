@@ -1,32 +1,64 @@
 #ifndef UTILS_MAIN_H
 #define UTILS_MAIN_H
 
+#include <fstream>
+
 #include "../triple/main.h"
 
 #define invalidArgument invalid_argument
 
 using namespace std;
 
-enum SubsetType { train, test, valid };
+namespace meager::main::utils {
 
-SubsetType decodeSubsetType(string name);
+    enum class SubsetType {
+        train,
+        test,
+        valid
+    };
 
-struct File {
-    FILE* file;
-    INT length;
+    SubsetType decodeSubsetType(string name);
 
-    File(FILE* file, INT length) {
-        this->file = file;
-        this->length = length;
-    }
+    struct File {
+        string path;
+        ifstream stream;
+        INT length;
 
-    void close() {
-        fclose(this->file);
-    }
-};
+        // File(ifstream* stream, INT length) {
+        //     this->stream = stream;
+        //     this->length = length;
+        // }
 
-File* readNumberOfElements(std::string path, bool verbose = false);
-File* readNumberOfTriples(std::string path, bool verbose = false);
-File* readNumberOfTypeConstrainedRelations(std::string path, bool verbose = false);
+        File(string path, bool verbose) {
+            this->stream.open(path);
+
+            if (!stream.is_open()) {
+                cerr << "file " << path << " does not exist" << endl;
+                throw invalidArgument("File " + path + " does not exist");
+            }
+
+            stream >> length;
+            this->path = path;
+
+            // INT foo;
+
+            // stream >> foo;
+
+            // cout << foo << endl;
+        }
+
+        void close() {
+            stream.close();
+        }
+
+        friend File operator>>(File file, long value);
+    };
+
+    // File* readNumberOfElements(std::string path, bool verbose = false);
+    // File* readNumberOfTriples(std::string path, bool verbose = false);
+    // File* readNumberOfTypeConstrainedRelations(std::string path, bool verbose = false);
+
+}
+
 
 #endif

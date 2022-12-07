@@ -1,18 +1,22 @@
 #include "main.h"
 
-SubsetType decodeSubsetType(string name) {
+namespace meager::main::utils {
 
-    if (name == "train") {
-        return train;
+    SubsetType decodeSubsetType(string name) {
+
+        if (name == "train") {
+            return SubsetType::train;
+        }
+
+        if (name == "test") {
+            return SubsetType::test;
+        }
+
+        if (name == "valid") {
+            return SubsetType::valid;
+        }
+
+        throw invalidArgument("Unknown corpus subset provided: " + name);
     }
 
-    if (name == "test") {
-        return test;
-    }
-
-    if (name == "valid") {
-        return valid;
-    }
-
-    throw invalidArgument("Unknown corpus subset provided: " + name);
 }
