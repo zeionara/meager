@@ -47,16 +47,17 @@ struct OpenKECorpusReader: CorpusReader<INT> {
             ), verbose
         );
 
-        TripleList* triples = new TripleList(file.length, tripleElement);
+        TripleList* triples = new TripleList(file.getLength(), tripleElement);
         Triple* items = triples->items;
 
         INT j = 0;
 
         if (verbose) {
-            cout << "For each of " << file.length << " triples" << endl;
+            cout << "For each of " << file.getLength() << " triples" << endl;
         }
 
-        for (INT i = 0; i < file.length; i++) { // Reading train samples
+        for (INT i = 0; i < file.getLength(); i++) { // Reading train samples
+        // while (file.good()) {
             INT h = 0, r = 0, t = 0;
 
             file.stream >> h >> t >> r;
@@ -132,16 +133,23 @@ struct OpenKECorpusReader: CorpusReader<INT> {
 
     INT readVocabularySize(TripleComponent tripleComponent, bool verbose = false) {
         File* file = new File(path + (tripleComponent == entity ? ENTITIES_FILENAME : RELATIONS_FILENAME), verbose);
+        INT length = file->getLength();
         file->close();
-        return file->length;
+        return length;
     }
 
     RelationTypesContents<INT>* readRelationTypesContents(bool verbose = false) {
         File file = File(path + TYPE_FILENAME, verbose);
 
-        RelationTypeContents<INT>** relations = (RelationTypeContents<INT>**)calloc(file.length * 2, sizeof(RelationTypeContents<INT>*));
+        // cout << "ff" << endl;
 
-        for (INT i = 0; i < file.length * 2; i++) {
+        RelationTypeContents<INT>** relations = (RelationTypeContents<INT>**)calloc(file.getLength() * 2, sizeof(RelationTypeContents<INT>*));
+
+        // cout << file.getLength() << endl;
+        // cout << file.getLength() << endl;
+        // cout << "ff" << endl;
+
+        for (INT i = 0; i < file.getLength() * 2; i++) {
             INT relation = 0;
 
             // cout << file->length << endl;
@@ -168,7 +176,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
             relations[i] = new RelationTypeContents<INT>(items, length, relation);
         }
 
-        return new RelationTypesContents<INT>(relations, file.length * 2);
+        return new RelationTypesContents<INT>(relations, file.getLength() * 2);
     }
 
     // void separateInverseTriples(string path, Triple* triples, INT nTriples, TripleIndex* index, bool verbose, bool drop_duplicates, bool enable_filters) {

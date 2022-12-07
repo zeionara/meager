@@ -2,6 +2,7 @@
 #define UTILS_MAIN_H
 
 #include <fstream>
+#include <functional>
 
 #include "../triple/main.h"
 
@@ -9,7 +10,51 @@
 
 using namespace std;
 
+
+// class Foo {
+//     INT foo;
+// 
+// 
+//     public:
+//         Foo() {};
+// 
+//         Foo(INT value) {
+//             foo = value;
+//         }
+// };
+// 
+// class Bar {
+//     Foo foo;
+// 
+//     Bar(Foo value) {
+//         foo = Foo(2);
+//     }
+// };
+
+
 namespace meager::main::utils {
+
+    // template <typename T>
+    // struct ComputedProperty {
+    //     function<void(T*)> compute;
+    //     T value;
+    //     bool computed;
+
+    //     ComputedProperty() {}
+
+    //     ComputedProperty(function<void(T*)> compute) {
+    //         this->compute = compute;
+    //         computed = false;
+    //     }
+
+    //     public:
+    //         operator T () const {
+    //             if (computed)
+    //                 return value;
+    //             compute(&value);
+    //             return value;
+    //         }
+    // };
 
     enum class SubsetType {
         train,
@@ -22,13 +67,18 @@ namespace meager::main::utils {
     struct File {
         string path;
         ifstream stream;
-        INT length;
+        // ComputedProperty<INT> length;
+        private:
+            INT length;
+            bool length_is_set;
+
 
         // File(ifstream* stream, INT length) {
         //     this->stream = stream;
         //     this->length = length;
         // }
 
+        public:
         File(string path, bool verbose) {
             this->stream.open(path);
 
@@ -37,8 +87,13 @@ namespace meager::main::utils {
                 throw invalidArgument("File " + path + " does not exist");
             }
 
-            stream >> length;
+            // stream >> length;
             this->path = path;
+
+            // length = ComputedProperty<INT>([this](INT* value) {
+            //     stream >> *value;
+            // });
+            length_is_set = false;
 
             // INT foo;
 
@@ -49,6 +104,19 @@ namespace meager::main::utils {
 
         void close() {
             stream.close();
+            // foo = 2;
+        }
+
+        INT getLength() {
+            if (length_is_set)
+                return length;
+            stream >> length;
+            length_is_set = true;
+            return length;
+        }
+
+        bool good() {
+            return stream.good();
         }
 
         friend File& operator>>(File& file, long value);

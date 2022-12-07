@@ -27,7 +27,7 @@ INT readTriples(
     // cout << file->length << endl;
     // cout << "start loop" << endl;
 
-	for (INT i = 0; i < file->length; i++) { // Reading train samples
+	for (INT i = 0; i < file->getLength(); i++) { // Reading train samples
         INT h, r, t;
 
 
