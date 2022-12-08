@@ -10,51 +10,7 @@
 
 using namespace std;
 
-
-// class Foo {
-//     INT foo;
-// 
-// 
-//     public:
-//         Foo() {};
-// 
-//         Foo(INT value) {
-//             foo = value;
-//         }
-// };
-// 
-// class Bar {
-//     Foo foo;
-// 
-//     Bar(Foo value) {
-//         foo = Foo(2);
-//     }
-// };
-
-
 namespace meager::main::utils {
-
-    // template <typename T>
-    // struct ComputedProperty {
-    //     function<void(T*)> compute;
-    //     T value;
-    //     bool computed;
-
-    //     ComputedProperty() {}
-
-    //     ComputedProperty(function<void(T*)> compute) {
-    //         this->compute = compute;
-    //         computed = false;
-    //     }
-
-    //     public:
-    //         operator T () const {
-    //             if (computed)
-    //                 return value;
-    //             compute(&value);
-    //             return value;
-    //         }
-    // };
 
     enum class SubsetType {
         train,
@@ -76,16 +32,14 @@ namespace meager::main::utils {
             this->stream.open(path);
 
             if (!stream.is_open()) {
-                cerr << "file " << path << " does not exist" << endl;
-                throw invalidArgument("File " + path + " does not exist");
+                throw invalidArgument("Cannot open file" + path);
             }
 
             this->path = path;
         }
 
-        void close() {
+        ~File() {
             stream.close();
-            // foo = 2;
         }
 
         bool good() {
@@ -106,11 +60,6 @@ namespace meager::main::utils {
 
     };
 
-    // File* readNumberOfElements(std::string path, bool verbose = false);
-    // File* readNumberOfTriples(std::string path, bool verbose = false);
-    // File* readNumberOfTypeConstrainedRelations(std::string path, bool verbose = false);
-
 }
-
 
 #endif

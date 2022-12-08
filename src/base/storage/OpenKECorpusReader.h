@@ -50,6 +50,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
         TripleList* triples = new TripleList(file.length, tripleElement);
         Triple* items = triples->items;
 
+        INT h = 0, r = 0, t = 0;
         INT j = 0;
 
         if (verbose) {
@@ -57,17 +58,8 @@ struct OpenKECorpusReader: CorpusReader<INT> {
         }
 
         for (INT i = 0; i < file.length; i++) { // Reading train samples
-        // while (file.good()) {
-            INT h = 0, r = 0, t = 0;
 
             file >> h >> t >> r;
-            // file.stream >> h >> t >> r;
-
-            // cout << h << " " << t << " " << r << endl;
-
-            // fscanf(file->file, "%ld", &h);
-            // fscanf(file->file, "%ld", &t);
-            // fscanf(file->file, "%ld", &r);
 
             if (!enableFilters || filter->allows(Triple(h, r, t))) {
                 if (enableFilters) {
@@ -137,7 +129,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
     INT readVocabularySize(TripleComponent tripleComponent, bool verbose = false) {
         FileWithHeader* file = new FileWithHeader(path + (tripleComponent == entity ? ENTITIES_FILENAME : RELATIONS_FILENAME), verbose);
         INT length = file->length;
-        file->close();
+        delete file;
         return length;
     }
 
