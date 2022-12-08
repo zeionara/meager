@@ -38,6 +38,10 @@ namespace meager::main::utils {
             this->path = path;
         }
 
+        bool getLine(string line) {
+            return (bool)getline(this->stream, line);
+        }
+
         ~File() {
             stream.close();
         }

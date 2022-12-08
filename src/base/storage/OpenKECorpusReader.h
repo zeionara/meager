@@ -8,7 +8,7 @@
 
 #include "CorpusReader.h"
 
-#define getLine getline
+// #define getLine getline
 #define unorderedSet unordered_set
 #define pushBack push_back
 #define invalidArgument invalid_argument
@@ -88,19 +88,21 @@ struct OpenKECorpusReader: CorpusReader<INT> {
     }
 
     vector<regex> readFilterPatterns(bool excluding = false, bool verbose = false, bool dropDuplicates = true) {
-        if (verbose) {
-            cout << "started reading filter patterns" << endl;
-        }
+        // if (verbose) {
+        //     cout << "started reading filter patterns" << endl;
+        // }
 
-        ifstream inFile(path + (excluding ? EXCLUDING_FILTERS_FILENAME : INCLUDING_FILTERS_FILENAME));
+        // ifstream inFile(path + (excluding ? EXCLUDING_FILTERS_FILENAME : INCLUDING_FILTERS_FILENAME));
 
-        if (!inFile.good()) {
-            throw invalidArgument("cannot find file with filter on disk");
-        }
+        // if (!inFile.good()) {
+        //     throw invalidArgument("cannot find file with filter on disk");
+        // }
+
+        File file = File(path + (excluding ? EXCLUDING_FILTERS_FILENAME : INCLUDING_FILTERS_FILENAME), verbose);
 
         vector<regex> patterns;
 
-        for (string line; getLine(inFile, line);) {
+        for (string line; file.getLine(line);) {
             if (dropDuplicates) {
                 unorderedSet<string> seenPatterns;
 
@@ -127,44 +129,22 @@ struct OpenKECorpusReader: CorpusReader<INT> {
     }
 
     INT readVocabularySize(TripleComponent tripleComponent, bool verbose = false) {
-        FileWithHeader* file = new FileWithHeader(path + (tripleComponent == entity ? ENTITIES_FILENAME : RELATIONS_FILENAME), verbose);
-        INT length = file->length;
-        delete file;
-        return length;
+        return FileWithHeader(path + (tripleComponent == entity ? ENTITIES_FILENAME : RELATIONS_FILENAME), verbose).length;
     }
 
     RelationTypesContents<INT>* readRelationTypesContents(bool verbose = false) {
         FileWithHeader file = FileWithHeader(path + TYPE_FILENAME, verbose);
 
-        // cout << "ff" << endl;
-
         RelationTypeContents<INT>** relations = (RelationTypeContents<INT>**)calloc(file.length * 2, sizeof(RelationTypeContents<INT>*));
 
-        // cout << file.getLength() << endl;
-        // cout << file.getLength() << endl;
-        // cout << "ff" << endl;
-
         for (INT i = 0; i < file.length * 2; i++) {
-            INT relation = 0;
+            INT relation = 0, length = 0;
 
-            // cout << file->length << endl;
-            // cout << "bar" << endl;
-            // cout << file->stream << endl;
-            file >> relation;
-            // cout << "handling relation " << relation << endl;
-            // fscanf(file->file, "%ld", &relation);
-
-            INT length = 0;
-
-            file >> length;
-            // cout << "number of elements for relation = " << length << endl;
-            // cout << length << endl;
-            // fscanf(file->file, "%ld", &length);
+            file >> relation >> length;
 
             INT* items = (INT*)calloc(length, sizeof(INT));
 
             for (INT j = 0; j < length; j++) {
-                // fscanf(file->file, "%ld", &items[j]);
                 file >> items[j];
             }
 
@@ -187,18 +167,21 @@ struct OpenKECorpusReader: CorpusReader<INT> {
                 throw invalidArgument("Pattern is not binary");
         }
 
-        ifstream inFile(path + relativePath);
+        // ifstream inFile(path + relativePath);
+        File file = File(path + relativePath, verbose);
 
-        if (!inFile.good()) {
-            throw invalidArgument("cannot find file with binary pattern relations list on disk");
-        }
+        // if (!inFile.good()) {
+        //     throw invalidArgument("cannot find file with binary pattern relations list on disk");
+        // }
 
         INT firstRelation, secondRelation;
 
         unordered_map<INT, INT> firstRelationToSecond;
         unordered_map<INT, INT> secondRelationToFirst;
 
-        while (inFile >> firstRelation >> secondRelation) {
+        while (file.good()) {
+            file >> firstRelation >> secondRelation;
+
             if (verbose) {
                 printf("Read relations %ld and %ld.\n", firstRelation, secondRelation);
             }
@@ -211,7 +194,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
             printf("Number of relations in binary pattern = %d.\n", (int)firstRelationToSecond.size());
         }
 
-        inFile.close();
+        // inFile.close();
 
         return new BinaryPatternRelationMap<INT>(firstRelationToSecond, secondRelationToFirst);
     }
@@ -228,16 +211,20 @@ struct OpenKECorpusReader: CorpusReader<INT> {
                 throw invalidArgument("Pattern is not unary");
         }
 
-        ifstream inFile(path + relativePath);
+        // ifstream inFile(path + relativePath);
+        
+        File file = File(path + relativePath, verbose);
 
-        if (!inFile.good()) {
-            throw invalidArgument("cannot find file with unary pattern relations list on disk");
-        }
+        // if (!inFile.good()) {
+        //     throw invalidArgument("cannot find file with unary pattern relations list on disk");
+        // }
 
         INT relation;
         unordered_set<INT> relations;
 
-        while (inFile >> relation) {
+        while (file.good()) {
+            file >> relation;
+
             if (verbose) {
                 printf("Read relation %ld.\n", relation);
             }
@@ -249,7 +236,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
             printf("Number of symmetric relations = %d.\n", (int)relations.size());
         }
 
-        inFile.close();
+        // inFile.close();
 
         if (verbose) {
             cout << "Symmetric triples" << endl;
