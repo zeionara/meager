@@ -6,13 +6,14 @@
 #include "reader/CorpusReader.h"
 
 using namespace std;
+using namespace meager::main::storage;
 
 template <typename T>
 struct LocalCorpus: Corpus {
-    CorpusReader<T>* reader;
+    reader::Corpus<T>* reader;
     bool enableFilters;
 
-    LocalCorpus(CorpusReader<T>* reader, bool enableFilters = false) {
+    LocalCorpus(reader::Corpus<T>* reader, bool enableFilters = false) {
         this->reader = reader;
         this->enableFilters = enableFilters;
     }

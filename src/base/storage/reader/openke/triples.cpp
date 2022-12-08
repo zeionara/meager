@@ -1,53 +1,57 @@
 #include "OpenKECorpusReader.h"
 
-TripleList* OpenKECorpusReader::readTriples(
-    SubsetType subsetType, TripleIndex* tripleIndex, TripleElement tripleElement, TripleFilter<INT>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose
-) {
-    FileWithHeader file = FileWithHeader(
-        path + (
-            subsetType == SubsetType::train ? TRAIN_FILENAME :
-            subsetType == SubsetType::test ? TEST_FILENAME :
-            subsetType == SubsetType::valid ? VALID_FILENAME :
-            throw invalidArgument("Unknown subset type")
-        ), verbose
-    );
+namespace meager::main::storage::reader::openke {
 
-    TripleList* triples = new TripleList(file.length, tripleElement);
-    Triple* items = triples->items;
+    TripleList* Corpus::readTriples(
+        SubsetType subsetType, TripleIndex* tripleIndex, TripleElement tripleElement, TripleFilter<INT>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose
+    ) {
+        FileWithHeader file = FileWithHeader(
+            path + (
+                subsetType == SubsetType::train ? TRAIN_FILENAME :
+                subsetType == SubsetType::test ? TEST_FILENAME :
+                subsetType == SubsetType::valid ? VALID_FILENAME :
+                throw invalidArgument("Unknown subset type")
+            ), verbose
+        );
 
-    INT h = 0, r = 0, t = 0;
-    INT j = 0;
+        TripleList* triples = new TripleList(file.length, tripleElement);
+        Triple* items = triples->items;
 
-    if (verbose) {
-        cout << "For each of " << file.length << " triples" << endl;
-    }
+        INT h = 0, r = 0, t = 0;
+        INT j = 0;
 
-    for (INT i = 0; i < file.length; i++) { // Reading train samples
-
-        file >> h >> t >> r;
-
-        if (!enableFilters || filter->allows(Triple(h, r, t))) {
-            if (enableFilters) {
-                items[j].h = encoder->entity->encode(h);
-                items[j].t = encoder->entity->encode(t);
-                items[j].r = encoder->relation->encode(r);
-            } else {
-                items[j].h = h;
-                items[j].t = t;
-                items[j].r = r;
-            }
-
-            tripleIndex->add(items[j]);
-
-            j++;
+        if (verbose) {
+            cout << "For each of " << file.length << " triples" << endl;
         }
+
+        for (INT i = 0; i < file.length; i++) { // Reading train samples
+
+            file >> h >> t >> r;
+
+            if (!enableFilters || filter->allows(Triple(h, r, t))) {
+                if (enableFilters) {
+                    items[j].h = encoder->entity->encode(h);
+                    items[j].t = encoder->entity->encode(t);
+                    items[j].r = encoder->relation->encode(r);
+                } else {
+                    items[j].h = h;
+                    items[j].t = t;
+                    items[j].r = r;
+                }
+
+                tripleIndex->add(items[j]);
+
+                j++;
+            }
+        }
+
+        if (enableFilters && verbose) {
+            cout << "Current entity id in encoder = " << encoder->entity->nEncodedValues << endl;
+        }
+
+        triples->length = j;
+
+        return triples;
     }
 
-    if (enableFilters && verbose) {
-        cout << "Current entity id in encoder = " << encoder->entity->nEncodedValues << endl;
-    }
-
-    triples->length = j;
-
-    return triples;
 }

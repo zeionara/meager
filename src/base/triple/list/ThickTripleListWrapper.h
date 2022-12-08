@@ -36,7 +36,7 @@ struct ThickTripleListWrapper {
     PatternDescriptions<T>* patterns;
 
     ThickTripleListWrapper(
-        SubsetType subset, CorpusReader<T>* reader, TripleFilter<T>* filter, TripleEncoder<T>* encoder, PatternDescriptionTemplates<T>* patterns,
+        SubsetType subset, reader::Corpus<T>* reader, TripleFilter<T>* filter, TripleEncoder<T>* encoder, PatternDescriptionTemplates<T>* patterns,
         bool enableFilters, bool dropPatternDuplicates = true, bool verbose = false
     ) {
 
@@ -130,7 +130,7 @@ struct ThickTripleListWrapper {
     }
 
     void read(
-        TripleFilter<T>* filter, TripleEncoder<T>* encoder, CorpusReader<T>* reader, PatternDescriptionTemplates<T>* patterns,
+        TripleFilter<T>* filter, TripleEncoder<T>* encoder, reader::Corpus<T>* reader, PatternDescriptionTemplates<T>* patterns,
         bool enableFilters, bool dropPatternDuplicates = true, bool verbose = false
     ) {
         if (verbose) {

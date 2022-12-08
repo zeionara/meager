@@ -10,6 +10,8 @@
 #include "../TripleEncoder.h"
 #include "../../filters/TripleFilter.h"
 
+using namespace meager::main::storage;
+
 template <typename T>
 struct ThinTripleListWrapper {
     TripleList* content;
@@ -18,7 +20,7 @@ struct ThinTripleListWrapper {
 
     TripleIndex* index;
 
-    ThinTripleListWrapper(SubsetType subset, CorpusReader<T>* reader, TripleFilter<T>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose = false) {
+    ThinTripleListWrapper(SubsetType subset, reader::Corpus<T>* reader, TripleFilter<T>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose = false) {
         this->index = new TripleIndex();
 
         if (verbose) {
@@ -40,7 +42,7 @@ struct ThinTripleListWrapper {
         this->content->sort(nRelations); // Sort by relation, then by head, then by tail
     }
 
-    void read(CorpusReader<T>* reader, TripleFilter<T>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose = false) {
+    void read(reader::Corpus<T>* reader, TripleFilter<T>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose = false) {
         if (enableFilters) {
             this->sort(encoder->relation->nEncodedValues);
         } else {

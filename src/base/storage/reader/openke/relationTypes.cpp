@@ -1,23 +1,27 @@
 #include "OpenKECorpusReader.h"
 
-RelationTypesContents<INT>* OpenKECorpusReader::readRelationTypesContents(bool verbose) {
-    FileWithHeader file = FileWithHeader(path + TYPE_FILENAME, verbose);
+namespace meager::main::storage::reader::openke {
 
-    RelationTypeContents<INT>** relations = (RelationTypeContents<INT>**)calloc(file.length * 2, sizeof(RelationTypeContents<INT>*));
+    RelationTypesContents<INT>* Corpus::readRelationTypesContents(bool verbose) {
+        FileWithHeader file = FileWithHeader(path + TYPE_FILENAME, verbose);
 
-    for (INT i = 0; i < file.length * 2; i++) {
-        INT relation = 0, length = 0;
+        RelationTypeContents<INT>** relations = (RelationTypeContents<INT>**)calloc(file.length * 2, sizeof(RelationTypeContents<INT>*));
 
-        file >> relation >> length;
+        for (INT i = 0; i < file.length * 2; i++) {
+            INT relation = 0, length = 0;
 
-        INT* items = (INT*)calloc(length, sizeof(INT));
+            file >> relation >> length;
 
-        for (INT j = 0; j < length; j++) {
-            file >> items[j];
+            INT* items = (INT*)calloc(length, sizeof(INT));
+
+            for (INT j = 0; j < length; j++) {
+                file >> items[j];
+            }
+
+            relations[i] = new RelationTypeContents<INT>(items, length, relation);
         }
 
-        relations[i] = new RelationTypeContents<INT>(items, length, relation);
+        return new RelationTypesContents<INT>(relations, file.length * 2);
     }
 
-    return new RelationTypesContents<INT>(relations, file.length * 2);
 }

@@ -2,6 +2,7 @@
 #include "../storage/reader/openke/OpenKECorpusReader.h"
 
 using namespace meager::main::utils;
+using namespace meager::main::storage;
 
 // Init
 
@@ -10,7 +11,7 @@ LocalTsvCorpus<INT>* corpus;
 bool constexpr DROP_PATTERN_DUPLICATES = true;
 
 void initCorpus(char *path, bool enableFilters, bool verbose) {
-    corpus = new LocalTsvCorpus<INT>(new OpenKECorpusReader(path), enableFilters, verbose);
+    corpus = new LocalTsvCorpus<INT>(new reader::openke::Corpus(path), enableFilters, verbose);
     if (verbose) {
         printf("corpus path is set to %s\n", path);
     }

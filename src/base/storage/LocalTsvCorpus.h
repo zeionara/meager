@@ -12,6 +12,7 @@
 #include "../evaluation/Stopwatch.h"
 
 using namespace std;
+using namespace meager::main::storage;
 
 string const _TRAIN_FILENAME = "train2id.txt";
 string const _TEST_FILENAME = "test2id.txt";
@@ -49,7 +50,7 @@ struct LocalTsvCorpus: LocalCorpus<T> {
     TripleEncoder<T>* encoder;
     PatternDescriptionTemplates<T>* patterns;
 
-    LocalTsvCorpus(CorpusReader<T>* reader, bool enableFilters = false, bool verbose = false): LocalCorpus<T>(reader, enableFilters) {
+    LocalTsvCorpus(reader::Corpus<T>* reader, bool enableFilters = false, bool verbose = false): LocalCorpus<T>(reader, enableFilters) {
         if (enableFilters) {
             if (verbose) {
                 cout << "filters are enabled" << endl;

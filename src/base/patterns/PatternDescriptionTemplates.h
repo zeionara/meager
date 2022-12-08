@@ -10,6 +10,8 @@
 #define invalidArgument invalid_argument
 #define Map unordered_map
 
+using namespace meager::main::storage;
+
 struct PatternDescriptionTemplate {
 
     Pattern pattern;
@@ -27,7 +29,7 @@ struct BinaryPatternDescriptionTemplate: PatternDescriptionTemplate {
 
     BinaryPatternRelationMap<T>* content;
 
-    BinaryPatternDescriptionTemplate(Pattern pattern, CorpusReader<T>* reader, TripleEncoder<T>* encoder, bool enableFilters = false, bool verbose = false): PatternDescriptionTemplate(pattern) {
+    BinaryPatternDescriptionTemplate(Pattern pattern, reader::Corpus<T>* reader, TripleEncoder<T>* encoder, bool enableFilters = false, bool verbose = false): PatternDescriptionTemplate(pattern) {
         try {
             content = reader->readBinaryPatterns(pattern, encoder, enableFilters, verbose);
         } catch (invalidArgument&) {
@@ -42,7 +44,7 @@ struct UnaryPatternDescriptionTemplate: PatternDescriptionTemplate {
 
     UnaryPatternRelationSet<T>* content;
 
-    UnaryPatternDescriptionTemplate(Pattern pattern, CorpusReader<T>* reader, TripleEncoder<T>* encoder, bool enableFilters = false, bool verbose = false): PatternDescriptionTemplate(pattern) {
+    UnaryPatternDescriptionTemplate(Pattern pattern, reader::Corpus<T>* reader, TripleEncoder<T>* encoder, bool enableFilters = false, bool verbose = false): PatternDescriptionTemplate(pattern) {
         try {
             content = reader->readUnaryPatterns(pattern, encoder, enableFilters, verbose);
         } catch (invalidArgument&) {
@@ -58,7 +60,7 @@ struct PatternDescriptionTemplates {
     BinaryPatternDescriptionTemplate<T>* inverse;
     UnaryPatternDescriptionTemplate<T>* symmetric;
     
-    PatternDescriptionTemplates(CorpusReader<T>* reader, TripleEncoder<T>* encoder, bool enableFilters = true, bool verbose = false) {
+    PatternDescriptionTemplates(reader::Corpus<T>* reader, TripleEncoder<T>* encoder, bool enableFilters = true, bool verbose = false) {
         inverse = new BinaryPatternDescriptionTemplate<T>(::Pattern::inverse, reader, encoder, enableFilters, verbose);
         symmetric = new UnaryPatternDescriptionTemplate<T>(::Pattern::symmetric, reader, encoder, enableFilters, verbose);
     }

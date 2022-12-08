@@ -7,6 +7,8 @@
 
 #define invalidArgument invalid_argument
 
+using namespace meager::main::storage;
+
 template<typename T>
 bool binarySearch(T* items, T target, long start, long end) {
   
@@ -98,7 +100,7 @@ struct RelationTypes {
     RelationType<T>** relations;
     INT length;
 
-    RelationTypes(bool enableFilters, TripleEncoder<T>* encoder, CorpusReader<T>* reader, bool verbose = false) {
+    RelationTypes(bool enableFilters, TripleEncoder<T>* encoder, reader::Corpus<T>* reader, bool verbose = false) {
         RelationTypesContents<T>* contents = reader->readRelationTypesContents(verbose);
 
         relations = (RelationType<T>**)calloc(contents->length, sizeof(RelationType<T>*));

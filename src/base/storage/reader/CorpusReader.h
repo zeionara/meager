@@ -56,21 +56,26 @@ struct RelationTypesContents {
 template <typename T>
 struct TripleFilter;
 
-template <typename T>
-struct CorpusReader {
+namespace meager::main::storage::reader {
 
-    string path; // TODO: Delete this
+    template <typename T>
+    struct Corpus {
 
-    virtual TripleList* readTriples(
-        SubsetType subsetType, TripleIndex* tripleIndex, TripleElement tripleElement, TripleFilter<T>* filter, TripleEncoder<T>* encoder,
-        bool enableFilters = false, bool verbose = false
-    ) = 0;
-    virtual INT readVocabularySize(TripleComponent tripleComponent, bool verbose = false) = 0;
-    virtual vector<regex> readFilterPatterns(bool excluding = false, bool verbose = false, bool drop_duplicates = true) = 0;
-    virtual RelationTypesContents<T>* readRelationTypesContents(bool verbose = false) = 0;
+        string path; // TODO: Delete this
 
-    virtual BinaryPatternRelationMap<INT>* readBinaryPatterns(Pattern pattern, TripleEncoder<T>* encoder, bool enableFilters = false, bool verbose = false) = 0;
-    virtual UnaryPatternRelationSet<INT>* readUnaryPatterns(Pattern pattern, TripleEncoder<T>* encoder, bool enableFilters = false, bool verbose = false) = 0;
-};
+        virtual TripleList* readTriples(
+            SubsetType subsetType, TripleIndex* tripleIndex, TripleElement tripleElement, TripleFilter<T>* filter, TripleEncoder<T>* encoder,
+            bool enableFilters = false, bool verbose = false
+        ) = 0;
+
+        virtual INT readVocabularySize(TripleComponent tripleComponent, bool verbose = false) = 0;
+        virtual vector<regex> readFilterPatterns(bool excluding = false, bool verbose = false, bool drop_duplicates = true) = 0;
+        virtual RelationTypesContents<T>* readRelationTypesContents(bool verbose = false) = 0;
+
+        virtual BinaryPatternRelationMap<INT>* readBinaryPatterns(Pattern pattern, TripleEncoder<T>* encoder, bool enableFilters = false, bool verbose = false) = 0;
+        virtual UnaryPatternRelationSet<INT>* readUnaryPatterns(Pattern pattern, TripleEncoder<T>* encoder, bool enableFilters = false, bool verbose = false) = 0;
+    };
+
+}
 
 #endif

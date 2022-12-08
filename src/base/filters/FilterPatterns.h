@@ -11,6 +11,7 @@
 #include "../storage/reader/CorpusReader.h"
 
 using namespace std;
+using namespace meager::main::storage;
 
 template <typename T>
 struct FilterPatterns {
@@ -18,7 +19,7 @@ struct FilterPatterns {
 	bool empty;
     vector<regex> items;
 
-    FilterPatterns(CorpusReader<T>* reader, bool excluding = false, bool dropDuplicates = true, bool verbose = false) {
+    FilterPatterns(reader::Corpus<T>* reader, bool excluding = false, bool dropDuplicates = true, bool verbose = false) {
         try {
             items = reader->readFilterPatterns(excluding, dropDuplicates, verbose); 
             empty = false;

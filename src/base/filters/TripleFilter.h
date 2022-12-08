@@ -3,13 +3,15 @@
 
 #include "FilterPatterns.h"
 
+using namespace meager::main::storage;
+
 template <typename T>
 struct TripleFilter {
 
     FilterPatterns<T>* excluding;
     FilterPatterns<T>* including;
 
-    TripleFilter(CorpusReader<T>* reader, bool dropDuplicates, bool verbose) {
+    TripleFilter(reader::Corpus<T>* reader, bool dropDuplicates, bool verbose) {
         if (verbose) {
             cout << "started initializing filter" << endl;
         }
