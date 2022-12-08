@@ -64,21 +64,14 @@ namespace meager::main::utils {
 
     SubsetType decodeSubsetType(string name);
 
-    struct File {
-        string path;
+    class File {
+        bool length_is_set;
+
+    public:
         ifstream stream;
-        // ComputedProperty<INT> length;
-        private:
-            INT length;
-            bool length_is_set;
+        string path;
+        INT length;
 
-
-        // File(ifstream* stream, INT length) {
-        //     this->stream = stream;
-        //     this->length = length;
-        // }
-
-        public:
         File(string path, bool verbose) {
             this->stream.open(path);
 
@@ -87,19 +80,9 @@ namespace meager::main::utils {
                 throw invalidArgument("File " + path + " does not exist");
             }
 
-            // stream >> length;
             this->path = path;
 
-            // length = ComputedProperty<INT>([this](INT* value) {
-            //     stream >> *value;
-            // });
             length_is_set = false;
-
-            // INT foo;
-
-            // stream >> foo;
-
-            // cout << foo << endl;
         }
 
         void close() {
@@ -119,7 +102,7 @@ namespace meager::main::utils {
             return stream.good();
         }
 
-        friend File& operator>>(File& file, long value);
+        friend File& operator>>(File& file, long& value);
     };
 
     // File* readNumberOfElements(std::string path, bool verbose = false);

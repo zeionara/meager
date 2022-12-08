@@ -60,7 +60,10 @@ struct OpenKECorpusReader: CorpusReader<INT> {
         // while (file.good()) {
             INT h = 0, r = 0, t = 0;
 
-            file.stream >> h >> t >> r;
+            file >> h >> t >> r;
+            // file.stream >> h >> t >> r;
+
+            cout << h << " " << t << " " << r << endl;
 
             // fscanf(file->file, "%ld", &h);
             // fscanf(file->file, "%ld", &t);
