@@ -65,12 +65,12 @@ namespace meager::main::utils {
     SubsetType decodeSubsetType(string name);
 
     class File {
-        bool length_is_set;
+
+    protected:
+        ifstream stream;
 
     public:
-        ifstream stream;
         string path;
-        INT length;
 
         File(string path, bool verbose) {
             this->stream.open(path);
@@ -81,8 +81,6 @@ namespace meager::main::utils {
             }
 
             this->path = path;
-
-            length_is_set = false;
         }
 
         void close() {
@@ -90,19 +88,22 @@ namespace meager::main::utils {
             // foo = 2;
         }
 
-        INT getLength() {
-            if (length_is_set)
-                return length;
-            stream >> length;
-            length_is_set = true;
-            return length;
-        }
-
         bool good() {
             return stream.good();
         }
 
         friend File& operator>>(File& file, long& value);
+    };
+
+    class FileWithHeader: public File {
+
+    public:
+        INT length;
+
+        FileWithHeader(string path, bool verbose): File(path, verbose) {
+            *this >> length;
+        }
+
     };
 
     // File* readNumberOfElements(std::string path, bool verbose = false);
