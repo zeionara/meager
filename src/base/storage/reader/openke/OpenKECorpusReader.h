@@ -38,187 +38,138 @@ struct OpenKECorpusReader: CorpusReader<INT> {
     }
 
     TripleList* readTriples(SubsetType subsetType, TripleIndex* tripleIndex, TripleElement tripleElement, TripleFilter<INT>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose);
-    // TripleList* readTriples(SubsetType subsetType, TripleIndex* tripleIndex, TripleElement tripleElement, TripleFilter<INT>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose) {
-    //     FileWithHeader file = FileWithHeader(
-    //         path + (
-    //             subsetType == SubsetType::train ? TRAIN_FILENAME :
-    //             subsetType == SubsetType::test ? TEST_FILENAME :
-    //             subsetType == SubsetType::valid ? VALID_FILENAME :
-    //             throw invalidArgument("Unknown subset type")
-    //         ), verbose
-    //     );
 
-    //     TripleList* triples = new TripleList(file.length, tripleElement);
-    //     Triple* items = triples->items;
+    vector<regex> readFilterPatterns(bool excluding = false, bool verbose = false, bool dropDuplicates = true);
+    //     File file = File(path + (excluding ? EXCLUDING_FILTERS_FILENAME : INCLUDING_FILTERS_FILENAME), verbose);
 
-    //     INT h = 0, r = 0, t = 0;
-    //     INT j = 0;
+    //     vector<regex> patterns;
 
-    //     if (verbose) {
-    //         cout << "For each of " << file.length << " triples" << endl;
-    //     }
+    //     for (string line; file.getLine(line);) {
+    //         if (dropDuplicates) {
+    //             unorderedSet<string> seenPatterns;
 
-    //     for (INT i = 0; i < file.length; i++) { // Reading train samples
+    //             if (seenPatterns.find(line) == seenPatterns.end()) {
+    //                 seenPatterns.insert(line);
+    //                 regex lineRegex(line);
+    //                 patterns.pushBack(lineRegex);
 
-    //         file >> h >> t >> r;
-
-    //         if (!enableFilters || filter->allows(Triple(h, r, t))) {
-    //             if (enableFilters) {
-    //                 items[j].h = encoder->entity->encode(h);
-    //                 items[j].t = encoder->entity->encode(t);
-    //                 items[j].r = encoder->relation->encode(r);
-    //             } else {
-    //                 items[j].h = h;
-    //                 items[j].t = t;
-    //                 items[j].r = r;
+    //                 if (verbose) {
+    //                     cout << "read filter pattern " << line << endl;
+    //                 }
     //             }
-
-    //             tripleIndex->add(items[j]);
-
-    //             j++;
+    //         } else {
+    //             regex lineRegex(line);
+    //             patterns.pushBack(lineRegex);
     //         }
     //     }
 
-    //     if (enableFilters && verbose) {
-    //         cout << "Current entity id in encoder = " << encoder->entity->nEncodedValues << endl;
+    //     if (verbose) {
+    //         cout << "finished reading filter patterns" << endl;
     //     }
 
-    //     triples->length = j;
-
-    //     return triples;
+    //     return patterns;
     // }
-
-    vector<regex> readFilterPatterns(bool excluding = false, bool verbose = false, bool dropDuplicates = true) {
-        File file = File(path + (excluding ? EXCLUDING_FILTERS_FILENAME : INCLUDING_FILTERS_FILENAME), verbose);
-
-        vector<regex> patterns;
-
-        for (string line; file.getLine(line);) {
-            if (dropDuplicates) {
-                unorderedSet<string> seenPatterns;
-
-                if (seenPatterns.find(line) == seenPatterns.end()) {
-                    seenPatterns.insert(line);
-                    regex lineRegex(line);
-                    patterns.pushBack(lineRegex);
-
-                    if (verbose) {
-                        cout << "read filter pattern " << line << endl;
-                    }
-                }
-            } else {
-                regex lineRegex(line);
-                patterns.pushBack(lineRegex);
-            }
-        }
-
-        if (verbose) {
-            cout << "finished reading filter patterns" << endl;
-        }
-
-        return patterns;
-    }
 
     INT readVocabularySize(TripleComponent tripleComponent, bool verbose = false) {
         return FileWithHeader(path + (tripleComponent == entity ? ENTITIES_FILENAME : RELATIONS_FILENAME), verbose).length;
     }
 
-    RelationTypesContents<INT>* readRelationTypesContents(bool verbose = false) {
-        FileWithHeader file = FileWithHeader(path + TYPE_FILENAME, verbose);
+    RelationTypesContents<INT>* readRelationTypesContents(bool verbose = false);
+    //     FileWithHeader file = FileWithHeader(path + TYPE_FILENAME, verbose);
 
-        RelationTypeContents<INT>** relations = (RelationTypeContents<INT>**)calloc(file.length * 2, sizeof(RelationTypeContents<INT>*));
+    //     RelationTypeContents<INT>** relations = (RelationTypeContents<INT>**)calloc(file.length * 2, sizeof(RelationTypeContents<INT>*));
 
-        for (INT i = 0; i < file.length * 2; i++) {
-            INT relation = 0, length = 0;
+    //     for (INT i = 0; i < file.length * 2; i++) {
+    //         INT relation = 0, length = 0;
 
-            file >> relation >> length;
+    //         file >> relation >> length;
 
-            INT* items = (INT*)calloc(length, sizeof(INT));
+    //         INT* items = (INT*)calloc(length, sizeof(INT));
 
-            for (INT j = 0; j < length; j++) {
-                file >> items[j];
-            }
+    //         for (INT j = 0; j < length; j++) {
+    //             file >> items[j];
+    //         }
 
-            relations[i] = new RelationTypeContents<INT>(items, length, relation);
-        }
+    //         relations[i] = new RelationTypeContents<INT>(items, length, relation);
+    //     }
 
-        return new RelationTypesContents<INT>(relations, file.length * 2);
-    }
+    //     return new RelationTypesContents<INT>(relations, file.length * 2);
+    // }
 
-    BinaryPatternRelationMap<INT>* readBinaryPatterns(Pattern pattern, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose) {
-        string relativePath;
+    BinaryPatternRelationMap<INT>* readBinaryPatterns(Pattern pattern, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose);
+    //     string relativePath;
 
-        switch (pattern) {
-            case inverse:
-                relativePath = INVERSE_PATTERNS_FILENAME;
-                break;
-            default:
-                cerr << "Pattern is not binary" << endl;
-                throw invalidArgument("Pattern is not binary");
-        }
+    //     switch (pattern) {
+    //         case inverse:
+    //             relativePath = INVERSE_PATTERNS_FILENAME;
+    //             break;
+    //         default:
+    //             cerr << "Pattern is not binary" << endl;
+    //             throw invalidArgument("Pattern is not binary");
+    //     }
 
-        File file = File(path + relativePath, verbose);
+    //     File file = File(path + relativePath, verbose);
 
-        INT firstRelation, secondRelation;
+    //     INT firstRelation, secondRelation;
 
-        unordered_map<INT, INT> firstRelationToSecond;
-        unordered_map<INT, INT> secondRelationToFirst;
+    //     unordered_map<INT, INT> firstRelationToSecond;
+    //     unordered_map<INT, INT> secondRelationToFirst;
 
-        while (file.good()) {
-            file >> firstRelation >> secondRelation;
+    //     while (file.good()) {
+    //         file >> firstRelation >> secondRelation;
 
-            if (verbose) {
-                printf("Read relations %ld and %ld.\n", firstRelation, secondRelation);
-            }
+    //         if (verbose) {
+    //             printf("Read relations %ld and %ld.\n", firstRelation, secondRelation);
+    //         }
 
-            firstRelationToSecond[firstRelation] = enableFilters ? encoder->relation->encode(secondRelation) : secondRelation;
-            secondRelationToFirst[secondRelation] = enableFilters ? encoder->relation->encode(firstRelation) : firstRelation;
-        }
+    //         firstRelationToSecond[firstRelation] = enableFilters ? encoder->relation->encode(secondRelation) : secondRelation;
+    //         secondRelationToFirst[secondRelation] = enableFilters ? encoder->relation->encode(firstRelation) : firstRelation;
+    //     }
 
-        if (verbose) {
-            printf("Number of relations in binary pattern = %d.\n", (int)firstRelationToSecond.size());
-        }
+    //     if (verbose) {
+    //         printf("Number of relations in binary pattern = %d.\n", (int)firstRelationToSecond.size());
+    //     }
 
-        return new BinaryPatternRelationMap<INT>(firstRelationToSecond, secondRelationToFirst);
-    }
+    //     return new BinaryPatternRelationMap<INT>(firstRelationToSecond, secondRelationToFirst);
+    // }
 
-    UnaryPatternRelationSet<INT>* readUnaryPatterns(Pattern pattern, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose) {
-        string relativePath;
+    UnaryPatternRelationSet<INT>* readUnaryPatterns(Pattern pattern, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose);
+    //     string relativePath;
 
-        switch (pattern) {
-            case symmetric:
-                relativePath = SYMMETRIC_PATTERNS_FILENAME;
-                break;
-            default:
-                cerr << "Pattern is not unary" << endl;
-                throw invalidArgument("Pattern is not unary");
-        }
+    //     switch (pattern) {
+    //         case symmetric:
+    //             relativePath = SYMMETRIC_PATTERNS_FILENAME;
+    //             break;
+    //         default:
+    //             cerr << "Pattern is not unary" << endl;
+    //             throw invalidArgument("Pattern is not unary");
+    //     }
 
-        File file = File(path + relativePath, verbose);
+    //     File file = File(path + relativePath, verbose);
 
-        INT relation;
-        unordered_set<INT> relations;
+    //     INT relation;
+    //     unordered_set<INT> relations;
 
-        while (file.good()) {
-            file >> relation;
+    //     while (file.good()) {
+    //         file >> relation;
 
-            if (verbose) {
-                printf("Read relation %ld.\n", relation);
-            }
+    //         if (verbose) {
+    //             printf("Read relation %ld.\n", relation);
+    //         }
 
-            relations.insert(enableFilters ? encoder->relation->encode(relation) : relation);
-        }
+    //         relations.insert(enableFilters ? encoder->relation->encode(relation) : relation);
+    //     }
 
-        if (verbose) {
-            printf("Number of symmetric relations = %d.\n", (int)relations.size());
-        }
+    //     if (verbose) {
+    //         printf("Number of symmetric relations = %d.\n", (int)relations.size());
+    //     }
 
-        if (verbose) {
-            cout << "Symmetric triples" << endl;
-        }
+    //     if (verbose) {
+    //         cout << "Symmetric triples" << endl;
+    //     }
 
-        return new UnaryPatternRelationSet<INT>(relations);
-    }
+    //     return new UnaryPatternRelationSet<INT>(relations);
+    // }
 };
 
 #endif

@@ -1,6 +1,8 @@
 #include "OpenKECorpusReader.h"
 
-TripleList* OpenKECorpusReader::readTriples(SubsetType subsetType, TripleIndex* tripleIndex, TripleElement tripleElement, TripleFilter<INT>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose) {
+TripleList* OpenKECorpusReader::readTriples(
+    SubsetType subsetType, TripleIndex* tripleIndex, TripleElement tripleElement, TripleFilter<INT>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose
+) {
     FileWithHeader file = FileWithHeader(
         path + (
             subsetType == SubsetType::train ? TRAIN_FILENAME :
