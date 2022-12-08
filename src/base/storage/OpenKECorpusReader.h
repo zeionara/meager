@@ -88,16 +88,6 @@ struct OpenKECorpusReader: CorpusReader<INT> {
     }
 
     vector<regex> readFilterPatterns(bool excluding = false, bool verbose = false, bool dropDuplicates = true) {
-        // if (verbose) {
-        //     cout << "started reading filter patterns" << endl;
-        // }
-
-        // ifstream inFile(path + (excluding ? EXCLUDING_FILTERS_FILENAME : INCLUDING_FILTERS_FILENAME));
-
-        // if (!inFile.good()) {
-        //     throw invalidArgument("cannot find file with filter on disk");
-        // }
-
         File file = File(path + (excluding ? EXCLUDING_FILTERS_FILENAME : INCLUDING_FILTERS_FILENAME), verbose);
 
         vector<regex> patterns;
@@ -154,7 +144,6 @@ struct OpenKECorpusReader: CorpusReader<INT> {
         return new RelationTypesContents<INT>(relations, file.length * 2);
     }
 
-    // void separateInverseTriples(string path, Triple* triples, INT nTriples, TripleIndex* index, bool verbose, bool drop_duplicates, bool enable_filters) {
     BinaryPatternRelationMap<INT>* readBinaryPatterns(Pattern pattern, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose) {
         string relativePath;
 
@@ -167,12 +156,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
                 throw invalidArgument("Pattern is not binary");
         }
 
-        // ifstream inFile(path + relativePath);
         File file = File(path + relativePath, verbose);
-
-        // if (!inFile.good()) {
-        //     throw invalidArgument("cannot find file with binary pattern relations list on disk");
-        // }
 
         INT firstRelation, secondRelation;
 
@@ -194,8 +178,6 @@ struct OpenKECorpusReader: CorpusReader<INT> {
             printf("Number of relations in binary pattern = %d.\n", (int)firstRelationToSecond.size());
         }
 
-        // inFile.close();
-
         return new BinaryPatternRelationMap<INT>(firstRelationToSecond, secondRelationToFirst);
     }
 
@@ -211,13 +193,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
                 throw invalidArgument("Pattern is not unary");
         }
 
-        // ifstream inFile(path + relativePath);
-        
         File file = File(path + relativePath, verbose);
-
-        // if (!inFile.good()) {
-        //     throw invalidArgument("cannot find file with unary pattern relations list on disk");
-        // }
 
         INT relation;
         unordered_set<INT> relations;
@@ -235,8 +211,6 @@ struct OpenKECorpusReader: CorpusReader<INT> {
         if (verbose) {
             printf("Number of symmetric relations = %d.\n", (int)relations.size());
         }
-
-        // inFile.close();
 
         if (verbose) {
             cout << "Symmetric triples" << endl;
