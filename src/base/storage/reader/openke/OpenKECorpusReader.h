@@ -4,9 +4,9 @@
 #include <string>
 #include <fstream>
 
-#include "../filters/TripleFilter.h"
+#include "../../../filters/TripleFilter.h"
 
-#include "CorpusReader.h"
+#include "../CorpusReader.h"
 
 // #define getLine getline
 #define unorderedSet unordered_set

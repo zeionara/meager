@@ -3,7 +3,7 @@
 
 #include "../triple/main.h"
 #include "Corpus.h"
-#include "CorpusReader.h"
+#include "reader/CorpusReader.h"
 
 using namespace std;
 

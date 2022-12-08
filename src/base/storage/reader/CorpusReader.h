@@ -4,14 +4,14 @@
 #include <vector>
 #include <regex>
 
-#include "../triple/TripleEncoder.h"
-#include "../triple/list/TripleList.h"
-#include "../triple/TripleIndex.h"
-#include "../utils/main.h"
+#include "../../triple/TripleEncoder.h"
+#include "../../triple/list/TripleList.h"
+#include "../../triple/TripleIndex.h"
+#include "../../utils/main.h"
 
-#include "../patterns/main.h"
-#include "../patterns/BinaryPatternRelationMap.h"
-#include "../patterns/UnaryPatternRelationSet.h"
+#include "../../patterns/main.h"
+#include "../../patterns/BinaryPatternRelationMap.h"
+#include "../../patterns/UnaryPatternRelationSet.h"
 
 using namespace std;
 using namespace meager::main::utils;

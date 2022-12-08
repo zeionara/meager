@@ -8,7 +8,7 @@
 #include <unordered_set>
 
 #include "../triple/main.h"
-#include "../storage/CorpusReader.h"
+#include "../storage/reader/CorpusReader.h"
 
 using namespace std;
 

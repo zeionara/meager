@@ -4,7 +4,7 @@
 #include "main.h"
 
 #include "../triple/list/TripleList.h"
-#include "../storage/CorpusReader.h"
+#include "../storage/reader/CorpusReader.h"
 #include "../triple/TripleIndex.h"
 
 #include "none/NonePatternDescription.h"

@@ -1,5 +1,5 @@
 #include "../storage/LocalTsvCorpus.h"
-#include "../storage/OpenKECorpusReader.h"
+#include "../storage/reader/openke/OpenKECorpusReader.h"
 
 using namespace meager::main::utils;
 

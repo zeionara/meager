@@ -1,7 +1,7 @@
 #ifndef PATTERNS_INVERSE_PATTERN_DESCRIPTION_H
 #define PATTERNS_INVERSE_PATTERN_DESCRIPTION_H
 
-#include "../../storage/CorpusReader.h"
+#include "../../storage/reader/CorpusReader.h"
 
 #include "../BinaryPatternRelationMap.h"
 #include "../PatternDescription.h"
