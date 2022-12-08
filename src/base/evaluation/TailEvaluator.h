@@ -10,7 +10,7 @@ struct TailEvaluator: EntityEvaluator<T> {
         EntityEvaluator<T>(corpus, triples, testTriples, makeMetricSetTracker, "tail") {};
 
     Triple makeTriple(INT i) {
-        return Triple(this->testTriples->content->items[this->currentTripleIndex].t, this->testTriples->content->items[this->currentTripleIndex].r, i);
+        return Triple(this->testTriples->content->items[this->currentTripleIndex].h, this->testTriples->content->items[this->currentTripleIndex].r, i);
     }
 
     INT getTripleComponent(Triple triple) {

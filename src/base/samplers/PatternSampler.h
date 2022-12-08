@@ -155,6 +155,8 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
                             );
                         // if (randd(threadIndex) % 1000 < headCorruptionThreshold) { // Corrupt TAIL by generating a random number
                         if (randomizer->state->sample(1000) < headCorruptionThreshold) { // Corrupt TAIL by generating a random number
+                        // if (randomizer->state->sample(1000) < 2000) { // Corrupt TAIL by generating a random number
+                            // cout << "+" << endl;
                             // if (batchWiseTripleIndex == 44)
                             //     cout << "Started corrupting tail" << endl;
                             // cout << "Started corrupting tail" << endl;
@@ -166,6 +168,7 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
                             // if (batchWiseTripleIndex == 44)
                             //     cout << "Finished corrupting tail" << endl;
                         } else { // Corrupt HEAD
+                            // cout << "-" << endl;
                             // if (batchWiseTripleIndex == 44)
                             //     cout << "Started corrupting head" << endl;
                             triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = corruptionStrategy->corruptHead(sampledTriple, randomizer);

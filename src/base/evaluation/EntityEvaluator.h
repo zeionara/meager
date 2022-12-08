@@ -37,6 +37,8 @@ struct EntityEvaluator {
 
     TripleBatch* makeBatch() { // Generate all possible triples for every entity which may be used as a triple head
         // cout << "make batch" << endl;
+        // cout << this->testTriples->content->items[this->currentTripleIndex].h << " " << this->testTriples->content->items[this->currentTripleIndex].r << " " << this->testTriples->content->items[this->currentTripleIndex].t << endl;
+        // cout << "--" << endl;
         Triple* triples = (Triple*) malloc(this->corpus->countEntities() * sizeof(Triple));
         // cout << "made batch" << endl;
 
@@ -46,6 +48,7 @@ struct EntityEvaluator {
         for (INT i = 0; i < nEntities; i++) {
             // cout << i << endl;
             triples[i] = makeTriple(i);
+            // cout << triples[i].h << " " << triples[i].r << " " << triples[i].t << endl;
         }
         // cout << "made triples" << endl;
 
