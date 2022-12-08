@@ -38,7 +38,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
     }
 
     TripleList* readTriples(SubsetType subsetType, TripleIndex* tripleIndex, TripleElement tripleElement, TripleFilter<INT>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose) {
-        File file = File(
+        FileWithHeader file = FileWithHeader(
             path + (
                 subsetType == SubsetType::train ? TRAIN_FILENAME :
                 subsetType == SubsetType::test ? TEST_FILENAME :
@@ -47,20 +47,20 @@ struct OpenKECorpusReader: CorpusReader<INT> {
             ), verbose
         );
 
-        TripleList* triples = new TripleList(file.getLength(), tripleElement);
+        TripleList* triples = new TripleList(file.length, tripleElement);
         Triple* items = triples->items;
 
         INT j = 0;
 
         if (verbose) {
-            cout << "For each of " << file.getLength() << " triples" << endl;
+            cout << "For each of " << file.length << " triples" << endl;
         }
 
-        for (INT i = 0; i < file.getLength(); i++) { // Reading train samples
+        for (INT i = 0; i < file.length; i++) { // Reading train samples
         // while (file.good()) {
             INT h = 0, r = 0, t = 0;
 
-            file.stream >> h >> t >> r;
+            file >> h >> t >> r;
 
             // fscanf(file->file, "%ld", &h);
             // fscanf(file->file, "%ld", &t);
@@ -132,37 +132,43 @@ struct OpenKECorpusReader: CorpusReader<INT> {
     }
 
     INT readVocabularySize(TripleComponent tripleComponent, bool verbose = false) {
-        File* file = new File(path + (tripleComponent == entity ? ENTITIES_FILENAME : RELATIONS_FILENAME), verbose);
-        INT length = file->getLength();
-        file->close();
-        return length;
+        // File* file = new File(path + (tripleComponent == entity ? ENTITIES_FILENAME : RELATIONS_FILENAME), verbose);
+        // INT length = file->getLength();
+        // file->close();
+        // return length;
+        return FileWithHeader(path + (tripleComponent == entity ? ENTITIES_FILENAME : RELATIONS_FILENAME), verbose).length;
     }
 
     RelationTypesContents<INT>* readRelationTypesContents(bool verbose = false) {
-        File file = File(path + TYPE_FILENAME, verbose);
+        FileWithHeader file = FileWithHeader(path + TYPE_FILENAME, verbose);
+        File file2 = File(path + TYPE_FILENAME, verbose);
+        INT foo = 0;
+        file2 >> foo;
+        cout << "file2 length = " << foo << endl;
 
         // cout << "ff" << endl;
 
-        RelationTypeContents<INT>** relations = (RelationTypeContents<INT>**)calloc(file.getLength() * 2, sizeof(RelationTypeContents<INT>*));
+        RelationTypeContents<INT>** relations = (RelationTypeContents<INT>**)calloc(file.length * 2, sizeof(RelationTypeContents<INT>*));
 
         // cout << file.getLength() << endl;
         // cout << file.getLength() << endl;
         // cout << "ff" << endl;
+        cout << "number of entries = " << file.length;
 
-        for (INT i = 0; i < file.getLength() * 2; i++) {
+        for (INT i = 0; i < file.length * 2; i++) {
             INT relation = 0;
 
             // cout << file->length << endl;
             // cout << "bar" << endl;
             // cout << file->stream << endl;
             file >> relation;
-            // cout << "handling relation " << relation << endl;
+            cout << "handling relation " << relation << endl;
             // fscanf(file->file, "%ld", &relation);
 
             INT length = 0;
 
             file >> length;
-            // cout << "number of elements for relation = " << length << endl;
+            cout << "number of elements for relation = " << length << endl;
             // cout << length << endl;
             // fscanf(file->file, "%ld", &length);
 
@@ -176,7 +182,7 @@ struct OpenKECorpusReader: CorpusReader<INT> {
             relations[i] = new RelationTypeContents<INT>(items, length, relation);
         }
 
-        return new RelationTypesContents<INT>(relations, file.getLength() * 2);
+        return new RelationTypesContents<INT>(relations, file.length * 2);
     }
 
     // void separateInverseTriples(string path, Triple* triples, INT nTriples, TripleIndex* index, bool verbose, bool drop_duplicates, bool enable_filters) {

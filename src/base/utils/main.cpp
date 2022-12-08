@@ -2,6 +2,11 @@
 
 namespace meager::main::utils {
 
+    File& operator>>(File& file, long value) {
+        file.stream >> value;
+        return file;
+    }
+
     SubsetType decodeSubsetType(string name) {
 
         if (name == "train") {
