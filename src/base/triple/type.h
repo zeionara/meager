@@ -3,7 +3,8 @@
 
 #include "main.h"
 #include "TripleIndex.h"
-#include "reader.h"
+
+#include "../storage/reader/CorpusReader.h"
 
 #define invalidArgument invalid_argument
 

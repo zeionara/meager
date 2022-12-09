@@ -2,11 +2,6 @@
 #define TRIPLE_LIST_THICK_TRIPLE_LIST_WRAPPER_H
 
 #include "../TripleIndex.h"
-#include "../reader.h"
-
-// #include "../../patterns/none/reader.h"
-// #include "../../patterns/symmetric/reader.h"
-// #include "../../patterns/inverse/reader.h"
 
 #include "RelationScore.h"
 #include "../../filters/TripleFilter.h"

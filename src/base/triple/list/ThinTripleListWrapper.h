@@ -2,7 +2,6 @@
 #define TRIPLE_LIST_THIN_TRIPLE_LIST_WRAPPER_H
 
 #include "../main.h"
-#include "../reader.h"
 #include "../TripleIndex.h"
 // #include "../../utils/main.h"
 
