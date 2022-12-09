@@ -66,30 +66,6 @@ struct Triple {
     }
 };
 
-// struct TripleLists {
-//     Triple* main;
-//     Triple* head;
-//     Triple* tail;
-//     Triple* relation;
-//     INT length;
-// 
-//     TripleLists(INT length) {
-//         this->main = (Triple *)calloc(trainTotal, sizeof(Triple));
-//         this->head = (Triple *)calloc(trainTotal, sizeof(Triple));
-//         this->tail = (Triple *)calloc(trainTotal, sizeof(Triple));
-//         this->relation = (Triple *)calloc(trainTotal, sizeof(Triple));
-//         this->length = length;
-//     }
-// 
-//     TripleLists(Triple* main, INT length) {
-//         this->main = main;
-//         this->head = (Triple *)calloc(trainTotal, sizeof(Triple));
-//         this->tail = (Triple *)calloc(trainTotal, sizeof(Triple));
-//         this->relation = (Triple *)calloc(trainTotal, sizeof(Triple));
-//         this->length = length;
-//     }
-// };
-
 struct Frequencies {
     INT* entity;
     INT* relation;
@@ -106,57 +82,6 @@ struct Frequencies {
     }
 };
 
-struct Boundaries {
-    INT* left;
-    INT* right;
-    INT (*getTripleComponent)(Triple triple);
-
-    INT length;
-
-    Boundaries(INT length, INT (*getTripleComponent)(Triple triple)) {
-        this->left = (INT *)calloc(length, sizeof(INT));
-        this->right = (INT *)calloc(length, sizeof(INT));
-
-        this->length = length;
-        this->getTripleComponent = getTripleComponent;
-
-        memset(this->right, -1, sizeof(INT) * length);
-    }
-
-    void update(Triple* triples, INT i) {
-		if (this->getTripleComponent(triples[i]) != this->getTripleComponent(triples[i - 1])) { // lef - left boundary of such an interval, rig - right boundary
-			this->right[this->getTripleComponent(triples[i - 1])] = i - 1;
-			this->left[this->getTripleComponent(triples[i])] = i;
-		}
-    }
-
-    void finalize(Triple* triples, INT nTriples) {
-        this->left[this->getTripleComponent(triples[0])] = 0;
-        this->right[this->getTripleComponent(triples[nTriples - 1])] = nTriples - 1;
-    }
-};
-
-struct BoundaryCollection {
-    Boundaries* head;
-    Boundaries* tail;
-    Boundaries* relation;
-
-    BoundaryCollection(INT nEntities, INT nRelations) {
-        this->head = new Boundaries(nEntities, [](Triple triple){return triple.h;});
-        this->tail = new Boundaries(nEntities, [](Triple triple){return triple.t;});
-        this->relation = new Boundaries(nRelations, [](Triple triple){return triple.r;});
-    }
-
-    BoundaryCollection(Frequencies* frequencies): BoundaryCollection(frequencies->nEntities, frequencies->nRelations) {}
-};
-
 Frequencies* dropDuplicates(Triple* main, Triple* heads, Triple* tails, Triple* relations, INT length, INT nEntities, INT nRelations);
-// BoundaryCollection* findBoundaries(TripleLists* lists, Frequencies* frequencies);
-
-extern std::vector<INT> internal_to_external_entity_id;
-extern std::vector<INT> internal_to_external_relation_id;
-
-extern std::unordered_map<INT, INT> external_to_internal_entity_id;
-extern std::unordered_map<INT, INT> external_to_internal_relation_id;
 
 #endif
