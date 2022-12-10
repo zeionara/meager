@@ -63,10 +63,11 @@ struct DefaultCorruptionStrategy: CorruptionStrategy {
         // cout << "Finishing corruption" << endl;
 
         // INT tmp = rand_max(randomizer, maxId - (rr - ll + 2)); // Generate random entity index in the interval [0; nEntities - (nTailEntitiesForGivenHead + nHeadEntitiesForGivenHead)]
-        INT tmp = randomizer->state->sample(maxId - (rr - ll + 2)); // Generate random entity index in the interval [0; nEntities - (nTailEntitiesForGivenHead + nHeadEntitiesForGivenHead)]
+        // INT tmp = randomizer->state->sample(maxId - (rr - ll + 2)); // Generate random entity index in the interval [0; nEntities - (nTailEntitiesForGivenHead + nHeadEntitiesForGivenHead)]
+        INT tmp = randomizer->state->sample(maxId - (rr - ll + 1)); // Generate random entity index in the interval [0; nEntities - (nTailEntitiesForGivenHead + nHeadEntitiesForGivenHead)]
         if (tmp < getCorruptableTripleComponent(list->items[ll])) return tmp; // If generated entity index is less than any other tail entity index (in other case the generated triple would probably not be unique) then return this
         // if (tmp + rr - ll + 1 > trainHead[rr].t) return tmp + rr - ll + 1;
-        if (tmp > getCorruptableTripleComponent(list->items[rr]) - rr + ll - 1) return tmp + rr - ll + 1; // If generated entity index + max possible offset is larger than any other tail entity index then return this
+        if (tmp > getCorruptableTripleComponent(list->items[rr]) - (rr - ll + 1)) return tmp + rr - ll + 1; // If generated entity index + max possible offset is larger than any other tail entity index then return this
 
         lef = ll, rig = rr + 1;
         while (lef + 1 < rig) { // While the left and right boundaries do not overlap (they differ at least by one)
