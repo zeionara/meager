@@ -11,7 +11,7 @@ using namespace std;
 namespace meager::main::triple {
 
     template <typename K>
-    struct TripleComponentEncoder {
+    struct ComponentEncoder {
 
         unordered_map<K, INT> encodingMap;
         vector<K> decodingMap;

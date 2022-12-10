@@ -25,7 +25,7 @@ namespace meager::main::triple::relation {
             this->relation = headContents->relation;
         }
 
-        void encode(TripleEncoder<INT>* encoder) {
+        void encode(Encoder<INT>* encoder) {
             relation = encoder->relation->encode(relation);
             heads->encode(encoder->entity);
             tails->encode(encoder->entity);

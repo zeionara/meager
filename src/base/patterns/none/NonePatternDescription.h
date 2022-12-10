@@ -9,7 +9,7 @@
 
 struct NonePatternDescription: PatternDescription {
 
-    NonePatternDescription(TripleList* triples, bool verbose = false, bool dropDuplicates = true) {
+    NonePatternDescription(triple::List* triples, bool verbose = false, bool dropDuplicates = true) {
 
         label = nonePatternName;
         id = none;

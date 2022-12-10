@@ -8,9 +8,9 @@ using namespace std;
 namespace meager::main::triple {
 
     template <typename T>
-    struct TripleEncoder {
-        TripleComponentEncoder<T>* entity = new TripleComponentEncoder<T>();
-        TripleComponentEncoder<T>* relation = new TripleComponentEncoder<T>();
+    struct Encoder {
+        ComponentEncoder<T>* entity = new ComponentEncoder<T>();
+        ComponentEncoder<T>* relation = new ComponentEncoder<T>();
     };
 
 }

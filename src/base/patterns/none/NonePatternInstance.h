@@ -9,14 +9,14 @@ const string nonePatternName = "none";
 
 struct NonePatternInstance: PatternInstance {
 
-    NonePatternInstance(Triple triple) {
+    NonePatternInstance(triple::Triple triple) {
         triples = {triple};
         observedTripleIndices = {0};
     }
 
     void print(string label = nonePatternName) {
         cout << "--- " << label << " triples pattern instance"  << endl;
-        Triple triple = triples[0];
+        triple::Triple triple = triples[0];
         cout << "| head = " << triple.h << ", rel = " << triple.r << ", tail = " << triple.t << getObservanceMark(0) << endl;
         cout << "---" << endl;
     }

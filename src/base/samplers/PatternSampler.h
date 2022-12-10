@@ -93,7 +93,7 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
         Randomizer<INT>* randomizer = localState->randomizer;
 
         INT threadIndex = localState->id;
-        Triple* triples = state->triples;
+        triple::Triple* triples = state->triples;
         REAL* labels = state->labels;
         INT batchSize = state->batchSize;
         INT entityNegativeRate = state->entityNegativeRate;
@@ -111,7 +111,7 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
 
         INT nWorkers = state->nWorkers;
 
-        RelationScore* relationScore = corruptionStrategy->corpus->train->relationScore;
+        triple::RelationScore* relationScore = corruptionStrategy->corpus->train->relationScore;
 
         INT first_triple_index, last_triple_index;
 
@@ -142,7 +142,7 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
             //     cout << "sampled " << batchWiseTripleIndex << " triples" << endl;
             // }
 
-            for (Triple sampledTriple: sampledPatternInstance.triples) {
+            for (triple::Triple sampledTriple: sampledPatternInstance.triples) {
                 triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex] = sampledTriple;
                 labels[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex] = 1;
                 // INT last = batchSize;

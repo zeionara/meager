@@ -18,7 +18,7 @@ namespace meager::main::triple {
         >
     >;
 
-    struct TripleIndex {
+    struct Index {
         map triples;
 
         void push(Triple triple) {

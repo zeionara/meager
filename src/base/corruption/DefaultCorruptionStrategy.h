@@ -22,8 +22,8 @@ struct DefaultCorruptionStrategy: CorruptionStrategy {
     };
 
     INT corruptEntity(
-        TripleList* list, Triple triple, INT maxId,
-        INT (*getPrimaryTripleComponent)(Triple triple), INT (*getSecondaryTripleComponent)(Triple triple), INT (*getCorruptableTripleComponent)(Triple triple),
+        triple::List* list, triple::Triple triple, INT maxId,
+        INT (*getPrimaryTripleComponent)(triple::Triple triple), INT (*getSecondaryTripleComponent)(triple::Triple triple), INT (*getCorruptableTripleComponent)(triple::Triple triple),
         Randomizer<INT>* randomizer
     ) {
 
@@ -82,40 +82,40 @@ struct DefaultCorruptionStrategy: CorruptionStrategy {
         return tmp + lef - ll + 1;
     }
 
-    Triple corruptHead(Triple triple, Randomizer<INT>* randomizer) {
+    triple::Triple corruptHead(triple::Triple triple, Randomizer<INT>* randomizer) {
         INT corruptedHead = corruptEntity(
             corpus->train->tail, triple, corpus->train->frequencies->nEntities,
-            [](Triple triple){return triple.t;}, [](Triple triple){return triple.r;}, [](Triple triple){return triple.h;},
+            [](triple::Triple triple){return triple.t;}, [](triple::Triple triple){return triple.r;}, [](triple::Triple triple){return triple.h;},
             randomizer
         );
-        return Triple(corruptedHead, triple.r, triple.t);
+        return triple::Triple(corruptedHead, triple.r, triple.t);
     }
 
-    Triple corruptTail(Triple triple, Randomizer<INT>* randomizer) {
+    triple::Triple corruptTail(triple::Triple triple, Randomizer<INT>* randomizer) {
         INT corruptedTail = corruptEntity(
             corpus->train->head, triple, corpus->train->frequencies->nEntities,
-            [](Triple triple){return triple.h;}, [](Triple triple){return triple.r;}, [](Triple triple){return triple.t;},
+            [](triple::Triple triple){return triple.h;}, [](triple::Triple triple){return triple.r;}, [](triple::Triple triple){return triple.t;},
             randomizer
         );
-        return Triple(triple.h, triple.r, corruptedTail);
+        return triple::Triple(triple.h, triple.r, corruptedTail);
     }
 
-    Triple corruptRelation(Triple triple, Randomizer<INT>* randomizer) {
+    triple::Triple corruptRelation(triple::Triple triple, Randomizer<INT>* randomizer) {
         INT corruptedRelation = corruptEntity(
             corpus->train->relation, triple, corpus->train->frequencies->nRelations,
-            [](Triple triple){return triple.h;}, [](Triple triple){return triple.t;}, [](Triple triple){return triple.r;},
+            [](triple::Triple triple){return triple.h;}, [](triple::Triple triple){return triple.t;}, [](triple::Triple triple){return triple.r;},
             randomizer
         );
-        return Triple(triple.h, corruptedRelation, triple.t);
+        return triple::Triple(triple.h, corruptedRelation, triple.t);
     }
 
-    Triple corrupt(Triple triple, Randomizer<INT>* randomizer){  // Corrupt tail
+    triple::Triple corrupt(triple::Triple triple, Randomizer<INT>* randomizer){  // Corrupt tail
         INT loop = 0;
-        INT t;
+        // INT t;
         while(1) {
             // INT corruptedTail = corpus->types->get(triple.r)->tails->items[rand(0, corpus->types->get(triple.r)->tails->length)]; // Select random tail entity id for a given relation according to type mappings
             INT corruptedTail = corpus->types->get(triple.r)->tails->items[randomizer->state->sample(corpus->types->get(triple.r)->tails->length)]; // Select random tail entity id for a given relation according to type mappings
-            Triple corruptedTriple = Triple(triple.h, triple.r, corruptedTail);
+            triple::Triple corruptedTriple = triple::Triple(triple.h, triple.r, corruptedTail);
             if (not isCorrectTriple(corruptedTriple)) { // If obtained triple does not exist, then it is a suitable negative sample which may be immediately returned
             //	printf("r:%ld\tt:%ld\n", r, t);
                 return corruptedTriple;
@@ -129,7 +129,7 @@ struct DefaultCorruptionStrategy: CorruptionStrategy {
         }
     }
 
-    private: bool isCorrectTriple(Triple triple) { // Check whether a triple is presented in the dataset (tripleList variables contains triples from all subsets)
+    private: bool isCorrectTriple(triple::Triple triple) { // Check whether a triple is presented in the dataset (tripleList variables contains triples from all subsets)
         return corpus->train->index->contains(triple) || corpus->test->index->contains(triple) || corpus->valid->index->contains(triple);
     }
 };

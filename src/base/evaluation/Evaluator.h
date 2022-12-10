@@ -31,13 +31,13 @@ struct Evaluator {
 
     Corpus* corpus;
 
-    ThickTripleListWrapper<T>* triples;
-    ThinTripleListWrapper<T>* testTriples;
+    triple::ThickTripleListWrapper<T>* triples;
+    triple::ThinTripleListWrapper<T>* testTriples;
 
     HeadEvaluator<T>* head;
     TailEvaluator<T>* tail;
 
-    Evaluator(Corpus* corpus, ThickTripleListWrapper<T>* triples, ThinTripleListWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker) {
+    Evaluator(Corpus* corpus, triple::ThickTripleListWrapper<T>* triples, triple::ThinTripleListWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker) {
         this->corpus = corpus;
         this->triples = triples;
         this->testTriples = testTriples;

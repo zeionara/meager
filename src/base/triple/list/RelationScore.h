@@ -16,7 +16,7 @@ namespace meager::main::triple {
 
         INT length;
 
-        RelationScore(TripleList* headList, TripleList* tailList, Frequencies* frequencies) {
+        RelationScore(List* headList, List* tailList, Frequencies* frequencies) {
             REAL* head = new REAL[frequencies->nRelations];  // (REAL *)calloc(frequencies->nRelations, sizeof(REAL));
             REAL* tail = new REAL[frequencies->nRelations];  // (REAL *)calloc(frequencies->nRelations, sizeof(REAL));
 
@@ -36,7 +36,7 @@ namespace meager::main::triple {
             this->length = frequencies->nRelations;
         }
 
-        REAL handleEntity(TripleList* list, INT entity, function<void(INT)> incrementScore) {
+        REAL handleEntity(List* list, INT entity, function<void(INT)> incrementScore) {
             if (list->left[entity] == -1 && list->right[entity] == -1)  {
                 return 0;
             }

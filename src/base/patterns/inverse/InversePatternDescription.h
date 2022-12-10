@@ -13,7 +13,7 @@ template <typename T>
 struct InversePatternDescription: PatternDescription {
 
     InversePatternDescription(
-        TripleList* triples, BinaryPatternDescriptionTemplate<T>* descriptionTemplate, TripleIndex* index, TripleEncoder<T>* encoder,
+        triple::List* triples, BinaryPatternDescriptionTemplate<T>* descriptionTemplate, triple::Index* index, triple::Encoder<T>* encoder,
         bool dropDuplicates = true, bool enableFilters = false, bool verbose = false
     ) {
 
@@ -31,7 +31,7 @@ struct InversePatternDescription: PatternDescription {
         unordered_set<string> seenInstances;
 
         for (INT i = 0; i < triples->length; i++) { // Reading train samples
-            Triple triple = triples->items[i];
+            triple::Triple triple = triples->items[i];
 
             INT relation = triple.r;
 
@@ -41,7 +41,7 @@ struct InversePatternDescription: PatternDescription {
                 tryPush(
                     InversePatternInstance(
                         triple,
-                        Triple(triple.t, forwardRelationIterator->second, triple.h),
+                        triple::Triple(triple.t, forwardRelationIterator->second, triple.h),
                         index
                     ),
                     seenInstances, dropDuplicates
@@ -52,7 +52,7 @@ struct InversePatternDescription: PatternDescription {
                 if (backwardRelationIterator != inverseBackwardRelationToForward.end()) {
                     tryPush(
                         InversePatternInstance(
-                            Triple(triple.t, backwardRelationIterator->second, triple.h),
+                            triple::Triple(triple.t, backwardRelationIterator->second, triple.h),
                             triple,
                             index,
                             false

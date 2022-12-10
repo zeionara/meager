@@ -8,7 +8,7 @@
 #include "TripleList.h"
 #include "../TripleEncoder.h"
 #include "../Frequencies.h"
-#include "../RelationScore.h"
+#include "RelationScore.h"
 // #include "../../patterns/inverse/InversePatternDescription.h"
 // #include "../../patterns/symmetric/SymmetricPatternDescription.h"
 // #include "../../patterns/none/NonePatternDescription.h"
@@ -21,31 +21,31 @@ namespace meager::main::triple {
     template <typename T>
     struct ThickTripleListWrapper {
 
-        TripleList* content;
+        List* content;
 
         INT length;
 
-        TripleList* head;
-        TripleList* relation;
-        TripleList* tail;
+        List* head;
+        List* relation;
+        List* tail;
 
-        TripleIndex* index;
+        Index* index;
         Frequencies* frequencies;
         RelationScore* relationScore;
 
         PatternDescriptions<T>* patterns;
 
         ThickTripleListWrapper(
-            SubsetType subset, reader::Corpus<T>* reader, TripleFilter<T>* filter, TripleEncoder<T>* encoder, PatternDescriptionTemplates<T>* patterns,
+            SubsetType subset, reader::Corpus<T>* reader, TripleFilter<T>* filter, Encoder<T>* encoder, PatternDescriptionTemplates<T>* patterns,
             bool enableFilters, bool dropPatternDuplicates = true, bool verbose = false
         ) {
 
-            index = new TripleIndex();
+            index = new Index();
 
             this->content = reader->readTriples(subset, index, Component::head, filter, encoder, enableFilters, verbose);
-            this->head = new TripleList(content->length, Component::head);
-            this->relation = new TripleList(content->length, Component::relation);
-            this->tail = new TripleList(content->length, Component::tail);
+            this->head = new List(content->length, Component::head);
+            this->relation = new List(content->length, Component::relation);
+            this->tail = new List(content->length, Component::tail);
 
             this->length = content->length;
 
@@ -130,7 +130,7 @@ namespace meager::main::triple {
         }
 
         void read(
-            TripleFilter<T>* filter, TripleEncoder<T>* encoder, reader::Corpus<T>* reader, PatternDescriptionTemplates<T>* patterns,
+            TripleFilter<T>* filter, Encoder<T>* encoder, reader::Corpus<T>* reader, PatternDescriptionTemplates<T>* patterns,
             bool enableFilters, bool dropPatternDuplicates = true, bool verbose = false
         ) {
             if (verbose) {
@@ -149,7 +149,7 @@ namespace meager::main::triple {
                 }
                 this->dropDuplicates(encoder->entity->nEncodedValues, encoder->relation->nEncodedValues);
             } else {
-                this->dropDuplicates(reader->readVocabularySize(ComponentType::entity), reader->readVocabularySize(Component::relation));
+                this->dropDuplicates(reader->readVocabularySize(ComponentType::entity), reader->readVocabularySize(ComponentType::relation));
             }
 
             if (verbose) {

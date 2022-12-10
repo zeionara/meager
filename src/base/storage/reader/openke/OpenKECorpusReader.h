@@ -38,19 +38,19 @@ namespace meager::main::storage::reader::openke {
             this->path = path;
         }
 
-        TripleList* readTriples(
-            SubsetType subsetType, TripleIndex* tripleIndex, TripleElement tripleElement, TripleFilter<INT>* filter, TripleEncoder<INT>* encoder,
+        triple::List* readTriples(
+            SubsetType subsetType, triple::Index* tripleIndex, triple::Component tripleComponent, TripleFilter<INT>* filter, triple::Encoder<INT>* encoder,
             bool enableFilters = false, bool verbose = false
         );
 
         vector<regex> readFilterPatterns(bool excluding = false, bool verbose = false, bool dropDuplicates = true);
         RelationTypesContents<INT>* readRelationTypesContents(bool verbose = false);
 
-        BinaryPatternRelationMap<INT>* readBinaryPatterns(Pattern pattern, TripleEncoder<INT>* encoder, bool enableFilters = false, bool verbose = false);
-        UnaryPatternRelationSet<INT>* readUnaryPatterns(Pattern pattern, TripleEncoder<INT>* encoder, bool enableFilters = false, bool verbose = false);
+        BinaryPatternRelationMap<INT>* readBinaryPatterns(Pattern pattern, triple::Encoder<INT>* encoder, bool enableFilters = false, bool verbose = false);
+        UnaryPatternRelationSet<INT>* readUnaryPatterns(Pattern pattern, triple::Encoder<INT>* encoder, bool enableFilters = false, bool verbose = false);
 
-        INT readVocabularySize(TripleComponent tripleComponent, bool verbose = false) {
-            return FileWithHeader(path + (tripleComponent == entity ? ENTITIES_FILENAME : RELATIONS_FILENAME), verbose).length;
+        INT readVocabularySize(triple::ComponentType componentType, bool verbose = false) {
+            return FileWithHeader(path + (componentType == triple::ComponentType::entity ? ENTITIES_FILENAME : RELATIONS_FILENAME), verbose).length;
         }
 
     };

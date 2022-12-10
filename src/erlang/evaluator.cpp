@@ -61,7 +61,7 @@ trial_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
         // cout << "foo" << endl;
         TripleBatch* tripleBatch = trial(
-            decodeTripleElement(enif_get_atom_(env, argv[0])),
+            triple::decodeComponent(enif_get_atom_(env, argv[0])),
             enif_get_bool(env, argv[1])
         );
 
@@ -85,7 +85,7 @@ evaluate_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         // cout << "Encoded predictions" << endl;
 
         evaluate(
-            decodeTripleElement(enif_get_atom_(env, argv[0])),
+            triple::decodeComponent(enif_get_atom_(env, argv[0])),
             predictions->items,
             enif_get_bool(env, argv[2]),
             enif_get_bool(env, argv[3])

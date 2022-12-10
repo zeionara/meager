@@ -18,7 +18,10 @@ template <typename T>
 struct PatternDescriptions {
     unordered_map<Pattern, PatternDescription> content;
 
-    PatternDescriptions(TripleList* triples, PatternDescriptionTemplates<T>* templates, TripleIndex* index, TripleEncoder<T>* encoder, bool dropDuplicates = true, bool enableFilters = false, bool verbose = false) {
+    PatternDescriptions(
+        triple::List* triples, PatternDescriptionTemplates<T>* templates, triple::Index* index, triple::Encoder<T>* encoder,
+        bool dropDuplicates = true, bool enableFilters = false, bool verbose = false
+    ) {
         content[none] = NonePatternDescription(triples, verbose, true);
         if (!templates->inverse->empty) {
             content[inverse] = InversePatternDescription<T>(triples, templates->inverse, index, encoder, dropDuplicates, enableFilters, verbose);

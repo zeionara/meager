@@ -24,7 +24,7 @@ struct TripleFilter {
         }
     }
 
-    bool allows(Triple triple) {
+    bool allows(triple::Triple triple) {
         return (
             (including->empty || including->match(triple)) && 
             (excluding->empty || !excluding->match(triple))

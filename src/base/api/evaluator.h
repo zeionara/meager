@@ -11,9 +11,9 @@ Evaluator<INT>* evaluator;
 
 void initEvaluator(MetricSetTrackerMaker makeMetricSetTracker, EvaluationTask task, SubsetType subset = SubsetType::test, bool verbose = false);
 
-TripleBatch* trial(TripleElement element, bool verbose = false);
+TripleBatch* trial(triple::Component tripleComponent, bool verbose = false);
 
-void evaluate(TripleElement element, REAL* predictions, bool reverse, bool verbose = false);
+void evaluate(triple::Component tripleComponent, REAL* predictions, bool reverse, bool verbose = false);
 
 MetricTreeRoot* computeMetrics(bool verbose);
 

@@ -10,7 +10,7 @@ using namespace std;
 
 namespace meager::main::triple {
 
-    Component decodeTripleElement(string name) {
+    Component decodeComponent(string name) {
 
         if (name == "head") {
             return Component::head;
@@ -21,7 +21,7 @@ namespace meager::main::triple {
         }
 
         if (name == "relation") {
-            return Component::rel;
+            return Component::relation;
         }
 
         throw invalidArgument("Unknown triple element name: " + name);

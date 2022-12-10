@@ -48,7 +48,7 @@ namespace meager::main::triple::relation {
             return binarySearch(items, value, 0, length);
         }
 
-        void encode(TripleComponentEncoder<INT>* encoder) {
+        void encode(ComponentEncoder<INT>* encoder) {
             INT j = 0;
             for (INT i = 0; i < length; i++) {
                 if (encoder->contains(items[i])) {

@@ -27,11 +27,11 @@ struct CorruptionStrategy {
         // this->validTriples = validTriples;
     }
 
-    virtual Triple corruptHead(Triple triple, Randomizer<INT>* randomizer) = 0;
-    virtual Triple corruptTail(Triple triple, Randomizer<INT>* randomizer) = 0;
-    virtual Triple corruptRelation(Triple triple, Randomizer<INT>* randomizer) = 0;
+    virtual triple::Triple corruptHead(triple::Triple triple, Randomizer<INT>* randomizer) = 0;
+    virtual triple::Triple corruptTail(triple::Triple triple, Randomizer<INT>* randomizer) = 0;
+    virtual triple::Triple corruptRelation(triple::Triple triple, Randomizer<INT>* randomizer) = 0;
 
-    virtual Triple corrupt(Triple triple, Randomizer<INT>* randomizer) = 0;
+    virtual triple::Triple corrupt(triple::Triple triple, Randomizer<INT>* randomizer) = 0;
 };
 
 #endif

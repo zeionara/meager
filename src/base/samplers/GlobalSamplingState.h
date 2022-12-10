@@ -7,7 +7,7 @@
 
 
 struct GlobalSamplingState {
-    Triple* triples;
+    triple::Triple* triples;
     REAL* labels;
 
     vector<PatternInstance>* patternInstances;
@@ -41,7 +41,7 @@ struct GlobalSamplingState {
         //     cout << "n triples to sample = " << nTriplesToSample << endl;
         // }
 
-        triples = (Triple*) malloc(nTriplesToSample * sizeof(Triple));
+        triples = (triple::Triple*) malloc(nTriplesToSample * sizeof(triple::Triple));
         labels = (REAL*) malloc(nTriplesToSample * sizeof(REAL));
 
         patternInstances = patternDescription.instanceSets[nObservedTriplesPerPatternInstance];

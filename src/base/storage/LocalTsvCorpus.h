@@ -2,7 +2,7 @@
 #define STORAGE_LOCAL_TSV_CORPUS_H
 
 #include "../triple/main.h"
-#include "../triple/type.h"
+// #include "../triple/type.h"
 #include "LocalCorpus.h"
 #include "../triple/list/ThickTripleListWrapper.h"
 #include "../triple/list/ThinTripleListWrapper.h"
@@ -11,7 +11,10 @@
 #include "../patterns/PatternDescriptionTemplates.h"
 #include "../evaluation/Stopwatch.h"
 
+#include "../triple/relation/RelationTypes.h"
+
 using namespace std;
+using namespace meager::main;
 using namespace meager::main::storage;
 
 string const _TRAIN_FILENAME = "train2id.txt";
@@ -40,14 +43,14 @@ string const VALID_IS_ALREADY_INITIALIZED = "Valid subset " + IS_ALREADY_INITIAL
 
 template <typename T>
 struct LocalTsvCorpus: LocalCorpus<T> {
-    ThickTripleListWrapper<T>* train;
+    triple::ThickTripleListWrapper<T>* train;
 
-    ThinTripleListWrapper<T>* test;
-    ThinTripleListWrapper<T>* valid;
+    triple::ThinTripleListWrapper<T>* test;
+    triple::ThinTripleListWrapper<T>* valid;
 
-    RelationTypes<T>* types;
+    triple::relation::Types<T>* types;
     TripleFilter<T>* filter;
-    TripleEncoder<T>* encoder;
+    triple::Encoder<T>* encoder;
     PatternDescriptionTemplates<T>* patterns;
 
     LocalTsvCorpus(reader::Corpus<T>* reader, bool enableFilters = false, bool verbose = false): LocalCorpus<T>(reader, enableFilters) {
@@ -55,7 +58,7 @@ struct LocalTsvCorpus: LocalCorpus<T> {
             if (verbose) {
                 cout << "filters are enabled" << endl;
             }
-            encoder = new TripleEncoder<INT>();
+            encoder = new triple::Encoder<INT>();
         } else {
             encoder = nullptr;
         }
@@ -88,7 +91,7 @@ struct LocalTsvCorpus: LocalCorpus<T> {
             throw invalidArgument(TRAIN_IS_ALREADY_INITIALIZED);
         }
 
-        this->train = new ThickTripleListWrapper<T>(::SubsetType::train, this->reader, filter, encoder, patterns, this->enableFilters, dropPatternDuplicates, verbose);
+        this->train = new triple::ThickTripleListWrapper<T>(::SubsetType::train, this->reader, filter, encoder, patterns, this->enableFilters, dropPatternDuplicates, verbose);
 
         if (verbose) {
             cout << "finished reading train subset" << endl;
@@ -104,7 +107,7 @@ struct LocalTsvCorpus: LocalCorpus<T> {
             throw invalidArgument(TEST_IS_ALREADY_INITIALIZED);
         }
 
-        this->test = new ThinTripleListWrapper<T>(::SubsetType::test, this->reader, filter, encoder, this->enableFilters, verbose);
+        this->test = new triple::ThinTripleListWrapper<T>(::SubsetType::test, this->reader, filter, encoder, this->enableFilters, verbose);
 
         if (verbose) {
             cout << "finished reading test subset" << endl;
@@ -120,7 +123,7 @@ struct LocalTsvCorpus: LocalCorpus<T> {
             throw invalidArgument(VALID_IS_ALREADY_INITIALIZED);
         }
 
-        this->valid = new ThinTripleListWrapper<T>(::SubsetType::valid, this->reader, filter, encoder, this->enableFilters, verbose);
+        this->valid = new triple::ThinTripleListWrapper<T>(::SubsetType::valid, this->reader, filter, encoder, this->enableFilters, verbose);
 
         if (verbose) {
             cout << "finished reading valid subset" << endl;
@@ -132,7 +135,7 @@ struct LocalTsvCorpus: LocalCorpus<T> {
             cout << "started reading relation types" << endl;
         }
 
-        this->types = new RelationTypes<T>(this->enableFilters, encoder, this->reader, verbose);
+        this->types = new triple::relation::Types<T>(this->enableFilters, encoder, this->reader, verbose);
 
         if (verbose) {
             cout << "finished reading " << types->length << " relation types" << endl;
@@ -149,7 +152,7 @@ struct LocalTsvCorpus: LocalCorpus<T> {
         }
     }
 
-    bool contains(Triple triple) {
+    bool contains(triple::Triple triple) {
         return (
             train != nullptr &&
             train->index->contains(triple)
@@ -162,7 +165,7 @@ struct LocalTsvCorpus: LocalCorpus<T> {
         );
     }
 
-    bool allowsHead(Triple triple) {
+    bool allowsHead(triple::Triple triple) {
         // auto typeStopWatch = Stopwatch(1);
         // auto resultStopWatch = Stopwatch(1);
 
@@ -181,11 +184,11 @@ struct LocalTsvCorpus: LocalCorpus<T> {
         return types->get(triple.r)->heads->contains(triple.h);
     }
 
-    bool allowsTail(Triple triple) {
+    bool allowsTail(triple::Triple triple) {
         return types->get(triple.r)->tails->contains(triple.t);
     }
 
-    bool allows(Triple triple) {
+    bool allows(triple::Triple triple) {
         return allowsHead(triple) && allowsTail(triple);
     }
 

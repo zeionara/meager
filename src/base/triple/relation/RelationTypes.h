@@ -12,7 +12,7 @@ namespace meager::main::triple::relation {
         Type<T>** relations;
         INT length;
 
-        Types(bool enableFilters, TripleEncoder<T>* encoder, reader::Corpus<T>* reader, bool verbose = false) {
+        Types(bool enableFilters, Encoder<T>* encoder, reader::Corpus<T>* reader, bool verbose = false) {
             RelationTypesContents<T>* contents = reader->readRelationTypesContents(verbose);
 
             // relations = (Type<T>**)calloc(contents->length, sizeof(Type<T>*));

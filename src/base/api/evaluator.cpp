@@ -9,7 +9,6 @@ using namespace meager::main::utils;
 
 Evaluator<INT>* evaluator;
 
-
 void initEvaluator(MetricSetTrackerMaker makeMetricSetTracker, EvaluationTask task, SubsetType subset, bool verbose) {
     if (subset == SubsetType::train) {
         throw invalidArgument("Cannot use train subset for evaluation");
@@ -26,23 +25,23 @@ void initEvaluator(MetricSetTrackerMaker makeMetricSetTracker, EvaluationTask ta
     );
 }
 
-TripleBatch* trial(TripleElement element, bool verbose) {
-    switch (element) {
-        case head:
+TripleBatch* trial(triple::Component tripleComponent, bool verbose) {
+    switch (tripleComponent) {
+        case triple::Component::head:
             return evaluator->head->makeBatch();
-        case tail:
+        case triple::Component::tail:
             return evaluator->tail->makeBatch();
         default:
             throw invalidArgument("Cannot trial passed triple element");
     }
 }
 
-void evaluate(TripleElement element, REAL* predictions, bool reverse, bool verbose) {
-    switch (element) {
-        case head:
+void evaluate(triple::Component tripleComponent, REAL* predictions, bool reverse, bool verbose) {
+    switch (tripleComponent) {
+        case triple::Component::head:
             evaluator->head->evaluate(predictions, reverse, verbose);
             break;
-        case tail:
+        case triple::Component::tail:
             evaluator->tail->evaluate(predictions, reverse, verbose);
             break;
         default:

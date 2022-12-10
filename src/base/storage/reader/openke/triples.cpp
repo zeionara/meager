@@ -2,8 +2,8 @@
 
 namespace meager::main::storage::reader::openke {
 
-    TripleList* Corpus::readTriples(
-        SubsetType subsetType, TripleIndex* tripleIndex, TripleElement tripleElement, TripleFilter<INT>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose
+    triple::List* Corpus::readTriples(
+        SubsetType subsetType, triple::Index* tripleIndex, triple::Component tripleComponent, TripleFilter<INT>* filter, triple::Encoder<INT>* encoder, bool enableFilters, bool verbose
     ) {
         FileWithHeader file = FileWithHeader(
             path + (
@@ -14,8 +14,8 @@ namespace meager::main::storage::reader::openke {
             ), verbose
         );
 
-        TripleList* triples = new TripleList(file.length, tripleElement);
-        Triple* items = triples->items;
+        triple::List* triples = new triple::List(file.length, tripleComponent);
+        triple::Triple* items = triples->items;
 
         INT h = 0, r = 0, t = 0;
         INT j = 0;
@@ -28,7 +28,7 @@ namespace meager::main::storage::reader::openke {
 
             file >> h >> t >> r;
 
-            if (!enableFilters || filter->allows(Triple(h, r, t))) {
+            if (!enableFilters || filter->allows(triple::Triple(h, r, t))) {
                 if (enableFilters) {
                     items[j].h = encoder->entity->encode(h);
                     items[j].t = encoder->entity->encode(t);
@@ -39,7 +39,7 @@ namespace meager::main::storage::reader::openke {
                     items[j].r = r;
                 }
 
-                tripleIndex->add(items[j]);
+                tripleIndex->push(items[j]);
 
                 j++;
             }

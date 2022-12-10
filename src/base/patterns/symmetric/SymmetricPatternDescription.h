@@ -13,7 +13,7 @@ template <typename T>
 struct SymmetricPatternDescription: PatternDescription {
 
     SymmetricPatternDescription(
-        TripleList* triples, UnaryPatternDescriptionTemplate<T>* descriptionTemplate, TripleIndex* index, TripleEncoder<T>* encoder,
+        triple::List* triples, UnaryPatternDescriptionTemplate<T>* descriptionTemplate, triple::Index* index, triple::Encoder<T>* encoder,
         bool dropDuplicates = true, bool enableFilters = false, bool verbose = false
     ) {
 
@@ -30,13 +30,13 @@ struct SymmetricPatternDescription: PatternDescription {
         unordered_set<string> seenInstances;
 
         for (INT i = 0; i < triples->length; i++) { // Reading train samples
-            Triple triple = triples->items[i];
+            triple::Triple triple = triples->items[i];
 
             if (relations.find(triple.r) != relations.end()) {
                 tryPush(
                     SymmetricPatternInstance(
                         triple,
-                        Triple(triple.t, triple.r, triple.h),
+                        triple::Triple(triple.t, triple.r, triple.h),
                         index
                     ),
                     seenInstances, dropDuplicates
@@ -44,7 +44,7 @@ struct SymmetricPatternDescription: PatternDescription {
 
                 tryPush(
                     SymmetricPatternInstance(
-                        Triple(triple.t, triple.r, triple.h),
+                        triple::Triple(triple.t, triple.r, triple.h),
                         triple,
                         index,
                         false

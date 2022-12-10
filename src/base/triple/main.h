@@ -25,7 +25,7 @@ namespace meager::main::triple {
         relation
     };
 
-    Component decodeTripleComponent(std::string name);
+    Component decodeComponent(std::string name);
 
 }
 

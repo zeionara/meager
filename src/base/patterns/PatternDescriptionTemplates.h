@@ -29,7 +29,7 @@ struct BinaryPatternDescriptionTemplate: PatternDescriptionTemplate {
 
     BinaryPatternRelationMap<T>* content;
 
-    BinaryPatternDescriptionTemplate(Pattern pattern, reader::Corpus<T>* reader, TripleEncoder<T>* encoder, bool enableFilters = false, bool verbose = false): PatternDescriptionTemplate(pattern) {
+    BinaryPatternDescriptionTemplate(Pattern pattern, reader::Corpus<T>* reader, triple::Encoder<T>* encoder, bool enableFilters = false, bool verbose = false): PatternDescriptionTemplate(pattern) {
         try {
             content = reader->readBinaryPatterns(pattern, encoder, enableFilters, verbose);
         } catch (invalidArgument&) {
@@ -44,7 +44,7 @@ struct UnaryPatternDescriptionTemplate: PatternDescriptionTemplate {
 
     UnaryPatternRelationSet<T>* content;
 
-    UnaryPatternDescriptionTemplate(Pattern pattern, reader::Corpus<T>* reader, TripleEncoder<T>* encoder, bool enableFilters = false, bool verbose = false): PatternDescriptionTemplate(pattern) {
+    UnaryPatternDescriptionTemplate(Pattern pattern, reader::Corpus<T>* reader, triple::Encoder<T>* encoder, bool enableFilters = false, bool verbose = false): PatternDescriptionTemplate(pattern) {
         try {
             content = reader->readUnaryPatterns(pattern, encoder, enableFilters, verbose);
         } catch (invalidArgument&) {
@@ -60,7 +60,7 @@ struct PatternDescriptionTemplates {
     BinaryPatternDescriptionTemplate<T>* inverse;
     UnaryPatternDescriptionTemplate<T>* symmetric;
     
-    PatternDescriptionTemplates(reader::Corpus<T>* reader, TripleEncoder<T>* encoder, bool enableFilters = true, bool verbose = false) {
+    PatternDescriptionTemplates(reader::Corpus<T>* reader, triple::Encoder<T>* encoder, bool enableFilters = true, bool verbose = false) {
         inverse = new BinaryPatternDescriptionTemplate<T>(::Pattern::inverse, reader, encoder, enableFilters, verbose);
         symmetric = new UnaryPatternDescriptionTemplate<T>(::Pattern::symmetric, reader, encoder, enableFilters, verbose);
     }

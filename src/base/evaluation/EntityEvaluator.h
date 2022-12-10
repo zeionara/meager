@@ -18,15 +18,15 @@ struct EntityEvaluator {
     EvaluationScoreCluster* state;
     Corpus* corpus;
 
-    ThickTripleListWrapper<T>* triples;
-    ThinTripleListWrapper<T>* testTriples;
+    triple::ThickTripleListWrapper<T>* triples;
+    triple::ThinTripleListWrapper<T>* testTriples;
 
     string label;
 
     // virtual bool isTripleFromDataset(Triple triple) = 0;
     // virtual bool isCorrectTriple(Triple triple) = 0;
    
-    EntityEvaluator(Corpus* corpus, ThickTripleListWrapper<T>* triples, ThinTripleListWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker, string label) {
+    EntityEvaluator(Corpus* corpus, triple::ThickTripleListWrapper<T>* triples, triple::ThinTripleListWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker, string label) {
         this->corpus = corpus;
         this->triples = triples;
         this->testTriples = testTriples;
@@ -39,7 +39,7 @@ struct EntityEvaluator {
         // cout << "make batch" << endl;
         // cout << this->testTriples->content->items[this->currentTripleIndex].h << " " << this->testTriples->content->items[this->currentTripleIndex].r << " " << this->testTriples->content->items[this->currentTripleIndex].t << endl;
         // cout << "--" << endl;
-        Triple* triples = (Triple*) malloc(this->corpus->countEntities() * sizeof(Triple));
+        triple::Triple* triples = (triple::Triple*) malloc(this->corpus->countEntities() * sizeof(triple::Triple));
         // cout << "made batch" << endl;
 
         INT nEntities = this->corpus->countEntities();
@@ -59,7 +59,7 @@ struct EntityEvaluator {
         // cout << "Test triples @ " << currentTripleIndex << endl;
         // cout << testTriples << endl;
 
-        Triple reference = testTriples->content->items[currentTripleIndex];
+        triple::Triple reference = testTriples->content->items[currentTripleIndex];
 
         // cout << "Reference @ " << getTripleComponent(reference) <<  endl;
 
@@ -88,7 +88,7 @@ struct EntityEvaluator {
 
                 // tripleMakingStopWatch->start();
 
-                Triple sampledTriple = makeTriple(hypothesis);
+                triple::Triple sampledTriple = makeTriple(hypothesis);
 
                 // tripleMakingStopWatch->stop();
 
@@ -146,8 +146,8 @@ struct EntityEvaluator {
 
     private:
 
-    virtual Triple makeTriple(INT i) = 0;
-    virtual INT getTripleComponent(Triple triple) = 0;
+    virtual triple::Triple makeTriple(INT i) = 0;
+    virtual INT getTripleComponent(triple::Triple triple) = 0;
 
 };
 

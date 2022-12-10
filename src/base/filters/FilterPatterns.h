@@ -28,9 +28,9 @@ struct FilterPatterns {
         }
     }
 
-    bool match(Triple triple) {
+    bool match(triple::Triple triple) {
         for (auto &filter_pattern: items) {
-            if (regex_match(triple.as_filterable_string(), filter_pattern)) {
+            if (regex_match(triple.asFilterableString(), filter_pattern)) {
                 return true;
             }
         }

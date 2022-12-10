@@ -6,14 +6,14 @@
 template <typename T>
 struct HeadEvaluator: EntityEvaluator<T> {
 
-    HeadEvaluator(Corpus* corpus, ThickTripleListWrapper<T>* triples, ThinTripleListWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker):
+    HeadEvaluator(Corpus* corpus, triple::ThickTripleListWrapper<T>* triples, triple::ThinTripleListWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker):
         EntityEvaluator<T>(corpus, triples, testTriples, makeMetricSetTracker, "head") {};
 
-    Triple makeTriple(INT i) {
-        return Triple(i, this->testTriples->content->items[this->currentTripleIndex].r, this->testTriples->content->items[this->currentTripleIndex].t);
+    triple::Triple makeTriple(INT i) {
+        return triple::Triple(i, this->testTriples->content->items[this->currentTripleIndex].r, this->testTriples->content->items[this->currentTripleIndex].t);
     }
 
-    INT getTripleComponent(Triple triple) {
+    INT getTripleComponent(triple::Triple triple) {
         return triple.h;
     }
 

@@ -6,7 +6,7 @@
 
 namespace meager::main::triple {
 
-    struct TripleList {
+    struct List {
         Triple* items;
 
         INT length;
@@ -17,7 +17,7 @@ namespace meager::main::triple {
         INT (*getTripleComponent)(Triple triple);
         Component component;
 
-        TripleList(INT length, Component component) {
+        List(INT length, Component component) {
             this->items = (Triple *)calloc(length, sizeof(Triple));
             this->length = length;
             this->component = component;

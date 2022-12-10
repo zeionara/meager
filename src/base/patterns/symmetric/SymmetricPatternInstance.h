@@ -10,7 +10,7 @@ const string symmetricPatternName = "symmetric";
 
 struct SymmetricPatternInstance: PatternInstance {
 
-    SymmetricPatternInstance(Triple forward, Triple backward, TripleIndex* index, bool isForwardObserved = true) {
+    SymmetricPatternInstance(triple::Triple forward, triple::Triple backward, triple::Index* index, bool isForwardObserved = true) {
         triples = {forward, backward};
         if (isForwardObserved) {
             observedTripleIndices = {0};
@@ -29,7 +29,7 @@ struct SymmetricPatternInstance: PatternInstance {
 
     void print(string label = symmetricPatternName) {
         cout << "--- " << label << " triples pattern instance"  << endl;
-        Triple triple = triples[0];
+        triple::Triple triple = triples[0];
         cout << "| forward : head = " << triple.h << ", rel = " << triple.r << ", tail = " << triple.t << getObservanceMark(0) << endl;
         triple = triples[1];
         cout << "| backward: head = " << triple.h << ", rel = " << triple.r << ", tail = " << triple.t << getObservanceMark(1) << endl;

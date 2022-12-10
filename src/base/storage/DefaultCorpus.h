@@ -3,19 +3,21 @@
 
 #include "../triple/list/ThickTripleListWrapper.h"
 #include "../triple/list/ThinTripleListWrapper.h"
-#include "../triple/type.h"
+// #include "../triple/type.h"
+
+#include "../triple/relation/RelationTypes.h"
 
 #include "Corpus.h"
 
 struct DefaultCorpus: Corpus {
 
-    ThickTripleListWrapper<INT>* train;
-    ThinTripleListWrapper<INT>* test;
-    ThinTripleListWrapper<INT>* valid;
+    triple::ThickTripleListWrapper<INT>* train;
+    triple::ThinTripleListWrapper<INT>* test;
+    triple::ThinTripleListWrapper<INT>* valid;
 
-    RelationTypes<INT>* types;
+    triple::relation::Types<INT>* types;
 
-    DefaultCorpus(ThickTripleListWrapper<INT>* train, ThinTripleListWrapper<INT>* test, ThinTripleListWrapper<INT>* valid, RelationTypes<INT>* types) {
+    DefaultCorpus(triple::ThickTripleListWrapper<INT>* train, triple::ThinTripleListWrapper<INT>* test, triple::ThinTripleListWrapper<INT>* valid, triple::relation::Types<INT>* types) {
         this->train = train;
         this->test = test;
         this->valid = valid;
@@ -23,19 +25,19 @@ struct DefaultCorpus: Corpus {
         this->types = types;
     }
 
-    bool contains(Triple triple) {
+    bool contains(triple::Triple triple) {
         return train->index->contains(triple) || test->index->contains(triple) || valid->index->contains(triple);
     }
 
-    bool allowsHead(Triple triple) {
+    bool allowsHead(triple::Triple triple) {
         return types->get(triple.r)->heads->contains(triple.h);
     }
 
-    bool allowsTail(Triple triple) {
+    bool allowsTail(triple::Triple triple) {
         return types->get(triple.r)->tails->contains(triple.t);
     }
 
-    bool allows(Triple triple) {
+    bool allows(triple::Triple triple) {
         return allowsHead(triple) && allowsTail(triple);
     }
 

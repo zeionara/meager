@@ -2,11 +2,13 @@
 #define TRIPLE_BATCH_H
 
 #include "../triple/main.h"
+#include "../triple/Triple.h"
 
 using namespace std;
+using namespace meager::main;
 
 struct TripleBatch {
-    Triple* triples;
+    triple::Triple* triples;
     REAL* labels;
 
     INT length;
@@ -15,7 +17,7 @@ struct TripleBatch {
     INT* relation;
     INT* tail;
 
-    TripleBatch(Triple* triples, INT length) {
+    TripleBatch(triple::Triple* triples, INT length) {
         REAL* labels = (REAL*) malloc(length * sizeof(REAL));
 
         for (INT i = 0; i < length; i++)
@@ -24,7 +26,7 @@ struct TripleBatch {
         init(triples, labels, length);
     };
 
-    TripleBatch(Triple* triples, REAL* labels, INT length) {
+    TripleBatch(triple::Triple* triples, REAL* labels, INT length) {
         init(triples, labels, length);
     }
 
@@ -39,13 +41,13 @@ struct TripleBatch {
         // cout << "Released memory occupied by triple batch" << endl;
     }
 
-    void init(Triple* triples, REAL* labels, INT length) {
+    void init(triple::Triple* triples, REAL* labels, INT length) {
         head = (INT*) malloc(length * sizeof(INT));
         relation = (INT*) malloc(length * sizeof(INT));
         tail = (INT*) malloc(length * sizeof(INT));
 
         for (INT i = 0; i < length; i++) {
-            Triple triple = triples[i];
+            triple::Triple triple = triples[i];
 
             head[i] = triple.h;
             relation[i] = triple.r;

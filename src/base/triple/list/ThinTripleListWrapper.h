@@ -15,14 +15,14 @@ namespace meager::main::triple {
 
     template <typename T>
     struct ThinTripleListWrapper {
-        TripleList* content;
+        List* content;
 
         INT length;
 
-        TripleIndex* index;
+        Index* index;
 
-        ThinTripleListWrapper(SubsetType subset, reader::Corpus<T>* reader, TripleFilter<T>* filter, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose = false) {
-            this->index = new TripleIndex();
+        ThinTripleListWrapper(SubsetType subset, reader::Corpus<T>* reader, TripleFilter<T>* filter, Encoder<INT>* encoder, bool enableFilters, bool verbose = false) {
+            this->index = new Index();
 
             if (verbose) {
                 cout << "started reading triples" << endl;

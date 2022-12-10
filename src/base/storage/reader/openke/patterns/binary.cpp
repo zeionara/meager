@@ -2,7 +2,7 @@
 
 namespace meager::main::storage::reader::openke {
 
-    BinaryPatternRelationMap<INT>* Corpus::readBinaryPatterns(Pattern pattern, TripleEncoder<INT>* encoder, bool enableFilters, bool verbose) {
+    BinaryPatternRelationMap<INT>* Corpus::readBinaryPatterns(Pattern pattern, triple::Encoder<INT>* encoder, bool enableFilters, bool verbose) {
         string relativePath;
 
         switch (pattern) {
