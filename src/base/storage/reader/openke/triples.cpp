@@ -2,7 +2,7 @@
 
 namespace meager::main::storage::reader::openke {
 
-    triple::List* Corpus::readTriples(
+    triple::list::List* Corpus::readTriples(
         SubsetType subsetType, triple::Index* tripleIndex, triple::Component tripleComponent, TripleFilter<INT>* filter, triple::Encoder<INT>* encoder, bool enableFilters, bool verbose
     ) {
         FileWithHeader file = FileWithHeader(
@@ -14,7 +14,7 @@ namespace meager::main::storage::reader::openke {
             ), verbose
         );
 
-        triple::List* triples = new triple::List(file.length, tripleComponent);
+        triple::list::List* triples = new triple::list::List(file.length, tripleComponent);
         triple::Triple* items = triples->items;
 
         INT h = 0, r = 0, t = 0;

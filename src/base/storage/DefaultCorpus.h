@@ -1,23 +1,23 @@
 #ifndef STORAGE_DEFAULT_CORPUS_H
 #define STORAGE_DEFAULT_CORPUS_H
 
-#include "../triple/list/ThickTripleListWrapper.h"
-#include "../triple/list/ThinTripleListWrapper.h"
+#include "../triple/list/ThickWrapper.h"
+#include "../triple/list/ThinWrapper.h"
 // #include "../triple/type.h"
 
-#include "../triple/relation/RelationTypes.h"
+#include "../triple/relation/Types.h"
 
 #include "Corpus.h"
 
 struct DefaultCorpus: Corpus {
 
-    triple::ThickTripleListWrapper<INT>* train;
-    triple::ThinTripleListWrapper<INT>* test;
-    triple::ThinTripleListWrapper<INT>* valid;
+    triple::list::ThickWrapper<INT>* train;
+    triple::list::ThinWrapper<INT>* test;
+    triple::list::ThinWrapper<INT>* valid;
 
     triple::relation::Types<INT>* types;
 
-    DefaultCorpus(triple::ThickTripleListWrapper<INT>* train, triple::ThinTripleListWrapper<INT>* test, triple::ThinTripleListWrapper<INT>* valid, triple::relation::Types<INT>* types) {
+    DefaultCorpus(triple::list::ThickWrapper<INT>* train, triple::list::ThinWrapper<INT>* test, triple::list::ThinWrapper<INT>* valid, triple::relation::Types<INT>* types) {
         this->train = train;
         this->test = test;
         this->valid = valid;

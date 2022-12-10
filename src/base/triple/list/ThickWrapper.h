@@ -19,7 +19,7 @@
 namespace meager::main::triple::list {
 
     template <typename T>
-    struct ThickTripleListWrapper {
+    struct ThickWrapper {
 
         List* content;
 
@@ -35,7 +35,7 @@ namespace meager::main::triple::list {
 
         PatternDescriptions<T>* patterns;
 
-        ThickTripleListWrapper(
+        ThickWrapper(
             SubsetType subset, reader::Corpus<T>* reader, TripleFilter<T>* filter, Encoder<T>* encoder, PatternDescriptionTemplates<T>* patterns,
             bool enableFilters, bool dropPatternDuplicates = true, bool verbose = false
         ) {

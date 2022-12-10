@@ -6,7 +6,7 @@
 template <typename T>
 struct HeadEvaluator: EntityEvaluator<T> {
 
-    HeadEvaluator(Corpus* corpus, triple::ThickTripleListWrapper<T>* triples, triple::ThinTripleListWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker):
+    HeadEvaluator(Corpus* corpus, triple::list::ThickWrapper<T>* triples, triple::list::ThinWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker):
         EntityEvaluator<T>(corpus, triples, testTriples, makeMetricSetTracker, "head") {};
 
     triple::Triple makeTriple(INT i) {

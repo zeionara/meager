@@ -1,8 +1,8 @@
 #ifndef CORRUPT_DEFAULT_CORRUPTION_STRATEGY_H
 #define CORRUPT_DEFAULT_CORRUPTION_STRATEGY_H
 
-#include "../triple/list/ThickTripleListWrapper.h"
-#include "../triple/list/ThinTripleListWrapper.h"
+// #include "../triple/list/ThickWrapper.h"
+// #include "../triple/list/ThinWrapper.h"
 #include "CorruptionStrategy.h"
 // #include "../Random.h"
 // #include "state/RandomizationState.h"
@@ -22,7 +22,7 @@ struct DefaultCorruptionStrategy: CorruptionStrategy {
     };
 
     INT corruptEntity(
-        triple::List* list, triple::Triple triple, INT maxId,
+        triple::list::List* list, triple::Triple triple, INT maxId,
         INT (*getPrimaryTripleComponent)(triple::Triple triple), INT (*getSecondaryTripleComponent)(triple::Triple triple), INT (*getCorruptableTripleComponent)(triple::Triple triple),
         Randomizer<INT>* randomizer
     ) {

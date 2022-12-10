@@ -6,7 +6,7 @@
 template <typename T>
 struct TailEvaluator: EntityEvaluator<T> {
 
-    TailEvaluator(Corpus* corpus, triple::ThickTripleListWrapper<T>* triples, triple::ThinTripleListWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker):
+    TailEvaluator(Corpus* corpus, triple::list::ThickWrapper<T>* triples, triple::list::ThinWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker):
         EntityEvaluator<T>(corpus, triples, testTriples, makeMetricSetTracker, "tail") {};
 
     triple::Triple makeTriple(INT i) {

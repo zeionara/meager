@@ -14,14 +14,14 @@ using namespace meager::main::storage;
 namespace meager::main::triple::list {
 
     template <typename T>
-    struct ThinTripleListWrapper {
+    struct ThinWrapper {
         List* content;
 
         INT length;
 
         Index* index;
 
-        ThinTripleListWrapper(SubsetType subset, reader::Corpus<T>* reader, TripleFilter<T>* filter, Encoder<INT>* encoder, bool enableFilters, bool verbose = false) {
+        ThinWrapper(SubsetType subset, reader::Corpus<T>* reader, TripleFilter<T>* filter, Encoder<INT>* encoder, bool enableFilters, bool verbose = false) {
             this->index = new Index();
 
             if (verbose) {

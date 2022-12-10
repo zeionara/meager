@@ -38,7 +38,7 @@ namespace meager::main::storage::reader::openke {
             this->path = path;
         }
 
-        triple::List* readTriples(
+        triple::list::List* readTriples(
             SubsetType subsetType, triple::Index* tripleIndex, triple::Component tripleComponent, TripleFilter<INT>* filter, triple::Encoder<INT>* encoder,
             bool enableFilters = false, bool verbose = false
         );

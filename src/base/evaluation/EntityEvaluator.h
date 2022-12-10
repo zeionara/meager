@@ -3,8 +3,8 @@
 
 #include <chrono>
 
-#include "../triple/list/ThickTripleListWrapper.h"
-#include "../triple/list/ThinTripleListWrapper.h"
+#include "../triple/list/ThickWrapper.h"
+#include "../triple/list/ThinWrapper.h"
 #include "../samplers/TripleBatch.h"
 #include "../corruption/CorruptionStrategy.h"
 #include "EvaluationScoreCluster.h"
@@ -18,15 +18,15 @@ struct EntityEvaluator {
     EvaluationScoreCluster* state;
     Corpus* corpus;
 
-    triple::ThickTripleListWrapper<T>* triples;
-    triple::ThinTripleListWrapper<T>* testTriples;
+    triple::list::ThickWrapper<T>* triples;
+    triple::list::ThinWrapper<T>* testTriples;
 
     string label;
 
     // virtual bool isTripleFromDataset(Triple triple) = 0;
     // virtual bool isCorrectTriple(Triple triple) = 0;
    
-    EntityEvaluator(Corpus* corpus, triple::ThickTripleListWrapper<T>* triples, triple::ThinTripleListWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker, string label) {
+    EntityEvaluator(Corpus* corpus, triple::list::ThickWrapper<T>* triples, triple::list::ThinWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker, string label) {
         this->corpus = corpus;
         this->triples = triples;
         this->testTriples = testTriples;

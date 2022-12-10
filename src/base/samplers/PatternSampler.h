@@ -111,7 +111,7 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
 
         INT nWorkers = state->nWorkers;
 
-        triple::RelationScore* relationScore = corruptionStrategy->corpus->train->relationScore;
+        triple::relation::Score* relationScore = corruptionStrategy->corpus->train->relationScore;
 
         INT first_triple_index, last_triple_index;
 

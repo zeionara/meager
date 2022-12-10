@@ -1,8 +1,8 @@
 #ifndef CORRUPT_CORRUPTION_STRATEGY_H
 #define CORRUPT_CORRUPTION_STRATEGY_H
 
-#include "../triple/list/ThickTripleListWrapper.h"
-#include "../triple/list/ThinTripleListWrapper.h"
+#include "../triple/list/ThickWrapper.h"
+#include "../triple/list/ThinWrapper.h"
 
 #include "../storage/LocalTsvCorpus.h"
 // #include "state/RandomizationState.h"

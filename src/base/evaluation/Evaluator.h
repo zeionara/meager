@@ -3,8 +3,8 @@
 
 #include <functional>
 
-#include "../triple/list/ThickTripleListWrapper.h"
-#include "../triple/list/ThinTripleListWrapper.h"
+#include "../triple/list/ThickWrapper.h"
+#include "../triple/list/ThinWrapper.h"
 #include "../samplers/TripleBatch.h"
 #include "../corruption/CorruptionStrategy.h"
 
@@ -31,13 +31,13 @@ struct Evaluator {
 
     Corpus* corpus;
 
-    triple::ThickTripleListWrapper<T>* triples;
-    triple::ThinTripleListWrapper<T>* testTriples;
+    triple::list::ThickWrapper<T>* triples;
+    triple::list::ThinWrapper<T>* testTriples;
 
     HeadEvaluator<T>* head;
     TailEvaluator<T>* tail;
 
-    Evaluator(Corpus* corpus, triple::ThickTripleListWrapper<T>* triples, triple::ThinTripleListWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker) {
+    Evaluator(Corpus* corpus, triple::list::ThickWrapper<T>* triples, triple::list::ThinWrapper<T>* testTriples, MetricSetTrackerMaker makeMetricSetTracker) {
         this->corpus = corpus;
         this->triples = triples;
         this->testTriples = testTriples;

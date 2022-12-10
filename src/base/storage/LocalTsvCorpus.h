@@ -4,14 +4,14 @@
 #include "../triple/main.h"
 // #include "../triple/type.h"
 #include "LocalCorpus.h"
-#include "../triple/list/ThickTripleListWrapper.h"
-#include "../triple/list/ThinTripleListWrapper.h"
+#include "../triple/list/ThickWrapper.h"
+#include "../triple/list/ThinWrapper.h"
 #include "../filters/TripleFilter.h"
-#include "../triple/TripleEncoder.h"
+#include "../triple/Encoder.h"
 #include "../patterns/PatternDescriptionTemplates.h"
 #include "../evaluation/Stopwatch.h"
 
-#include "../triple/relation/RelationTypes.h"
+#include "../triple/relation/Types.h"
 
 using namespace std;
 using namespace meager::main;
@@ -43,10 +43,10 @@ string const VALID_IS_ALREADY_INITIALIZED = "Valid subset " + IS_ALREADY_INITIAL
 
 template <typename T>
 struct LocalTsvCorpus: LocalCorpus<T> {
-    triple::ThickTripleListWrapper<T>* train;
+    triple::list::ThickWrapper<T>* train;
 
-    triple::ThinTripleListWrapper<T>* test;
-    triple::ThinTripleListWrapper<T>* valid;
+    triple::list::ThinWrapper<T>* test;
+    triple::list::ThinWrapper<T>* valid;
 
     triple::relation::Types<T>* types;
     TripleFilter<T>* filter;
@@ -91,7 +91,7 @@ struct LocalTsvCorpus: LocalCorpus<T> {
             throw invalidArgument(TRAIN_IS_ALREADY_INITIALIZED);
         }
 
-        this->train = new triple::ThickTripleListWrapper<T>(::SubsetType::train, this->reader, filter, encoder, patterns, this->enableFilters, dropPatternDuplicates, verbose);
+        this->train = new triple::list::ThickWrapper<T>(::SubsetType::train, this->reader, filter, encoder, patterns, this->enableFilters, dropPatternDuplicates, verbose);
 
         if (verbose) {
             cout << "finished reading train subset" << endl;
@@ -107,7 +107,7 @@ struct LocalTsvCorpus: LocalCorpus<T> {
             throw invalidArgument(TEST_IS_ALREADY_INITIALIZED);
         }
 
-        this->test = new triple::ThinTripleListWrapper<T>(::SubsetType::test, this->reader, filter, encoder, this->enableFilters, verbose);
+        this->test = new triple::list::ThinWrapper<T>(::SubsetType::test, this->reader, filter, encoder, this->enableFilters, verbose);
 
         if (verbose) {
             cout << "finished reading test subset" << endl;
@@ -123,7 +123,7 @@ struct LocalTsvCorpus: LocalCorpus<T> {
             throw invalidArgument(VALID_IS_ALREADY_INITIALIZED);
         }
 
-        this->valid = new triple::ThinTripleListWrapper<T>(::SubsetType::valid, this->reader, filter, encoder, this->enableFilters, verbose);
+        this->valid = new triple::list::ThinWrapper<T>(::SubsetType::valid, this->reader, filter, encoder, this->enableFilters, verbose);
 
         if (verbose) {
             cout << "finished reading valid subset" << endl;
