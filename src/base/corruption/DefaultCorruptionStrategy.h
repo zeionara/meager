@@ -75,7 +75,7 @@ struct DefaultCorruptionStrategy: CorruptionStrategy {
             mid = (lef + rig) >> 1;
             // if (trainHead[mid].t + (ll - mid) - 1 < tmp)
             // if (trainHead[mid].t < tmp + (mid - ll) + 1)
-            if (getCorruptableTripleComponent(list->items[mid]) - mid + ll - 1 < tmp)
+            if (getCorruptableTripleComponent(list->items[mid]) - (mid - ll + 1) < tmp)
                 lef = mid;
             else 
                 rig = mid;
