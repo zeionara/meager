@@ -1,7 +1,7 @@
 #ifndef TRIPLE_TRIPLE_ENCODER_H
 #define TRIPLE_TRIPLE_ENCODER_H
 
-#include "TripleComponentEncoder.h"
+#include "ComponentEncoder.h"
 
 using namespace std;
 

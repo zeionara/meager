@@ -1,10 +1,10 @@
-#ifndef TRIPLE_LIST_TRIPLE_LIST_H
-#define TRIPLE_LIST_TRIPLE_LIST_H
+#ifndef TRIPLE_LIST_LIST_H
+#define TRIPLE_LIST_LIST_H
 
 #include "../main.h"
 #include "../Triple.h"
 
-namespace meager::main::triple {
+namespace meager::main::triple::list {
 
     struct List {
         Triple* items;

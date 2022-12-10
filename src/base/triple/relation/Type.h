@@ -1,7 +1,7 @@
 #ifndef TRIPLE_RELATION_RELATION_TYPE_H
 #define TRIPLE_RELATION_RELATION_TYPE_H
 
-#include "AllowedTripleComponents.h"
+#include "AllowedComponents.h"
 
 namespace meager::main::triple::relation {
 

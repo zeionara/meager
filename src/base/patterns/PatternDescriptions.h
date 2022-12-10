@@ -3,9 +3,9 @@
 
 #include "main.h"
 
-#include "../triple/list/TripleList.h"
+#include "../triple/list/List.h"
 #include "../storage/reader/CorpusReader.h"
-#include "../triple/TripleIndex.h"
+#include "../triple/Index.h"
 
 #include "none/NonePatternDescription.h"
 #include "inverse/InversePatternDescription.h"
@@ -19,7 +19,7 @@ struct PatternDescriptions {
     unordered_map<Pattern, PatternDescription> content;
 
     PatternDescriptions(
-        triple::List* triples, PatternDescriptionTemplates<T>* templates, triple::Index* index, triple::Encoder<T>* encoder,
+        triple::list::List* triples, PatternDescriptionTemplates<T>* templates, triple::Index* index, triple::Encoder<T>* encoder,
         bool dropDuplicates = true, bool enableFilters = false, bool verbose = false
     ) {
         content[none] = NonePatternDescription(triples, verbose, true);

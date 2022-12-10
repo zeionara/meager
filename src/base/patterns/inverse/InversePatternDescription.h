@@ -13,7 +13,7 @@ template <typename T>
 struct InversePatternDescription: PatternDescription {
 
     InversePatternDescription(
-        triple::List* triples, BinaryPatternDescriptionTemplate<T>* descriptionTemplate, triple::Index* index, triple::Encoder<T>* encoder,
+        triple::list::List* triples, BinaryPatternDescriptionTemplate<T>* descriptionTemplate, triple::Index* index, triple::Encoder<T>* encoder,
         bool dropDuplicates = true, bool enableFilters = false, bool verbose = false
     ) {
 

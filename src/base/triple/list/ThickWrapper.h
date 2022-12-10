@@ -1,14 +1,14 @@
-#ifndef TRIPLE_LIST_THICK_TRIPLE_LIST_WRAPPER_H
-#define TRIPLE_LIST_THICK_TRIPLE_LIST_WRAPPER_H
+#ifndef TRIPLE_LIST_THICK_WRAPPER_H
+#define TRIPLE_LIST_THICK_WRAPPER_H
 
-#include "../TripleIndex.h"
+#include "../Index.h"
 // 
 // #include "RelationScore.h"
 // #include "../../filters/TripleFilter.h"
-#include "TripleList.h"
-#include "../TripleEncoder.h"
-#include "../Frequencies.h"
-#include "RelationScore.h"
+// #include "List.h"
+#include "../Encoder.h"
+// #include "../ComponentFrequencies.h"
+#include "../relation/Score.h"
 // #include "../../patterns/inverse/InversePatternDescription.h"
 // #include "../../patterns/symmetric/SymmetricPatternDescription.h"
 // #include "../../patterns/none/NonePatternDescription.h"
@@ -16,7 +16,7 @@
 #include "../../patterns/PatternDescriptions.h"
 // #include "../../patterns/PatternDescriptionTemplates.h"
 
-namespace meager::main::triple {
+namespace meager::main::triple::list {
 
     template <typename T>
     struct ThickTripleListWrapper {
@@ -30,8 +30,8 @@ namespace meager::main::triple {
         List* tail;
 
         Index* index;
-        Frequencies* frequencies;
-        RelationScore* relationScore;
+        ComponentFrequencies* frequencies;
+        relation::Score* relationScore;
 
         PatternDescriptions<T>* patterns;
 
@@ -60,7 +60,7 @@ namespace meager::main::triple {
             Triple* relations = this->relation->items;
             Triple* main = this->content->items;
 
-            Frequencies* frequencies = new Frequencies(nEntities, nRelations);
+            ComponentFrequencies* frequencies = new ComponentFrequencies(nEntities, nRelations);
 
             std::sort(main, main + length, Triple::compareHeadRelationTail);
 
@@ -162,7 +162,7 @@ namespace meager::main::triple {
                 cout << "started making relation score" << endl;
             }
 
-            this->relationScore = new RelationScore(this->head, this->tail, this->frequencies);
+            this->relationScore = new relation::Score(this->head, this->tail, this->frequencies);
 
             if (verbose) {
                 cout << "finished making relation score" << endl;

@@ -3,9 +3,9 @@
 
 #include "main.h"
 
-#include "../triple/list/TripleList.h"
+// #include "../triple/list/List.h"
 #include "../storage/reader/CorpusReader.h"
-#include "../triple/TripleIndex.h"
+#include "../triple/Index.h"
 
 #define invalidArgument invalid_argument
 #define Map unordered_map

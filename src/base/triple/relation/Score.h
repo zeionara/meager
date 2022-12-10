@@ -3,20 +3,20 @@
 
 // #include "../main.h"
 
-#include "TripleList.h"
-#include "../Frequencies.h"
+#include "../list/List.h"
+#include "../ComponentFrequencies.h"
 
 using namespace std;
 
-namespace meager::main::triple {
+namespace meager::main::triple::relation {
 
-    struct RelationScore {
+    struct Score {
         REAL* head; 
         REAL* tail;
 
         INT length;
 
-        RelationScore(List* headList, List* tailList, Frequencies* frequencies) {
+        Score(list::List* headList, list::List* tailList, ComponentFrequencies* frequencies) {
             REAL* head = new REAL[frequencies->nRelations];  // (REAL *)calloc(frequencies->nRelations, sizeof(REAL));
             REAL* tail = new REAL[frequencies->nRelations];  // (REAL *)calloc(frequencies->nRelations, sizeof(REAL));
 
@@ -36,7 +36,7 @@ namespace meager::main::triple {
             this->length = frequencies->nRelations;
         }
 
-        REAL handleEntity(List* list, INT entity, function<void(INT)> incrementScore) {
+        REAL handleEntity(list::List* list, INT entity, function<void(INT)> incrementScore) {
             if (list->left[entity] == -1 && list->right[entity] == -1)  {
                 return 0;
             }

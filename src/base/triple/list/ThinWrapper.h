@@ -11,7 +11,7 @@
 
 using namespace meager::main::storage;
 
-namespace meager::main::triple {
+namespace meager::main::triple::list {
 
     template <typename T>
     struct ThinTripleListWrapper {

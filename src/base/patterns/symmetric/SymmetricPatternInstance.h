@@ -4,7 +4,7 @@
 #include <cstdlib>
 
 #include "../main.h"
-#include "../../triple/TripleIndex.h"
+#include "../../triple/Index.h"
 
 const string symmetricPatternName = "symmetric";
 

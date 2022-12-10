@@ -13,7 +13,7 @@ template <typename T>
 struct SymmetricPatternDescription: PatternDescription {
 
     SymmetricPatternDescription(
-        triple::List* triples, UnaryPatternDescriptionTemplate<T>* descriptionTemplate, triple::Index* index, triple::Encoder<T>* encoder,
+        triple::list::List* triples, UnaryPatternDescriptionTemplate<T>* descriptionTemplate, triple::Index* index, triple::Encoder<T>* encoder,
         bool dropDuplicates = true, bool enableFilters = false, bool verbose = false
     ) {
 

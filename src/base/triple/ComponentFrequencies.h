@@ -5,14 +5,14 @@
 
 namespace meager::main::triple {
 
-    struct Frequencies {
+    struct ComponentFrequencies {
         INT* entity;
         INT* relation;
 
         INT nEntities;
         INT nRelations;
 
-        Frequencies(INT nEntities, INT nRelations) {
+        ComponentFrequencies(INT nEntities, INT nRelations) {
             this->entity = new INT[nEntities];
             this->relation = new INT[nRelations];
 
@@ -20,7 +20,7 @@ namespace meager::main::triple {
             this->nRelations = nRelations;
         }
 
-        ~Frequencies() {
+        ~ComponentFrequencies() {
             delete [] this->entity;
             delete [] this->relation;
         }

@@ -1,7 +1,7 @@
 #ifndef PATTERNS_NONE_PATTERN_DESCRIPTION_H
 #define PATTERNS_NONE_PATTERN_DESCRIPTION_H
 
-#include "../../triple/list/TripleList.h"
+#include "../../triple/list/List.h"
 
 #include "../PatternDescription.h"
 
@@ -9,7 +9,7 @@
 
 struct NonePatternDescription: PatternDescription {
 
-    NonePatternDescription(triple::List* triples, bool verbose = false, bool dropDuplicates = true) {
+    NonePatternDescription(triple::list::List* triples, bool verbose = false, bool dropDuplicates = true) {
 
         label = nonePatternName;
         id = none;

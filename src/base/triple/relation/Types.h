@@ -1,7 +1,7 @@
 #ifndef TRIPLE_RELATION_RELATION_TYPES_H
 #define TRIPLE_RELATION_RELATION_TYPES_H
 
-#include "RelationType.h"
+#include "Type.h"
 
 using namespace meager::main::storage;
 

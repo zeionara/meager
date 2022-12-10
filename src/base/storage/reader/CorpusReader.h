@@ -4,9 +4,9 @@
 #include <vector>
 #include <regex>
 
-#include "../../triple/TripleEncoder.h"
-#include "../../triple/list/TripleList.h"
-#include "../../triple/TripleIndex.h"
+#include "../../triple/Encoder.h"
+#include "../../triple/list/List.h"
+#include "../../triple/Index.h"
 #include "../../utils/main.h"
 
 #include "../../patterns/main.h"
@@ -64,7 +64,7 @@ namespace meager::main::storage::reader {
 
         string path; // TODO: Delete this
 
-        virtual triple::List* readTriples(
+        virtual triple::list::List* readTriples(
             SubsetType subsetType, triple::Index* tripleIndex, triple::Component tripleComponent, TripleFilter<T>* filter, triple::Encoder<T>* encoder,
             bool enableFilters = false, bool verbose = false
         ) = 0;

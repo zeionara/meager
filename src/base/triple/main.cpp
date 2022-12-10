@@ -1,6 +1,6 @@
 #include <algorithm>
 #include "main.h"
-#include "TripleIndex.h"
+#include "Index.h"
 
 #include "Triple.h"
 
