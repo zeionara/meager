@@ -6,7 +6,7 @@
 #include "../triple/list/ThickWrapper.h"
 #include "../triple/list/ThinWrapper.h"
 #include "../samplers/TripleBatch.h"
-#include "../corruption/CorruptionStrategy.h"
+// #include "../corruption/Strategy.h"
 
 #include "EvaluationScoreCluster.h"
 #include "../storage/Corpus.h"

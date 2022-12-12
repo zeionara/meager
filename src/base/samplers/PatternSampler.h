@@ -10,7 +10,7 @@
 #include "../triple/main.h"
 #include "../triple/pattern/main.h"
 
-#include "../corruption/DefaultCorruptionStrategy.h"
+#include "../corruption/DefaultStrategy.h"
 
 #include "DefaultLocalSamplingState.h"
 #include "state/RandomizationState.h"
@@ -65,8 +65,11 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
         for (INT thread_index = 0; thread_index < nWorkers; thread_index++) {
             localStates[thread_index].id = thread_index;
             localStates[thread_index].globalState = globalState;
-            localStates[thread_index].corruptionStrategy = new DefaultCorruptionStrategy<T>(corpus, thread_index);
-            localStates[thread_index].randomizer = new LoopingRandomizer<INT>(new JavaLikeLcgRandomizationState<INT>(rand()));
+
+            auto randomizer = new LoopingRandomizer<INT>(new JavaLikeLcgRandomizationState<INT>(rand()));
+            localStates[thread_index].corruptionStrategy = new corruption::DefaultStrategy<T>(corpus, thread_index, randomizer);
+            localStates[thread_index].randomizer = randomizer;
+
             pthread_create(&threads[thread_index], NULL, run, (void*)(localStates + thread_index));
         }
 
@@ -104,7 +107,7 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
         INT nObservedTriplesPerPatternInstance = state->nObservedTriplesPerPatternInstance;
         REAL headCorruptionThreshold = state->headCorruptionThreshold;
 
-        DefaultCorruptionStrategy<T>* corruptionStrategy = localState->corruptionStrategy;
+        corruption::DefaultStrategy<T>* corruptionStrategy = localState->corruptionStrategy;
 
         bool bern = state->bern;
         bool crossSampling = state->crossSampling;
@@ -161,7 +164,7 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
                             //     cout << "Started corrupting tail" << endl;
                             // cout << "Started corrupting tail" << endl;
                             // cout << trainList->head->left[sampledTriple.h] - 1 << "&&" << trainList->head->right[sampledTriple.h];
-                            triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = corruptionStrategy->corruptTail(sampledTriple, randomizer);
+                            triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = corruptionStrategy->corruptTail(sampledTriple);
                             // triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = Triple(
                             //     sampledTriple.h, sampledTriple.r, corrupt_head(threadIndex, sampledTriple.h, sampledTriple.r)
                             // );
@@ -171,7 +174,7 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
                             // cout << "-" << endl;
                             // if (batchWiseTripleIndex == 44)
                             //     cout << "Started corrupting head" << endl;
-                            triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = corruptionStrategy->corruptHead(sampledTriple, randomizer);
+                            triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = corruptionStrategy->corruptHead(sampledTriple);
                             // triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = Triple(
                             //     corrupt_tail(threadIndex, sampledTriple.t, sampledTriple.r),  sampledTriple.r, sampledTriple.t
                             // );
@@ -183,14 +186,14 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
                     } else  {
                         if(headBatchFlag){ // Corrupt HEAD by using provided flag which specifies which part of triple must be corrupted
                             // cout << "Started corrupting head" << endl;
-                            triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = corruptionStrategy->corruptHead(sampledTriple, randomizer);
+                            triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = corruptionStrategy->corruptHead(sampledTriple);
                             // triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = Triple(
                             //     corrupt_tail(threadIndex, sampledTriple.t, sampledTriple.r),  sampledTriple.r, sampledTriple.t
                             // );
                             // cout << "Finished corrupting head" << endl;
                         } else { // Corrupt TAIL
                             // cout << "Started corrupting tail" << endl;
-                            triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = corruptionStrategy->corruptTail(sampledTriple, randomizer);
+                            triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = corruptionStrategy->corruptTail(sampledTriple);
                             // triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + negativeTripleOffset * batchSize] = Triple(
                             //     sampledTriple.h, sampledTriple.r, corrupt_head(threadIndex, sampledTriple.h, sampledTriple.r)
                             // );
@@ -204,7 +207,7 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
                 for (INT negativeTripleOffset = 1; negativeTripleOffset <= relationNegativeRate; negativeTripleOffset++) {
                     // cout << "Started corrupting relation" << endl;
                     triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + (entityNegativeRate + negativeTripleOffset) * batchSize] =
-                        corruptionStrategy->corruptRelation(sampledTriple, randomizer);
+                        corruptionStrategy->corruptRelation(sampledTriple);
                     // triples[patternComponentOffset * patternComponentIndex + batchWiseTripleIndex + (entityNegativeRate + negativeTripleOffset) * batchSize] = Triple(
                     //     sampledTriple.h,  corrupt_rel(threadIndex, sampledTriple.h, sampledTriple.t), sampledTriple.t
                     // );
