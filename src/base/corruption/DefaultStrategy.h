@@ -11,15 +11,15 @@
 
 namespace meager::main::corruption {
 
-    template <typename T>
-    struct DefaultStrategy: Strategy {
+    template <typename T, typename R>
+    struct DefaultStrategy: Strategy<R> {
 
         // DefaultCorruptionStrategy(ThickTripleListWrapper* triples, INT threadId, ThinTripleListWrapper* testTriples, ThinTripleListWrapper* validTriples):
         //     CorruptionStrategy(triples, threadId, testTriples, validTriples) {};
 
         LocalTsvCorpus<T>* corpus;
 
-        DefaultStrategy(LocalTsvCorpus<T>* corpus, INT threadId, Randomizer<T>* randomizer): Strategy(threadId, randomizer) {
+        DefaultStrategy(LocalTsvCorpus<T>* corpus, INT threadId, Randomizer<R>* randomizer): Strategy<R>(threadId, randomizer) {
             this->corpus = corpus;
         };
 
@@ -65,7 +65,7 @@ namespace meager::main::corruption {
 
             // INT tmp = rand_max(randomizer, maxId - (rr - ll + 2)); // Generate random entity index in the interval [0; nEntities - (nTailEntitiesForGivenHead + nHeadEntitiesForGivenHead)]
             // INT tmp = randomizer->state->sample(maxId - (rr - ll + 2)); // Generate random entity index in the interval [0; nEntities - (nTailEntitiesForGivenHead + nHeadEntitiesForGivenHead)]
-            INT tmp = randomizer->state->sample(maxId - (rr - ll + 1)); // Generate random entity index in the interval [0; nEntities - (nTailEntitiesForGivenHead + nHeadEntitiesForGivenHead)]
+            INT tmp = this->randomizer->state->sample(maxId - (rr - ll + 1)); // Generate random entity index in the interval [0; nEntities - (nTailEntitiesForGivenHead + nHeadEntitiesForGivenHead)]
             if (tmp < getCorruptableTripleComponent(list->items[ll])) return tmp; // If generated entity index is less than any other tail entity index (in other case the generated triple would probably not be unique) then return this
             // if (tmp + rr - ll + 1 > trainHead[rr].t) return tmp + rr - ll + 1;
             if (tmp > getCorruptableTripleComponent(list->items[rr]) - (rr - ll + 1)) return tmp + rr - ll + 1; // If generated entity index + max possible offset is larger than any other tail entity index then return this
@@ -113,7 +113,7 @@ namespace meager::main::corruption {
             // INT t;
             while(1) {
                 // INT corruptedTail = corpus->types->get(triple.r)->tails->items[rand(0, corpus->types->get(triple.r)->tails->length)]; // Select random tail entity id for a given relation according to type mappings
-                INT corruptedTail = corpus->types->get(triple.r)->tails->items[randomizer->state->sample(corpus->types->get(triple.r)->tails->length)]; // Select random tail entity id for a given relation according to type mappings
+                INT corruptedTail = corpus->types->get(triple.r)->tails->items[this->randomizer->state->sample(corpus->types->get(triple.r)->tails->length)]; // Select random tail entity id for a given relation according to type mappings
                 triple::Triple corruptedTriple = triple::Triple(triple.h, triple.r, corruptedTail);
                 if (not isCorrectTriple(corruptedTriple)) { // If obtained triple does not exist, then it is a suitable negative sample which may be immediately returned
                 //	printf("r:%ld\tt:%ld\n", r, t);

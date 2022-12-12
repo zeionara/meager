@@ -7,15 +7,15 @@
 #include "GlobalSamplingState.h"
 #include "../corruption/DefaultStrategy.h"
 
-template <typename T>
+template <typename T, typename R>
 struct DefaultLocalSamplingState {
     INT id;
     GlobalSamplingState* globalState;
-    Randomizer<INT>* randomizer;
+    Randomizer<R>* randomizer;
 
-    corruption::DefaultStrategy<T>* corruptionStrategy;
+    corruption::DefaultStrategy<T, R>* corruptionStrategy;
 
-    DefaultLocalSamplingState(INT id, GlobalSamplingState* globalState, corruption::DefaultStrategy<T>* corruptionStrategy, Randomizer<INT>* randomizer) {
+    DefaultLocalSamplingState(INT id, GlobalSamplingState* globalState, corruption::DefaultStrategy<T, R>* corruptionStrategy, Randomizer<R>* randomizer) {
         this->id = id;
         this->globalState = globalState;
         this->corruptionStrategy = corruptionStrategy;

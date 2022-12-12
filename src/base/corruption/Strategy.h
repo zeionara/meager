@@ -11,6 +11,7 @@
 
 namespace meager::main::corruption {
 
+    template <typename T>  // Randomizer type
     struct Strategy {
         // ThickTripleListWrapper* triples;
 
@@ -20,9 +21,9 @@ namespace meager::main::corruption {
         // LocalTsvCorpus* corpus;
 
         INT threadId;
-        Randomizer<INT>* randomizer;
+        Randomizer<T>* randomizer;
 
-        Strategy(INT threadId, Randomizer<INT>* randomizer) {
+        Strategy(INT threadId, Randomizer<T>* randomizer) {
             // this->triples = triples;
             // this->corpus = corpus;
             this->threadId = threadId;

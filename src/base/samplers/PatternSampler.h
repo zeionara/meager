@@ -24,7 +24,7 @@ using namespace std;
 typedef void * (*PTR)(void *);
 
 
-template <typename T>
+template <typename T, typename R>
 struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
     triple::pattern::Pattern pattern;
     INT nObservedTriplesPerPatternInstance;
@@ -60,20 +60,21 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
         // }
 
         pthread_t* threads = (pthread_t*) malloc(nWorkers * sizeof(pthread_t));
-        DefaultLocalSamplingState<T>* localStates = (DefaultLocalSamplingState<T>*) malloc(nWorkers * sizeof(DefaultLocalSamplingState<T>));
+        DefaultLocalSamplingState<T, R>* localStates = (DefaultLocalSamplingState<T, R>*) malloc(nWorkers * sizeof(DefaultLocalSamplingState<T, R>));
 
         for (INT thread_index = 0; thread_index < nWorkers; thread_index++) {
             localStates[thread_index].id = thread_index;
             localStates[thread_index].globalState = globalState;
 
-            auto randomizer = new LoopingRandomizer<INT>(new JavaLikeLcgRandomizationState<INT>(rand()));
-            localStates[thread_index].corruptionStrategy = new corruption::DefaultStrategy<T>(corpus, thread_index, randomizer);
+            // cout << "foo" << endl;
+            auto randomizer = new LoopingRandomizer<R>(new JavaLikeLcgRandomizationState<R>(rand()));
+            // cout << "bar" << endl;
+            localStates[thread_index].corruptionStrategy = new corruption::DefaultStrategy<T, R>(corpus, thread_index, randomizer);
             localStates[thread_index].randomizer = randomizer;
 
             pthread_create(&threads[thread_index], NULL, run, (void*)(localStates + thread_index));
         }
-
-        // cout << "Waiting for the workers to complete" << endl;
+        // cout << "baz --" << endl;
 
         for (INT thread_index = 0; thread_index < nWorkers; thread_index++) {
             pthread_join(threads[thread_index], NULL);
@@ -91,9 +92,9 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
     }
 
     static void* run(void* con) {
-        DefaultLocalSamplingState<T>* localState = (DefaultLocalSamplingState<T> *)(con);
+        DefaultLocalSamplingState<T, R>* localState = (DefaultLocalSamplingState<T, R> *)(con);
         GlobalSamplingState* state = localState->globalState;
-        Randomizer<INT>* randomizer = localState->randomizer;
+        Randomizer<R>* randomizer = localState->randomizer;
 
         INT threadIndex = localState->id;
         triple::Triple* triples = state->triples;
@@ -107,7 +108,7 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
         INT nObservedTriplesPerPatternInstance = state->nObservedTriplesPerPatternInstance;
         REAL headCorruptionThreshold = state->headCorruptionThreshold;
 
-        corruption::DefaultStrategy<T>* corruptionStrategy = localState->corruptionStrategy;
+        corruption::DefaultStrategy<T, R>* corruptionStrategy = localState->corruptionStrategy;
 
         bool bern = state->bern;
         bool crossSampling = state->crossSampling;
@@ -157,7 +158,9 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
                                 relationScore->tail[sampledTriple.r] + relationScore->head[sampledTriple.r]
                             );
                         // if (randd(threadIndex) % 1000 < headCorruptionThreshold) { // Corrupt TAIL by generating a random number
-                        if (randomizer->state->sample(1000) < headCorruptionThreshold) { // Corrupt TAIL by generating a random number
+                        INT shouldCorruptHead = randomizer->state->sample(1000);
+                        // cout << shouldCorruptHead << endl;
+                        if (shouldCorruptHead < headCorruptionThreshold) { // Corrupt TAIL by generating a random number
                         // if (randomizer->state->sample(1000) < 2000) { // Corrupt TAIL by generating a random number
                             // cout << "+" << endl;
                             // if (batchWiseTripleIndex == 44)

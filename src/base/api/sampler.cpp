@@ -5,10 +5,10 @@
 
 INT validateNobservedTriplesPerPatternInstance(triple::pattern::Pattern pattern, INT nObservedTriplesPerPatternInstance);
 
-PatternSampler<INT>* sampler;
+PatternSampler<INT, INT>* sampler;
 
 void initSampler(triple::pattern::Pattern pattern, INT nObservedTriplesPerPatternInstance, bool bern, bool crossSampling, INT nWorkers, bool verbose) {
-    sampler = new PatternSampler<INT>(pattern, validateNobservedTriplesPerPatternInstance(pattern, nObservedTriplesPerPatternInstance), bern, crossSampling, nWorkers, verbose);
+    sampler = new PatternSampler<INT, INT>(pattern, validateNobservedTriplesPerPatternInstance(pattern, nObservedTriplesPerPatternInstance), bern, crossSampling, nWorkers, verbose);
 }
 
 TripleBatch* sample(INT batchSize, INT entityNegativeRate, INT relationNegativeRate, bool headBatchFlag, bool verbose) {
