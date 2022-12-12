@@ -2,11 +2,11 @@
 
 namespace meager::main::storage::reader::openke {
 
-    BinaryPatternRelationMap<INT>* Corpus::readBinaryPatterns(Pattern pattern, triple::Encoder<INT>* encoder, bool enableFilters, bool verbose) {
+    triple::pattern::relation::BinaryMap<INT>* Corpus::readBinaryPatterns(triple::pattern::Pattern pattern, triple::Encoder<INT>* encoder, bool enableFilters, bool verbose) {
         string relativePath;
 
         switch (pattern) {
-            case inverse:
+            case triple::pattern::Pattern::Inverse:
                 relativePath = INVERSE_PATTERNS_FILENAME;
                 break;
             default:
@@ -36,7 +36,7 @@ namespace meager::main::storage::reader::openke {
             printf("Number of relations in binary pattern = %d.\n", (int)firstRelationToSecond.size());
         }
 
-        return new BinaryPatternRelationMap<INT>(firstRelationToSecond, secondRelationToFirst);
+        return new triple::pattern::relation::BinaryMap<INT>(firstRelationToSecond, secondRelationToFirst);
     }
 
 }

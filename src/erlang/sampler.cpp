@@ -8,7 +8,7 @@ ERL_NIF_TERM encodeTripleBatch(ErlNifEnv* env, TripleBatch* tripleBatch, bool ve
 extern ERL_NIF_TERM
 initSampler_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
-        Pattern pattern = decodePatternName(enif_get_atom_(env, argv[0]));
+        triple::pattern::Pattern pattern = triple::pattern::decodeName(enif_get_atom_(env, argv[0]));
 
         initSampler(
             pattern,  // pattern

@@ -2,15 +2,15 @@
 #define SAMPLERS_GLOBAL_SAMPLING_STATE_H
 
 #include "../triple/main.h"
-#include "../patterns/main.h"
-#include "../patterns/PatternDescription.h"
+#include "../triple/pattern/main.h"
+#include "../triple/pattern/description/Description.h"
 
 
 struct GlobalSamplingState {
     triple::Triple* triples;
     REAL* labels;
 
-    vector<PatternInstance>* patternInstances;
+    vector<triple::pattern::Instance>* patternInstances;
 
     INT batchSize;
     INT entityNegativeRate;
@@ -28,7 +28,7 @@ struct GlobalSamplingState {
     bool crossSampling;
 
     GlobalSamplingState(
-        PatternDescription patternDescription,
+        triple::pattern::description::Description patternDescription,
         INT batchSize, INT entityNegativeRate, INT relationNegativeRate, bool headBatchFlag, INT nObservedTriplesPerPatternInstance, INT headCorruptionThreshold,
         bool bern = false, bool crossSampling = false, INT nWorkers = 1, bool verbose = false
     ) {

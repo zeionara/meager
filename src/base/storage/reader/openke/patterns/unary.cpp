@@ -2,11 +2,11 @@
 
 namespace meager::main::storage::reader::openke {
 
-    UnaryPatternRelationSet<INT>* Corpus::readUnaryPatterns(Pattern pattern, triple::Encoder<INT>* encoder, bool enableFilters, bool verbose) {
+    triple::pattern::relation::UnarySet<INT>* Corpus::readUnaryPatterns(triple::pattern::Pattern pattern, triple::Encoder<INT>* encoder, bool enableFilters, bool verbose) {
         string relativePath;
 
         switch (pattern) {
-            case symmetric:
+            case triple::pattern::Pattern::Symmetric:
                 relativePath = SYMMETRIC_PATTERNS_FILENAME;
                 break;
             default:
@@ -37,7 +37,7 @@ namespace meager::main::storage::reader::openke {
             cout << "Symmetric triples" << endl;
         }
 
-        return new UnaryPatternRelationSet<INT>(relations);
+        return new triple::pattern::relation::UnarySet<INT>(relations);
     }
 
 }

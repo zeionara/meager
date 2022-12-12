@@ -4,7 +4,7 @@
 #include <string>
 
 #include "../triple/main.h"
-#include "../patterns/main.h"
+#include "../triple/pattern/main.h"
 #include "../storage/Corpus.h"
 
 #include "TripleBatch.h"

@@ -8,7 +8,7 @@
 #include <string>
 
 #include "../triple/main.h"
-#include "../patterns/main.h"
+#include "../triple/pattern/main.h"
 
 #include "../corruption/DefaultCorruptionStrategy.h"
 
@@ -26,14 +26,14 @@ typedef void * (*PTR)(void *);
 
 template <typename T>
 struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
-    Pattern pattern;
+    triple::pattern::Pattern pattern;
     INT nObservedTriplesPerPatternInstance;
     INT nWorkers;
 
     bool bern;
     bool crossSampling;
 
-    PatternSampler(Pattern pattern, INT nObservedTriplesPerPatternInstance, bool bern = false, bool crossSampling = false, INT nWorkers = 1, bool verbose = false) {
+    PatternSampler(triple::pattern::Pattern pattern, INT nObservedTriplesPerPatternInstance, bool bern = false, bool crossSampling = false, INT nWorkers = 1, bool verbose = false) {
         this->pattern = pattern;
         this->nObservedTriplesPerPatternInstance = nObservedTriplesPerPatternInstance;
         this->bern = bern;
@@ -100,7 +100,7 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
         INT relationNegativeRate = state->relationNegativeRate;
         bool headBatchFlag = state->headBatchFlag;
         // std::vector<PatternInstance>** patternInstanceSets = para -> patternInstanceSets;
-        vector<PatternInstance>* patternInstances = state->patternInstances;
+        vector<triple::pattern::Instance>* patternInstances = state->patternInstances;
         INT nObservedTriplesPerPatternInstance = state->nObservedTriplesPerPatternInstance;
         REAL headCorruptionThreshold = state->headCorruptionThreshold;
 
@@ -135,7 +135,7 @@ struct PatternSampler: Sampler<LocalTsvCorpus<INT>> {
             // INT sampled_triple_index = rand_max(randomizer, (*patternInstances).size());
             INT sampled_triple_index = randomizer->state->sample((*patternInstances).size());
             // cout << "Sampling " << batchWiseTripleIndex << " triple " << endl;
-            PatternInstance sampledPatternInstance = (*patternInstances)[sampled_triple_index];
+            triple::pattern::Instance sampledPatternInstance = (*patternInstances)[sampled_triple_index];
             INT patternComponentIndex = 0;
 
             // if (batchWiseTripleIndex % 10 == 0) {

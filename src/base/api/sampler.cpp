@@ -1,13 +1,13 @@
 #include "../samplers/PatternSampler.h"
-#include "../patterns/main.h"
+#include "../triple/pattern/main.h"
 
 #include "corpus.h"
 
-INT validateNobservedTriplesPerPatternInstance(Pattern pattern, INT nObservedTriplesPerPatternInstance);
+INT validateNobservedTriplesPerPatternInstance(triple::pattern::Pattern pattern, INT nObservedTriplesPerPatternInstance);
 
 PatternSampler<INT>* sampler;
 
-void initSampler(Pattern pattern, INT nObservedTriplesPerPatternInstance, bool bern, bool crossSampling, INT nWorkers, bool verbose) {
+void initSampler(triple::pattern::Pattern pattern, INT nObservedTriplesPerPatternInstance, bool bern, bool crossSampling, INT nWorkers, bool verbose) {
     sampler = new PatternSampler<INT>(pattern, validateNobservedTriplesPerPatternInstance(pattern, nObservedTriplesPerPatternInstance), bern, crossSampling, nWorkers, verbose);
 }
 
@@ -15,8 +15,8 @@ TripleBatch* sample(INT batchSize, INT entityNegativeRate, INT relationNegativeR
     return sampler->sample(corpus, batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, verbose);
 }
 
-INT validateNobservedTriplesPerPatternInstance(Pattern pattern, INT nObservedTriplesPerPatternInstance) {
-    PatternDescription patternDescription = corpus->train->patterns->get(pattern);
+INT validateNobservedTriplesPerPatternInstance(triple::pattern::Pattern pattern, INT nObservedTriplesPerPatternInstance) {
+    triple::pattern::description::Description patternDescription = corpus->train->patterns->get(pattern);
 
     INT nTriplesPerPatternInstance = patternDescription.nTriplesPerInstance;
 

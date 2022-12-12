@@ -8,7 +8,7 @@
 #include "../triple/list/ThinWrapper.h"
 #include "../triple/filter/Filter.h"
 #include "../triple/Encoder.h"
-#include "../patterns/PatternDescriptionTemplates.h"
+#include "../triple/pattern/description/Templates.h"
 #include "../evaluation/Stopwatch.h"
 
 #include "../triple/relation/Types.h"
@@ -51,7 +51,7 @@ struct LocalTsvCorpus: LocalCorpus<T> {
     triple::relation::Types<T>* types;
     triple::filter::Filter<T>* filter;
     triple::Encoder<T>* encoder;
-    PatternDescriptionTemplates<T>* patterns;
+    triple::pattern::description::Templates<T>* patterns;
 
     LocalTsvCorpus(reader::Corpus<T>* reader, bool enableFilters = false, bool verbose = false): LocalCorpus<T>(reader, enableFilters) {
         if (enableFilters) {
@@ -75,7 +75,7 @@ struct LocalTsvCorpus: LocalCorpus<T> {
             cout << "started reading pattern description templates" << endl;
         }
 
-        this->patterns = new PatternDescriptionTemplates<T>(this->reader, encoder, this->enableFilters, verbose);
+        this->patterns = new triple::pattern::description::Templates<T>(this->reader, encoder, this->enableFilters, verbose);
 
         if (verbose) {
             cout << "finished reading pattern description templates" << endl;

@@ -9,9 +9,9 @@
 #include "../../triple/Index.h"
 #include "../../utils/main.h"
 
-#include "../../patterns/main.h"
-#include "../../patterns/BinaryPatternRelationMap.h"
-#include "../../patterns/UnaryPatternRelationSet.h"
+#include "../../triple/pattern/main.h"
+#include "../../triple/pattern/relation/BinaryMap.h"
+#include "../../triple/pattern/relation/UnarySet.h"
 
 using namespace std;
 using namespace meager::main;
@@ -75,8 +75,8 @@ namespace meager::main::storage::reader {
         virtual vector<regex> readFilterPatterns(bool excluding = false, bool verbose = false, bool drop_duplicates = true) = 0;
         virtual RelationTypesContents<T>* readRelationTypesContents(bool verbose = false) = 0;
 
-        virtual BinaryPatternRelationMap<INT>* readBinaryPatterns(Pattern pattern, triple::Encoder<T>* encoder, bool enableFilters = false, bool verbose = false) = 0;
-        virtual UnaryPatternRelationSet<INT>* readUnaryPatterns(Pattern pattern, triple::Encoder<T>* encoder, bool enableFilters = false, bool verbose = false) = 0;
+        virtual triple::pattern::relation::BinaryMap<INT>* readBinaryPatterns(triple::pattern::Pattern pattern, triple::Encoder<T>* encoder, bool enableFilters = false, bool verbose = false) = 0;
+        virtual triple::pattern::relation::UnarySet<INT>* readUnaryPatterns(triple::pattern::Pattern pattern, triple::Encoder<T>* encoder, bool enableFilters = false, bool verbose = false) = 0;
     };
 
 }

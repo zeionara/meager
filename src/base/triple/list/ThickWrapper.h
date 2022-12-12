@@ -13,7 +13,7 @@
 // #include "../../patterns/symmetric/SymmetricPatternDescription.h"
 // #include "../../patterns/none/NonePatternDescription.h"
 // 
-#include "../../patterns/PatternDescriptions.h"
+#include "../pattern/description/Descriptions.h"
 // #include "../../patterns/PatternDescriptionTemplates.h"
 
 namespace meager::main::triple::list {
@@ -33,10 +33,10 @@ namespace meager::main::triple::list {
         ComponentFrequencies* frequencies;
         relation::Score* relationScore;
 
-        PatternDescriptions<T>* patterns;
+        pattern::description::Descriptions<T>* patterns;
 
         ThickWrapper(
-            SubsetType subset, reader::Corpus<T>* reader, filter::Filter<T>* filter, Encoder<T>* encoder, PatternDescriptionTemplates<T>* patterns,
+            SubsetType subset, reader::Corpus<T>* reader, filter::Filter<T>* filter, Encoder<T>* encoder, pattern::description::Templates<T>* patterns,
             bool enableFilters, bool dropPatternDuplicates = true, bool verbose = false
         ) {
 
@@ -130,14 +130,14 @@ namespace meager::main::triple::list {
         }
 
         void read(
-            filter::Filter<T>* filter, Encoder<T>* encoder, reader::Corpus<T>* reader, PatternDescriptionTemplates<T>* patterns,
+            filter::Filter<T>* filter, Encoder<T>* encoder, reader::Corpus<T>* reader, pattern::description::Templates<T>* patterns,
             bool enableFilters, bool dropPatternDuplicates = true, bool verbose = false
         ) {
             if (verbose) {
                 cout << "n train triples before dropping duplicates:" << this->length << ", started reading patterns" << endl;
             }
 
-            this->patterns = new PatternDescriptions<T>(content, patterns, index, encoder, dropPatternDuplicates, enableFilters, verbose);
+            this->patterns = new pattern::description::Descriptions<T>(content, patterns, index, encoder, dropPatternDuplicates, enableFilters, verbose);
 
             if (verbose) {
                 cout << "finished reading patterns" << endl;

@@ -46,8 +46,8 @@ namespace meager::main::storage::reader::openke {
         vector<regex> readFilterPatterns(bool excluding = false, bool verbose = false, bool dropDuplicates = true);
         RelationTypesContents<INT>* readRelationTypesContents(bool verbose = false);
 
-        BinaryPatternRelationMap<INT>* readBinaryPatterns(Pattern pattern, triple::Encoder<INT>* encoder, bool enableFilters = false, bool verbose = false);
-        UnaryPatternRelationSet<INT>* readUnaryPatterns(Pattern pattern, triple::Encoder<INT>* encoder, bool enableFilters = false, bool verbose = false);
+        triple::pattern::relation::BinaryMap<INT>* readBinaryPatterns(triple::pattern::Pattern pattern, triple::Encoder<INT>* encoder, bool enableFilters = false, bool verbose = false);
+        triple::pattern::relation::UnarySet<INT>* readUnaryPatterns(triple::pattern::Pattern pattern, triple::Encoder<INT>* encoder, bool enableFilters = false, bool verbose = false);
 
         INT readVocabularySize(triple::ComponentType componentType, bool verbose = false) {
             return FileWithHeader(path + (componentType == triple::ComponentType::entity ? ENTITIES_FILENAME : RELATIONS_FILENAME), verbose).length;
