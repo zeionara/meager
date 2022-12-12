@@ -12,7 +12,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "../base/samplers/PatternSampler.h"
+#include "../base/sampling/Pattern.h"
 #include "../base/api/corpus.h"
 #include "../base/api/sampler.h"
 
@@ -109,7 +109,7 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     // cout << "Created sampler" << endl;
 
-    TripleBatch* tripleBatch = sampler->sample(corpus, batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag);
+    sampling::batch::Triple* tripleBatch = sampler->sample(corpus, batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag);
 
     // cout << "Used sampler" << endl;
 

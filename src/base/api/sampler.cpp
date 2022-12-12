@@ -1,17 +1,17 @@
-#include "../samplers/PatternSampler.h"
+#include "../sampling/Pattern.h"
 #include "../triple/pattern/main.h"
 
 #include "corpus.h"
 
 INT validateNobservedTriplesPerPatternInstance(triple::pattern::Pattern pattern, INT nObservedTriplesPerPatternInstance);
 
-PatternSampler<INT, INT>* sampler;
+sampling::Pattern<INT, INT>* sampler;
 
 void initSampler(triple::pattern::Pattern pattern, INT nObservedTriplesPerPatternInstance, bool bern, bool crossSampling, INT nWorkers, bool verbose) {
-    sampler = new PatternSampler<INT, INT>(pattern, validateNobservedTriplesPerPatternInstance(pattern, nObservedTriplesPerPatternInstance), bern, crossSampling, nWorkers, verbose);
+    sampler = new sampling::Pattern<INT, INT>(pattern, validateNobservedTriplesPerPatternInstance(pattern, nObservedTriplesPerPatternInstance), bern, crossSampling, nWorkers, verbose);
 }
 
-TripleBatch* sample(INT batchSize, INT entityNegativeRate, INT relationNegativeRate, bool headBatchFlag, bool verbose) {
+sampling::batch::Triple* sample(INT batchSize, INT entityNegativeRate, INT relationNegativeRate, bool headBatchFlag, bool verbose) {
     return sampler->sample(corpus, batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, verbose);
 }
 

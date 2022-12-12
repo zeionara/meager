@@ -12,14 +12,14 @@
 namespace meager::main::corruption {
 
     template <typename T, typename R>
-    struct DefaultStrategy: Strategy<R> {
+    struct LocalStrategy: Strategy<R> {
 
         // DefaultCorruptionStrategy(ThickTripleListWrapper* triples, INT threadId, ThinTripleListWrapper* testTriples, ThinTripleListWrapper* validTriples):
         //     CorruptionStrategy(triples, threadId, testTriples, validTriples) {};
 
         LocalTsvCorpus<T>* corpus;
 
-        DefaultStrategy(LocalTsvCorpus<T>* corpus, INT threadId, Randomizer<R>* randomizer): Strategy<R>(threadId, randomizer) {
+        LocalStrategy(LocalTsvCorpus<T>* corpus, INT threadId, Randomizer<R>* randomizer): Strategy<R>(threadId, randomizer) {
             this->corpus = corpus;
         };
 

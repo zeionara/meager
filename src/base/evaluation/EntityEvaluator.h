@@ -5,7 +5,7 @@
 
 #include "../triple/list/ThickWrapper.h"
 #include "../triple/list/ThinWrapper.h"
-#include "../samplers/TripleBatch.h"
+#include "../sampling/batch/Triple.h"
 // #include "../corruption/Strategy.h"
 #include "EvaluationScoreCluster.h"
 #include "../storage/Corpus.h"
@@ -35,7 +35,7 @@ struct EntityEvaluator {
         this->label = label;
     }
 
-    TripleBatch* makeBatch() { // Generate all possible triples for every entity which may be used as a triple head
+    sampling::batch::Triple* makeBatch() { // Generate all possible triples for every entity which may be used as a triple head
         // cout << "make batch" << endl;
         // cout << this->testTriples->content->items[this->currentTripleIndex].h << " " << this->testTriples->content->items[this->currentTripleIndex].r << " " << this->testTriples->content->items[this->currentTripleIndex].t << endl;
         // cout << "--" << endl;
@@ -52,7 +52,7 @@ struct EntityEvaluator {
         }
         // cout << "made triples" << endl;
 
-        return new TripleBatch(triples, this->corpus->countEntities());
+        return new sampling::batch::Triple(triples, this->corpus->countEntities());
     }
 
     void evaluate(REAL *probabilities, bool reverse, bool verbose = false) {

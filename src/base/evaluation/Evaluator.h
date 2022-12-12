@@ -5,7 +5,7 @@
 
 #include "../triple/list/ThickWrapper.h"
 #include "../triple/list/ThinWrapper.h"
-#include "../samplers/TripleBatch.h"
+// #include "../sampler/batch/Triple.h"
 // #include "../corruption/Strategy.h"
 
 #include "EvaluationScoreCluster.h"

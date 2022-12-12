@@ -60,7 +60,7 @@ extern ERL_NIF_TERM
 trial_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
         // cout << "foo" << endl;
-        TripleBatch* tripleBatch = trial(
+        sampling::batch::Triple* tripleBatch = trial(
             triple::decodeComponent(enif_get_atom_(env, argv[0])),
             enif_get_bool(env, argv[1])
         );

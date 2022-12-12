@@ -25,7 +25,7 @@ void initEvaluator(MetricSetTrackerMaker makeMetricSetTracker, EvaluationTask ta
     );
 }
 
-TripleBatch* trial(triple::Component tripleComponent, bool verbose) {
+sampling::batch::Triple* trial(triple::Component tripleComponent, bool verbose) {
     switch (tripleComponent) {
         case triple::Component::head:
             return evaluator->head->makeBatch();

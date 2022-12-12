@@ -3,7 +3,7 @@
 
 #include "../base/api/sampler.h"
 
-ERL_NIF_TERM encodeTripleBatch(ErlNifEnv* env, TripleBatch* tripleBatch, bool verbose = false);
+ERL_NIF_TERM encodeTripleBatch(ErlNifEnv* env, sampling::batch::Triple* tripleBatch, bool verbose = false);
 
 extern ERL_NIF_TERM
 initSampler_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
@@ -36,7 +36,7 @@ sample_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         bool headBatchFlag = enif_get_bool(env, argv[3]);
         bool verbose = enif_get_bool(env, argv[4]);
 
-        TripleBatch* tripleBatch = sample(batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, verbose);
+        sampling::batch::Triple* tripleBatch = sample(batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, verbose);
 
         ERL_NIF_TERM encoded = encodeTripleBatch(env, tripleBatch);
 
@@ -46,7 +46,7 @@ sample_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     }
 }
 
-ERL_NIF_TERM encodeTripleBatch(ErlNifEnv* env, TripleBatch* tripleBatch, bool encodeLabels) {
+ERL_NIF_TERM encodeTripleBatch(ErlNifEnv* env, sampling::batch::Triple* tripleBatch, bool encodeLabels) {
 
     int nElements = encodeLabels ? 4 : 3;
 

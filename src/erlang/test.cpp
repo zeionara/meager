@@ -5,7 +5,7 @@
 
 #include "../base/evaluation/Evaluator.h"
 #include "../base/storage/DefaultCorpus.h"
-#include "../base/samplers/TripleBatch.h"
+#include "../base/sampling/batch/Triple.h"
 
 #include "../base/api/corpus.h"
 #include "../base/api/evaluator.h"
@@ -35,7 +35,7 @@ get_head_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     // cout << "Making head batch" << endl;
 
-    TripleBatch* tripleBatch = evaluatorr->head->makeBatch();
+    sampling::batch::Triple* tripleBatch = evaluatorr->head->makeBatch();
 
     // cout << "Made head batch" << endl;
 
@@ -110,7 +110,7 @@ get_tail_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     // cout << "Making tail batch" << endl;
 
-    TripleBatch* tripleBatch = evaluatorr->tail->makeBatch();
+    sampling::batch::Triple* tripleBatch = evaluatorr->tail->makeBatch();
 
     // cout << "Made tail batch" << endl;
 
