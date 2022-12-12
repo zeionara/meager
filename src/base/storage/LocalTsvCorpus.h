@@ -6,7 +6,7 @@
 #include "LocalCorpus.h"
 #include "../triple/list/ThickWrapper.h"
 #include "../triple/list/ThinWrapper.h"
-#include "../filters/TripleFilter.h"
+#include "../triple/filter/Filter.h"
 #include "../triple/Encoder.h"
 #include "../patterns/PatternDescriptionTemplates.h"
 #include "../evaluation/Stopwatch.h"
@@ -49,7 +49,7 @@ struct LocalTsvCorpus: LocalCorpus<T> {
     triple::list::ThinWrapper<T>* valid;
 
     triple::relation::Types<T>* types;
-    TripleFilter<T>* filter;
+    triple::filter::Filter<T>* filter;
     triple::Encoder<T>* encoder;
     PatternDescriptionTemplates<T>* patterns;
 
@@ -144,7 +144,7 @@ struct LocalTsvCorpus: LocalCorpus<T> {
 
     void importFilter(bool dropDuplicates, bool verbose) {
         if (this->enableFilters) {
-            this->filter = new TripleFilter<T>(this->reader, dropDuplicates, verbose);
+            this->filter = new triple::filter::Filter<T>(this->reader, dropDuplicates, verbose);
         } else {
             if (verbose) {
                 cout << "skip reading filter because filters are disabled" << endl;

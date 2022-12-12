@@ -4,7 +4,7 @@
 #include <string>
 #include <fstream>
 
-#include "../../../filters/TripleFilter.h"
+#include "../../../triple/filter/Filter.h"
 
 #include "../CorpusReader.h"
 
@@ -39,7 +39,7 @@ namespace meager::main::storage::reader::openke {
         }
 
         triple::list::List* readTriples(
-            SubsetType subsetType, triple::Index* tripleIndex, triple::Component tripleComponent, TripleFilter<INT>* filter, triple::Encoder<INT>* encoder,
+            SubsetType subsetType, triple::Index* tripleIndex, triple::Component tripleComponent, triple::filter::Filter<INT>* filter, triple::Encoder<INT>* encoder,
             bool enableFilters = false, bool verbose = false
         );
 

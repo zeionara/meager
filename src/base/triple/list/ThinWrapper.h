@@ -1,5 +1,5 @@
-#ifndef TRIPLE_LIST_THIN_TRIPLE_LIST_WRAPPER_H
-#define TRIPLE_LIST_THIN_TRIPLE_LIST_WRAPPER_H
+#ifndef TRIPLE_LIST_THIN_WRAPPER_H
+#define TRIPLE_LIST_THIN_WRAPPER_H
 
 // #include "../main.h"
 // #include "../TripleIndex.h"
@@ -7,7 +7,8 @@
 
 // #include "TripleList.h"
 // #include "../TripleEncoder.h"
-#include "../../filters/TripleFilter.h"
+// #include "../../filters/TripleFilter.h"
+#include "../filter/Filter.h"
 
 using namespace meager::main::storage;
 
@@ -21,7 +22,7 @@ namespace meager::main::triple::list {
 
         Index* index;
 
-        ThinWrapper(SubsetType subset, reader::Corpus<T>* reader, TripleFilter<T>* filter, Encoder<INT>* encoder, bool enableFilters, bool verbose = false) {
+        ThinWrapper(SubsetType subset, reader::Corpus<T>* reader, filter::Filter<T>* filter, Encoder<INT>* encoder, bool enableFilters, bool verbose = false) {
             this->index = new Index();
 
             if (verbose) {

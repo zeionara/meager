@@ -3,7 +3,7 @@
 namespace meager::main::storage::reader::openke {
 
     triple::list::List* Corpus::readTriples(
-        SubsetType subsetType, triple::Index* tripleIndex, triple::Component tripleComponent, TripleFilter<INT>* filter, triple::Encoder<INT>* encoder, bool enableFilters, bool verbose
+        SubsetType subsetType, triple::Index* tripleIndex, triple::Component tripleComponent, triple::filter::Filter<INT>* filter, triple::Encoder<INT>* encoder, bool enableFilters, bool verbose
     ) {
         FileWithHeader file = FileWithHeader(
             path + (

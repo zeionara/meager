@@ -54,8 +54,10 @@ struct RelationTypesContents {
     }
 };
 
-template <typename T>
-struct TripleFilter;
+namespace meager::main::triple::filter {
+    template <typename T>
+    struct Filter;
+}
 
 namespace meager::main::storage::reader {
 
@@ -65,7 +67,7 @@ namespace meager::main::storage::reader {
         string path; // TODO: Delete this
 
         virtual triple::list::List* readTriples(
-            SubsetType subsetType, triple::Index* tripleIndex, triple::Component tripleComponent, TripleFilter<T>* filter, triple::Encoder<T>* encoder,
+            SubsetType subsetType, triple::Index* tripleIndex, triple::Component tripleComponent, triple::filter::Filter<T>* filter, triple::Encoder<T>* encoder,
             bool enableFilters = false, bool verbose = false
         ) = 0;
 

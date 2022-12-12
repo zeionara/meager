@@ -1,5 +1,5 @@
-#ifndef TRIPLE_RELATION_RELATION_TYPE_H
-#define TRIPLE_RELATION_RELATION_TYPE_H
+#ifndef TRIPLE_RELATION_TYPE_H
+#define TRIPLE_RELATION_TYPE_H
 
 #include "AllowedComponents.h"
 

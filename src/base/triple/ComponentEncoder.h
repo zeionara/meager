@@ -1,5 +1,5 @@
-#ifndef TRIPLE_TRIPLE_COMPONENT_ENCODER_H
-#define TRIPLE_TRIPLE_COMPONENT_ENCODER_H
+#ifndef TRIPLE_COMPONENT_ENCODER_H
+#define TRIPLE_COMPONENT_ENCODER_H
 
 #include <unordered_map>
 #include <vector>

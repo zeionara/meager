@@ -1,5 +1,5 @@
-#ifndef TRIPLE_TRIPLE_ENCODER_H
-#define TRIPLE_TRIPLE_ENCODER_H
+#ifndef TRIPLE_ENCODER_H
+#define TRIPLE_ENCODER_H
 
 #include "ComponentEncoder.h"
 
