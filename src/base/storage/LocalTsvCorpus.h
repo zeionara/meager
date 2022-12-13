@@ -9,7 +9,7 @@
 #include "../triple/filter/Filter.h"
 #include "../triple/Encoder.h"
 #include "../triple/pattern/description/Templates.h"
-#include "../evaluation/Stopwatch.h"
+#include "../utils/Stopwatch.h"
 
 #include "../triple/relation/Types.h"
 

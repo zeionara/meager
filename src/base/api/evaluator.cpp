@@ -1,4 +1,4 @@
-#include "../evaluation/Evaluator.h"
+#include "../evaluation/link-prediction/Evaluator.h"
 #include "../evaluation/main.h"
 
 #include "corpus.h"
@@ -7,17 +7,17 @@
 
 using namespace meager::main::utils;
 
-Evaluator<INT>* evaluator;
+evaluation::link_prediction::Evaluator<INT>* evaluator;
 
-void initEvaluator(MetricSetTrackerMaker makeMetricSetTracker, EvaluationTask task, SubsetType subset, bool verbose) {
+void initEvaluator(evaluation::metric::score::SetMaker makeMetricSetTracker, evaluation::task::Task task, SubsetType subset, bool verbose) {
     if (subset == SubsetType::train) {
         throw invalidArgument("Cannot use train subset for evaluation");
     }
-    if (task != LINK_PREDICTION) {
+    if (task != evaluation::task::Task::LinkPrediction) {
         throw invalidArgument("Only link prediction task is supported");
     }
 
-    evaluator = new Evaluator<INT>(
+    evaluator = new evaluation::link_prediction::Evaluator<INT>(
         corpus,
         corpus->train,
         subset == SubsetType::test ? corpus->test : subset == SubsetType::valid ? corpus->valid : throw invalidArgument("Unsupported subset type, cannot evaluate"),
@@ -49,6 +49,6 @@ void evaluate(triple::Component tripleComponent, REAL* predictions, bool reverse
     }
 }
 
-MetricTreeRoot* computeMetrics(bool verbose) {
+evaluation::metric::tree::Root* computeMetrics(bool verbose) {
     return evaluator->getMetricTree();
 }

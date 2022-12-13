@@ -2,23 +2,27 @@
 
 #include "Metric.h"
 
-#include "CountMetricTracker.h"
-#include "RankMetricTracker.h"
-#include "ReciprocalRankMetricTracker.h"
+#include "tracker/Count.h"
+#include "tracker/Rank.h"
+#include "tracker/ReciprocalRank.h"
 
-Metric decodeMetric(string name) {
+namespace meager::main::evaluation::metric {
 
-    if (name == COUNT) {
-        return Count;
+    Metric decodeName(string name) {
+
+        if (name == count::name) {
+            return Metric::Count;
+        }
+
+        if (name == rank::name) {
+            return Metric::Rank;
+        }
+
+        if (name == reciprocal_rank::name) {
+            return Metric::ReciprocalRank;
+        }
+
+        throw invalidArgument("Unknown metric name provided: " + name);
     }
 
-    if (name == RANK) {
-        return Rank;
-    }
-
-    if (name == RECIPROCAL_RANK) {
-        return ReciprocalRank;
-    }
-
-    throw invalidArgument("Unknown metric name provided: " + name);
 }

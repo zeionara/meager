@@ -1,5 +1,5 @@
-#ifndef EVALUATION_METRIC_H
-#define EVALUATION_METRIC_H
+#ifndef EVALUATION_METRIC_METRIC_H
+#define EVALUATION_METRIC_METRIC_H
 
 #include <string>
 #include <stdexcept>
@@ -8,8 +8,14 @@
 
 using namespace std;
 
-enum Metric { Count, Rank, ReciprocalRank };
+namespace meager::main::evaluation::metric {
 
-Metric decodeMetric(string name);
+    enum class Metric {
+        Count,
+        Rank,
+        ReciprocalRank
+    };
+
+}
 
 #endif

@@ -3,7 +3,12 @@
 
 #include "../base/utils/main.h"
 #include "../base/api/evaluator.h"
+#include "../base/evaluation/metric/main.h"
 #include "../base/evaluation/metric/Metric.h"
+
+#include "../base/evaluation/metric/tracker/Count.h"
+#include "../base/evaluation/metric/tracker/Rank.h"
+#include "../base/evaluation/metric/tracker/ReciprocalRank.h"
 
 #include "sampler.h"
 
@@ -11,12 +16,14 @@ extern ERL_NIF_TERM
 initEvaluator_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
 
-        EvaluationTask task = decodeEvaluationTask(enif_get_atom_(env, argv[1]));
+        evaluation::task::Task task = evaluation::task::decodeName(enif_get_atom_(env, argv[1]));
         SubsetType subset = decodeSubsetType(enif_get_atom_(env, argv[2]));
         bool verbose = enif_get_bool(env, argv[3]);
 
         initEvaluator([env, argv](string label){
-            List<MetricTrackerBase*>* trackers = decodeList<MetricTrackerBase*>(env, argv[0], [](ErlNifEnv* env, ERL_NIF_TERM metric) -> MetricTrackerBase* {
+            List<evaluation::metric::tracker::TrackerBase*>* trackers = decodeList<evaluation::metric::tracker::TrackerBase*>(
+                env, argv[0], [](ErlNifEnv* env, ERL_NIF_TERM metric
+            ) -> evaluation::metric::tracker::TrackerBase* {
                 int length;
                 const ERL_NIF_TERM* metricDescription;
 
@@ -28,25 +35,25 @@ initEvaluator_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
                 char* metricName = enif_get_atom_(env, metricDescription[0]);
 
-                switch (decodeMetric(metricName)) {
-                    case Count:
+                switch (evaluation::metric::decodeName(metricName)) {
+                    case evaluation::metric::Metric::Count:
                         if (length > 1)
-                            return new CountMetricTracker(enif_get_long_(env, metricDescription[1])); 
+                            return new evaluation::metric::tracker::Count(enif_get_long_(env, metricDescription[1])); 
                         throw invalidArgument("Metric count requires one parameter (top-n)");
-                    case Rank:
+                    case evaluation::metric::Metric::Rank:
                         if (length < 2)
-                            return new RankMetricTracker(); 
+                            return new evaluation::metric::tracker::Rank(); 
                         throw invalidArgument("Metric rank doesn't accept parameters");
-                    case ReciprocalRank:
+                    case evaluation::metric::Metric::ReciprocalRank:
                         if (length == 1)
-                            return new ReciprocalRankMetricTracker(); 
+                            return new evaluation::metric::tracker::ReciprocalRank(); 
                         throw invalidArgument("Metric reciprocal-rank doesn't accept parameters");
                     default:
                         throw invalidArgument("Unspecified metric tracker for metric " + string(metricName));
                 }
             });
 
-            return new MetricSetTracker(trackers->items, trackers->length, label);
+            return new evaluation::metric::tracker::Set(trackers->items, trackers->length, label);
         }, task, subset, verbose);
 
     } catch (invalidArgument& e) {
@@ -97,16 +104,16 @@ evaluate_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     return completed_with_success(env);
 }
 
-ERL_NIF_TERM encodeMetric(ErlNifEnv* env, MetricTrackerBase* metric) {
+ERL_NIF_TERM encodeMetric(ErlNifEnv* env, evaluation::metric::tracker::TrackerBase* metric) {
     switch (metric->getId()) {
-        case Count:
-            return enif_make_tuple2(env, enif_make_atom(env, metric->getName().c_str()), enif_make_long(env, ((CountMetricTracker*)metric)->n));
+        case evaluation::metric::Metric::Count:
+            return enif_make_tuple2(env, enif_make_atom(env, metric->getName().c_str()), enif_make_long(env, ((evaluation::metric::tracker::Count*)metric)->n));
         default:
             return enif_make_atom(env, metric->getName().c_str());
     }
 }
 
-ERL_NIF_TERM encodeMetricTree(ErlNifEnv* env, MetricTree* tree, INT normalizationCoefficient) {
+ERL_NIF_TERM encodeMetricTree(ErlNifEnv* env, evaluation::metric::tree::Tree* tree, INT normalizationCoefficient) {
     // cout << "--" << endl;
     // cout << tree->nodes << endl;
     // cout << tree->length << endl;
@@ -119,7 +126,7 @@ ERL_NIF_TERM encodeMetricTree(ErlNifEnv* env, MetricTree* tree, INT normalizatio
         for (INT i = 0; i < tree->length; i++) {
             string label = tree->nodes[i]->label;
             // cout << "label = " << label << endl;
-            MetricTree* subtree = tree->nodes[i]->value;
+            evaluation::metric::tree::Tree* subtree = tree->nodes[i]->value;
 
             ERL_NIF_TERM encodedChild = enif_make_tuple2(env, enif_make_atom(env, label.c_str()), encodeMetricTree(env, subtree, normalizationCoefficient));
             encodedChildren[i] = encodedChild;
@@ -131,9 +138,9 @@ ERL_NIF_TERM encodeMetricTree(ErlNifEnv* env, MetricTree* tree, INT normalizatio
 
         if (tree->metrics) {
             for (INT i = 0; i < tree->metrics->length; i++) {
-                MetricTrackerBase* metric = tree->metrics->trackers[i];
+                evaluation::metric::tracker::TrackerBase* metric = tree->metrics->trackers[i];
 
-                Metric id = metric->getId();
+                // evaluation::metric::Metric id = metric->getId();
 
                 encodedMetrics[i] = enif_make_tuple2(env, encodeMetric(env, metric), enif_make_double(env, metric->divide(normalizationCoefficient)));
             }
@@ -148,7 +155,7 @@ ERL_NIF_TERM encodeMetricTree(ErlNifEnv* env, MetricTree* tree, INT normalizatio
 extern ERL_NIF_TERM
 computeMetrics_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
-        MetricTreeRoot* root = computeMetrics(
+        evaluation::metric::tree::Root* root = computeMetrics(
             enif_get_bool(env, argv[0])
         );
         // cout << "Started encoding tree" << endl;

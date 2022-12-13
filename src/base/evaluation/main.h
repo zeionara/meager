@@ -2,6 +2,13 @@
 
 using namespace std;
 
-enum EvaluationTask { LINK_PREDICTION, TRIPLE_CLASSIFICATION };
+namespace meager::main::evaluation::task {
 
-EvaluationTask decodeEvaluationTask(string task);
+    enum class Task {
+        LinkPrediction,
+        TripleClassification
+    };
+
+    Task decodeName(string task);
+
+}

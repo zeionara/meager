@@ -1,0 +1,152 @@
+[
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager.dir/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp.o -c /home/zeio/meager/src/base/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp",
+  "file": "/home/zeio/meager/src/base/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager.dir/api/corpus.cpp.o -c /home/zeio/meager/src/base/api/corpus.cpp",
+  "file": "/home/zeio/meager/src/base/api/corpus.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager.dir/api/evaluator.cpp.o -c /home/zeio/meager/src/base/api/evaluator.cpp",
+  "file": "/home/zeio/meager/src/base/api/evaluator.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager.dir/api/sampler.cpp.o -c /home/zeio/meager/src/base/api/sampler.cpp",
+  "file": "/home/zeio/meager/src/base/api/sampler.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager.dir/evaluation/main.cpp.o -c /home/zeio/meager/src/base/evaluation/main.cpp",
+  "file": "/home/zeio/meager/src/base/evaluation/main.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager.dir/evaluation/metric/Tree.cpp.o -c /home/zeio/meager/src/base/evaluation/metric/Tree.cpp",
+  "file": "/home/zeio/meager/src/base/evaluation/metric/Tree.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager.dir/evaluation/metric/main.cpp.o -c /home/zeio/meager/src/base/evaluation/metric/main.cpp",
+  "file": "/home/zeio/meager/src/base/evaluation/metric/main.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager.dir/evaluation/metric/score/Score.cpp.o -c /home/zeio/meager/src/base/evaluation/metric/score/Score.cpp",
+  "file": "/home/zeio/meager/src/base/evaluation/metric/score/Score.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager.dir/storage/reader/openke/filter.cpp.o -c /home/zeio/meager/src/base/storage/reader/openke/filter.cpp",
+  "file": "/home/zeio/meager/src/base/storage/reader/openke/filter.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager.dir/storage/reader/openke/patterns/binary.cpp.o -c /home/zeio/meager/src/base/storage/reader/openke/patterns/binary.cpp",
+  "file": "/home/zeio/meager/src/base/storage/reader/openke/patterns/binary.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager.dir/storage/reader/openke/patterns/unary.cpp.o -c /home/zeio/meager/src/base/storage/reader/openke/patterns/unary.cpp",
+  "file": "/home/zeio/meager/src/base/storage/reader/openke/patterns/unary.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager.dir/storage/reader/openke/relationTypes.cpp.o -c /home/zeio/meager/src/base/storage/reader/openke/relationTypes.cpp",
+  "file": "/home/zeio/meager/src/base/storage/reader/openke/relationTypes.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager.dir/storage/reader/openke/triples.cpp.o -c /home/zeio/meager/src/base/storage/reader/openke/triples.cpp",
+  "file": "/home/zeio/meager/src/base/storage/reader/openke/triples.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager.dir/triple/main.cpp.o -c /home/zeio/meager/src/base/triple/main.cpp",
+  "file": "/home/zeio/meager/src/base/triple/main.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager.dir/triple/pattern/main.cpp.o -c /home/zeio/meager/src/base/triple/pattern/main.cpp",
+  "file": "/home/zeio/meager/src/base/triple/pattern/main.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager.dir/utils/main.cpp.o -c /home/zeio/meager/src/base/utils/main.cpp",
+  "file": "/home/zeio/meager/src/base/utils/main.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_erlang_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager_erlang.dir/erlang/corpus.cpp.o -c /home/zeio/meager/src/erlang/corpus.cpp",
+  "file": "/home/zeio/meager/src/erlang/corpus.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_erlang_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager_erlang.dir/erlang/evaluator.cpp.o -c /home/zeio/meager/src/erlang/evaluator.cpp",
+  "file": "/home/zeio/meager/src/erlang/evaluator.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_erlang_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager_erlang.dir/erlang/main.cpp.o -c /home/zeio/meager/src/erlang/main.cpp",
+  "file": "/home/zeio/meager/src/erlang/main.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_erlang_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager_erlang.dir/erlang/random.cpp.o -c /home/zeio/meager/src/erlang/random.cpp",
+  "file": "/home/zeio/meager/src/erlang/random.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_erlang_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager_erlang.dir/erlang/reader.cpp.o -c /home/zeio/meager/src/erlang/reader.cpp",
+  "file": "/home/zeio/meager/src/erlang/reader.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_erlang_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager_erlang.dir/erlang/sampler.cpp.o -c /home/zeio/meager/src/erlang/sampler.cpp",
+  "file": "/home/zeio/meager/src/erlang/sampler.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_erlang_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager_erlang.dir/erlang/setting.cpp.o -c /home/zeio/meager/src/erlang/setting.cpp",
+  "file": "/home/zeio/meager/src/erlang/setting.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_erlang_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager_erlang.dir/erlang/test.cpp.o -c /home/zeio/meager/src/erlang/test.cpp",
+  "file": "/home/zeio/meager/src/erlang/test.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_erlang_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager_erlang.dir/erlang/utils.cpp.o -c /home/zeio/meager/src/erlang/utils.cpp",
+  "file": "/home/zeio/meager/src/erlang/utils.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_python_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager_python.dir/python/main.cpp.o -c /home/zeio/meager/src/python/main.cpp",
+  "file": "/home/zeio/meager/src/python/main.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_python_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager_python.dir/python/random.cpp.o -c /home/zeio/meager/src/python/random.cpp",
+  "file": "/home/zeio/meager/src/python/random.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_python_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager_python.dir/python/reader.cpp.o -c /home/zeio/meager/src/python/reader.cpp",
+  "file": "/home/zeio/meager/src/python/reader.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_python_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager_python.dir/python/setting.cpp.o -c /home/zeio/meager/src/python/setting.cpp",
+  "file": "/home/zeio/meager/src/python/setting.cpp"
+},
+{
+  "directory": "/home/zeio/meager/src/base",
+  "command": "/usr/bin/c++ -Dmeager_python_EXPORTS -I/home/zeio/randeer/randeer  -fPIC -pthread -march=native -fPIC -std=gnu++20 -o CMakeFiles/meager_python.dir/python/test.cpp.o -c /home/zeio/meager/src/python/test.cpp",
+  "file": "/home/zeio/meager/src/python/test.cpp"
+}
+]

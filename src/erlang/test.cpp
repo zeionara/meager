@@ -3,7 +3,7 @@
 #include "../base/types.h"
 // #include "../base/Test.h"
 
-#include "../base/evaluation/Evaluator.h"
+#include "../base/evaluation/link-prediction/Evaluator.h"
 #include "../base/storage/DefaultCorpus.h"
 #include "../base/sampling/batch/Triple.h"
 

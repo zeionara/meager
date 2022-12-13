@@ -2,17 +2,24 @@
 
 #include "main.h"
 
+#include "triple-classification/main.h"
+#include "link-prediction/main.h"
+
 #define invalidArgument invalid_argument
 
-EvaluationTask decodeEvaluationTask(string name) {
+namespace meager::main::evaluation::task {
 
-    if (name == "link_prediction") {
-        return LINK_PREDICTION;
+    Task decodeName(string name) {
+
+        if (name == link_prediction::name) {
+            return Task::LinkPrediction;
+        }
+
+        if (name == triple_classification::name) {
+            return Task::TripleClassification;
+        }
+
+        throw invalidArgument("Unknown task name provided: " + name);
     }
 
-    if (name == "triple_classification") {
-        return TRIPLE_CLASSIFICATION;
-    }
-
-    throw invalidArgument("Unknown task name provided: " + name);
 }
