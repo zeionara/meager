@@ -1,97 +1,93 @@
 #include "../corpus/local/Default.h"
 #include "../corpus/reader/openke/Reader.h"
 
-using namespace meager::main::utils;
-using namespace meager::main::corpus;
+// using namespace meager::main::utils;
+// using namespace meager::main::corpus;
 
-// Init
+namespace meager::main::api::corpus {
 
-local::Default<INT>* corpus;
+    // Init
 
-bool constexpr DROP_PATTERN_DUPLICATES = true;
+    main::corpus::local::Default<INT>* corpus;
 
-void initCorpus(char *path, bool enableFilters, bool verbose) {
-    ::corpus = new local::Default<INT>(new reader::openke::Corpus(path), enableFilters, verbose);
-    if (verbose) {
-        printf("corpus path is set to %s\n", path);
+    bool constexpr DROP_PATTERN_DUPLICATES = true;
+
+    void init(char *path, bool enableFilters, bool verbose) {
+        corpus::corpus = new main::corpus::local::Default<INT>(new main::corpus::reader::openke::Corpus(path), enableFilters, verbose);
+        if (verbose) {
+            printf("corpus path is set to %s\n", path);
+        }
     }
-}
 
-// Read
+    // Read
 
-void importFilter(bool dropDuplicates = true, bool verbose = false) {
-    ::corpus->importFilter(dropDuplicates, verbose); 
-}
-
-void importPattern(bool verbose = false) {
-    ::corpus->importPattern(verbose); 
-}
-
-void importTrain(bool dropPatternDuplicates = true, bool verbose = false) {
-    ::corpus->importTrain(dropPatternDuplicates, verbose); 
-}
-// 
-// void importTest(bool verbose = false) {
-//     corpus->importTest(verbose); 
-// }
-// 
-// void importValid(bool verbose = false) {
-//     corpus->importValid(verbose); 
-// }
-
-void importTriples(subset::Type subset, bool verbose) {
-    switch (subset) {
-        case subset::Type::train:
-            ::corpus->importTrain(DROP_PATTERN_DUPLICATES, verbose); 
-            return;
-        case subset::Type::test:
-            ::corpus->importTest(verbose); 
-            return;
-        case subset::Type::valid:
-            ::corpus->importValid(verbose); 
-            return;
-        default:
-            throw invalidArgument("Unsupported subset type given. Cannot import triples");
+    void importTrain(bool dropPatternDuplicates = true, bool verbose = false) {
+        corpus::corpus->importTrain(dropPatternDuplicates, verbose); 
     }
-}
 
-void importTypes(bool verbose = false) {
-    ::corpus->importTypes(verbose); 
-}
-
-// Get
-
-long countEntities(bool verbose) {
-    return ::corpus->countEntities();
-}
-
-long countRelations(bool verbose) {
-    return ::corpus->countRelations();
-}
-
-long countTriples(subset::Type subset, bool verbose) {
-    switch (subset) {
-        case subset::Type::train:
-            if (::corpus->train == nullptr) {
-                throw invalidArgument(corpus::local::TRAIN_IS_NOT_INITIALIZED);
-            }
-            return ::corpus->train->length;
-        case subset::Type::test:
-            if (::corpus->test == nullptr) {
-                throw invalidArgument(corpus::local::TEST_IS_NOT_INITIALIZED);
-            }
-            return ::corpus->test->length;
-        case subset::Type::valid:
-            if (::corpus->valid == nullptr) {
-                throw invalidArgument(corpus::local::VALID_IS_NOT_INITIALIZED);
-            }
-            return ::corpus->valid->length;
-        default:
-            throw invalidArgument("Unsupported subset type given. Cannot count triples");
+    void importTriples(subset::Type subset, bool verbose) {
+        switch (subset) {
+            case subset::Type::train:
+                corpus::corpus->importTrain(DROP_PATTERN_DUPLICATES, verbose); 
+                return;
+            case subset::Type::test:
+                corpus::corpus->importTest(verbose); 
+                return;
+            case subset::Type::valid:
+                corpus::corpus->importValid(verbose); 
+                return;
+            default:
+                throw invalidArgument("Unsupported subset type given. Cannot import triples");
+        }
     }
-}
 
-long countTriples(bool verbose) {
-    // return countTrainTriples() + countTestTriples() + countValidTriples();
-    return ::corpus->getLength();
+    void importPattern(bool verbose = false) {
+        corpus::corpus->importPattern(verbose); 
+    }
+
+    void importFilter(bool dropDuplicates = true, bool verbose = false) {
+        corpus::corpus->importFilter(dropDuplicates, verbose); 
+    }
+
+    void importTypes(bool verbose = false) {
+        corpus::corpus->importTypes(verbose); 
+    }
+
+    // Get
+
+    long countEntities(bool verbose) {
+        return corpus::corpus->countEntities();
+    }
+
+    long countRelations(bool verbose) {
+        return corpus::corpus->countRelations();
+    }
+
+    long countTriples(subset::Type subset, bool verbose) {
+        switch (subset) {
+            case subset::Type::train:
+                if (corpus::corpus->train == nullptr) {
+                    throw invalidArgument(main::corpus::local::TRAIN_IS_NOT_INITIALIZED);
+                }
+                return corpus::corpus->train->length;
+            case subset::Type::test:
+                if (corpus::corpus->test == nullptr) {
+                    throw invalidArgument(main::corpus::local::TEST_IS_NOT_INITIALIZED);
+                }
+                return corpus::corpus->test->length;
+            case subset::Type::valid:
+                if (corpus::corpus->valid == nullptr) {
+                    throw invalidArgument(main::corpus::local::VALID_IS_NOT_INITIALIZED);
+                }
+                return corpus::corpus->valid->length;
+            default:
+                throw invalidArgument("Unsupported subset type given. Cannot count triples");
+        }
+    }
+
+    long countTriples(bool verbose) {
+        // return countTrainTriples() + countTestTriples() + countValidTriples();
+        return corpus::corpus->getLength();
+    }
+
 }

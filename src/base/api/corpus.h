@@ -1,61 +1,48 @@
 #ifndef API_CORPUS_H
 #define API_CORPUS_H
 
-// #define INT long
-// #define REAL float
-
 #include <cstring>
 #include <cstdio>
 #include <string>
 
 #include "../corpus/local/Default.h"
 
-extern
-corpus::local::Default<long>* corpus;
 
-extern
-void initCorpus(char *path, bool enableFilters = false, bool verbose = false);
+namespace meager::main::api::corpus {
 
-extern
-long countEntities(bool verbose = false); 
+    extern
+    main::corpus::local::Default<INT>* corpus;
 
-extern
-long countRelations(bool verbose = false); 
+    extern
+    void init(char *path, bool enableFilters = false, bool verbose = false);
 
-extern
-long countTriples(subset::Type subset, bool verbose = false);
+    extern
+    INT countEntities(bool verbose = false); 
 
-extern
-long countTriples(bool verbose = false); 
+    extern
+    INT countRelations(bool verbose = false); 
 
-// extern
-// long countTrainTriples(); 
-// 
-// extern
-// long countTestTriples(); 
-// 
-// extern
-// long countValidTriples(); 
+    extern
+    INT countTriples(subset::Type subset, bool verbose = false);
 
-extern
-void importFilter(bool dropDuplicates = true, bool verbose = false);
+    extern
+    INT countTriples(bool verbose = false); 
 
-extern
-void importPattern(bool verbose = false);
+    extern
+    void importFilter(bool dropDuplicates = true, bool verbose = false);
 
-extern
-void importTrain(bool dropPatternDuplicates = true, bool verbose = false);
+    extern
+    void importPattern(bool verbose = false);
 
-extern
-void importTriples(subset::Type subset, bool verbose = false);
+    extern
+    void importTrain(bool dropPatternDuplicates = true, bool verbose = false);
 
-// extern
-// void importTest(bool verbose = false);
-// 
-// extern
-// void importValid(bool verbose = false);
+    extern
+    void importTriples(subset::Type subset, bool verbose = false);
 
-extern
-void importTypes(bool verbose = false);
+    extern
+    void importTypes(bool verbose = false);
+
+}
 
 #endif

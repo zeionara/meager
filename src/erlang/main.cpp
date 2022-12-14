@@ -14,13 +14,14 @@
 
 #include "../base/sampling/Pattern.h"
 #include "../base/api/corpus.h"
-#include "../base/api/sampler.h"
+#include "../base/api/sampling.h"
 
 #include "corpus.h"
 #include "sampler.h"
 #include "evaluator.h"
 
 using namespace std;
+using namespace meager;
 
 extern ERL_NIF_TERM
 sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
@@ -43,7 +44,7 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     // cout << "HEAD BATCH FLAG = " << head_batch_flag << endl;
 
     triple::pattern::Pattern pattern = triple::pattern::decodeName(pattern_name);
-    triple::pattern::description::Description patternDescription = ::corpus->train->patterns->get(pattern); // patternDescriptions[pattern];
+    triple::pattern::description::Description patternDescription = main::api::corpus::corpus->train->patterns->get(pattern); // patternDescriptions[pattern];
 
     int nTriplesPerPatternInstance = patternDescription.nTriplesPerInstance;
 
@@ -109,7 +110,7 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     // cout << "Created sampler" << endl;
 
-    sampling::batch::Triple* tripleBatch = sampler->sample(::corpus, batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag);
+    sampling::batch::Triple* tripleBatch = main::api::sampling::sampler->sample(main::api::corpus::corpus, batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag);
 
     // cout << "Used sampler" << endl;
 

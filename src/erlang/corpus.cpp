@@ -3,10 +3,12 @@
 
 #include "../base/api/corpus.h"
 
+using namespace meager;
+
 extern ERL_NIF_TERM
 initCorpus_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
-        initCorpus(
+        main::api::corpus::init(
             enif_get_string_(env, argv[0], argv[1]),
             enif_get_bool(env, argv[2]),
             enif_get_bool(env, argv[3])
@@ -21,7 +23,7 @@ initCorpus_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 extern ERL_NIF_TERM
 importFilter_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
-        importFilter(
+        main::api::corpus::importFilter(
             enif_get_bool(env, argv[0]),
             enif_get_bool(env, argv[1])
         );
@@ -35,7 +37,7 @@ importFilter_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 extern ERL_NIF_TERM
 importPattern_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
-        importPattern(enif_get_bool(env, argv[0]));
+        main::api::corpus::importPattern(enif_get_bool(env, argv[0]));
     } catch (invalid_argument& e) {
         return completed_with_error(env, e.what());
     }
@@ -46,7 +48,7 @@ importPattern_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 extern ERL_NIF_TERM
 importTrain_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
-        importTrain(
+        main::api::corpus::importTrain(
             enif_get_bool(env, argv[0]),
             enif_get_bool(env, argv[1])
         );
@@ -57,36 +59,10 @@ importTrain_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     return completed_with_success(env);
 }
 
-// extern ERL_NIF_TERM
-// importTest_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-//     try {
-//         importTest(
-//             enif_get_bool(env, argv[0])
-//         );
-//     } catch (invalid_argument& e) {
-//         return completed_with_error(env, e.what());
-//     }
-// 
-//     return completed_with_success(env);
-// }
-// 
-// extern ERL_NIF_TERM
-// importValid_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-//     try {
-//         importValid(
-//             enif_get_bool(env, argv[0])
-//         );
-//     } catch (invalid_argument& e) {
-//         return completed_with_error(env, e.what());
-//     }
-// 
-//     return completed_with_success(env);
-// }
-
 extern ERL_NIF_TERM
 importTriples_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
-        importTriples(
+        main::api::corpus::importTriples(
             subset::decodeName(enif_get_atom_(env, argv[0])),
             enif_get_bool(env, argv[1])
         );
@@ -100,7 +76,7 @@ importTriples_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 extern ERL_NIF_TERM
 importTypes_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
-        importTypes(
+        main::api::corpus::importTypes(
             enif_get_bool(env, argv[0])
         );
     } catch (invalid_argument& e) {
@@ -117,7 +93,7 @@ countEntities_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
             env,
             enif_make_long(
                 env,
-                countEntities(
+                main::api::corpus::countEntities(
                     enif_get_bool(env, argv[0])
                 )
             )
@@ -134,7 +110,7 @@ countRelations_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
             env,
             enif_make_long(
                 env,
-                countRelations(
+                main::api::corpus::countRelations(
                     enif_get_bool(env, argv[0])
                 )
             )
@@ -153,7 +129,7 @@ countTriples_1(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
             env,
             enif_make_long(
                 env,
-                countTriples(
+                main::api::corpus::countTriples(
                     enif_get_bool(env, argv[0])
                 )
             )
@@ -172,7 +148,7 @@ countTriples_2(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
             env,
             enif_make_long(
                 env,
-                countTriples(
+                main::api::corpus::countTriples(
                     subset::decodeName(enif_get_atom_(env, argv[0])),
                     enif_get_bool(env, argv[1])
                 )

@@ -2,7 +2,7 @@
 #include "utils.h"
 
 #include "../base/utils/main.h"
-#include "../base/api/evaluator.h"
+#include "../base/api/evaluation.h"
 #include "../base/evaluation/metric/main.h"
 #include "../base/evaluation/metric/Metric.h"
 
@@ -12,6 +12,8 @@
 
 #include "sampler.h"
 
+using namespace meager;
+
 extern ERL_NIF_TERM
 initEvaluator_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
@@ -20,7 +22,7 @@ initEvaluator_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         subset::Type subset = subset::decodeName(enif_get_atom_(env, argv[2]));
         bool verbose = enif_get_bool(env, argv[3]);
 
-        initEvaluator([env, argv](string label){
+        main::api::evaluation::init([env, argv](string label){
             List<evaluation::metric::tracker::TrackerBase*>* trackers = decodeList<evaluation::metric::tracker::TrackerBase*>(
                 env, argv[0], [](ErlNifEnv* env, ERL_NIF_TERM metric
             ) -> evaluation::metric::tracker::TrackerBase* {
@@ -67,7 +69,7 @@ extern ERL_NIF_TERM
 trial_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
         // cout << "foo" << endl;
-        sampling::batch::Triple* tripleBatch = trial(
+        sampling::batch::Triple* tripleBatch = main::api::evaluation::trial(
             triple::decodeComponent(enif_get_atom_(env, argv[0])),
             enif_get_bool(env, argv[1])
         );
@@ -91,7 +93,7 @@ evaluate_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         });
         // cout << "Encoded predictions" << endl;
 
-        evaluate(
+        main::api::evaluation::evaluate(
             triple::decodeComponent(enif_get_atom_(env, argv[0])),
             predictions->items,
             enif_get_bool(env, argv[2]),
@@ -155,7 +157,7 @@ ERL_NIF_TERM encodeMetricTree(ErlNifEnv* env, evaluation::metric::tree::Tree* tr
 extern ERL_NIF_TERM
 computeMetrics_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
-        evaluation::metric::tree::Root* root = computeMetrics(
+        evaluation::metric::tree::Root* root = main::api::evaluation::computeMetrics(
             enif_get_bool(env, argv[0])
         );
         // cout << "Started encoding tree" << endl;

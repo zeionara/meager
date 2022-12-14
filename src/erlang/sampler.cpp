@@ -1,7 +1,9 @@
 #include "erl_nif.h"
 #include "utils.h"
 
-#include "../base/api/sampler.h"
+#include "../base/api/sampling.h"
+
+using namespace meager;
 
 ERL_NIF_TERM encodeTripleBatch(ErlNifEnv* env, sampling::batch::Triple* tripleBatch, bool verbose = false);
 
@@ -10,7 +12,7 @@ initSampler_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
         triple::pattern::Pattern pattern = triple::pattern::decodeName(enif_get_atom_(env, argv[0]));
 
-        initSampler(
+        main::api::sampling::init(
             pattern,  // pattern
             enif_get_long_(env, argv[1]),  // nObservedTriplesPerPatternInstance
             enif_get_bool(env, argv[2]),  // bern
@@ -36,7 +38,7 @@ sample_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         bool headBatchFlag = enif_get_bool(env, argv[3]);
         bool verbose = enif_get_bool(env, argv[4]);
 
-        sampling::batch::Triple* tripleBatch = sample(batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, verbose);
+        sampling::batch::Triple* tripleBatch = main::api::sampling::sample(batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, verbose);
 
         ERL_NIF_TERM encoded = encodeTripleBatch(env, tripleBatch);
 
