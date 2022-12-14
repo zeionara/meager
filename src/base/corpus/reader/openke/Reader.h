@@ -4,9 +4,9 @@
 #include <string>
 #include <fstream>
 
-#include "../../../triple/filter/Filter.h"
+// #include "../../../triple/filter/Filter.h"
 
-#include "../CorpusReader.h"
+#include "../Reader.h"
 
 #define unorderedSet unordered_set
 #define pushBack push_back
@@ -14,7 +14,7 @@
 
 using namespace std;
 
-namespace meager::main::storage::reader::openke {
+namespace meager::main::corpus::reader::openke {
 
     string const TRAIN_FILENAME = "train2id.txt";
     string const TEST_FILENAME = "test2id.txt";
@@ -44,7 +44,7 @@ namespace meager::main::storage::reader::openke {
         );
 
         vector<regex> readFilterPatterns(bool excluding = false, bool verbose = false, bool dropDuplicates = true);
-        RelationTypesContents<INT>* readRelationTypesContents(bool verbose = false);
+        triple::relation::TypesContents<INT>* readRelationTypesContents(bool verbose = false);
 
         triple::pattern::relation::BinaryMap<INT>* readBinaryPatterns(triple::pattern::Pattern pattern, triple::Encoder<INT>* encoder, bool enableFilters = false, bool verbose = false);
         triple::pattern::relation::UnarySet<INT>* readUnaryPatterns(triple::pattern::Pattern pattern, triple::Encoder<INT>* encoder, bool enableFilters = false, bool verbose = false);

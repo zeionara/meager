@@ -3,7 +3,7 @@
 
 #include "Type.h"
 
-using namespace meager::main::storage;
+// using namespace meager::main::storage;
 
 namespace meager::main::triple::relation {
 
@@ -12,8 +12,8 @@ namespace meager::main::triple::relation {
         Type<T>** relations;
         INT length;
 
-        Types(bool enableFilters, Encoder<T>* encoder, reader::Corpus<T>* reader, bool verbose = false) {
-            RelationTypesContents<T>* contents = reader->readRelationTypesContents(verbose);
+        Types(bool enableFilters, Encoder<T>* encoder, corpus::reader::Corpus<T>* reader, bool verbose = false) {
+            TypesContents<T>* contents = reader->readRelationTypesContents(verbose);
 
             // relations = (Type<T>**)calloc(contents->length, sizeof(Type<T>*));
             relations = new Type<T>*[contents->length]; // (Type<T>**)calloc(contents->length, sizeof(Type<T>*));
@@ -22,10 +22,10 @@ namespace meager::main::triple::relation {
 
             INT j = 0;
             for (INT i = 0; i < contents->length; i += 2) {
-                RelationTypeContents<T>* head = contents->relations[i];
+                TypeContents<T>* head = contents->relations[i];
 
                 if (!enableFilters || encoder->relation->contains(head->relation)) {
-                    RelationTypeContents<T>* tail = contents->relations[i + 1];
+                    TypeContents<T>* tail = contents->relations[i + 1];
 
                     if (enableFilters) {
                         head->encode(encoder);

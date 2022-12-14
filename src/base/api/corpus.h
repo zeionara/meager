@@ -8,10 +8,10 @@
 #include <cstdio>
 #include <string>
 
-#include "../storage/LocalTsvCorpus.h"
+#include "../corpus/local/Default.h"
 
 extern
-LocalTsvCorpus<long>* corpus;
+corpus::local::Default<long>* corpus;
 
 extern
 void initCorpus(char *path, bool enableFilters = false, bool verbose = false);

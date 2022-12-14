@@ -8,7 +8,7 @@
 // #include <unordered_set>
 
 // #include "../main.h"
-#include "../../storage/reader/CorpusReader.h"
+#include "../../corpus/reader/Reader.h"
 
 // using namespace std;
 // using namespace meager::main::storage;
@@ -21,7 +21,7 @@ namespace meager::main::triple::filter {
         bool empty;
         vector<regex> items;
 
-        Patterns(storage::reader::Corpus<T>* reader, bool excluding = false, bool dropDuplicates = true, bool verbose = false) {
+        Patterns(corpus::reader::Corpus<T>* reader, bool excluding = false, bool dropDuplicates = true, bool verbose = false) {
             try {
                 items = reader->readFilterPatterns(excluding, dropDuplicates, verbose); 
                 empty = false;

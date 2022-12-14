@@ -1,6 +1,6 @@
-#include "../OpenKECorpusReader.h"
+#include "../Reader.h"
 
-namespace meager::main::storage::reader::openke {
+namespace meager::main::corpus::reader::openke {
 
     triple::pattern::relation::BinaryMap<INT>* Corpus::readBinaryPatterns(triple::pattern::Pattern pattern, triple::Encoder<INT>* encoder, bool enableFilters, bool verbose) {
         string relativePath;

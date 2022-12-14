@@ -1,6 +1,7 @@
-#include "OpenKECorpusReader.h"
+#include "Reader.h"
+#include "../../../triple/filter/Filter.h"
 
-namespace meager::main::storage::reader::openke {
+namespace meager::main::corpus::reader::openke {
 
     triple::list::List* Corpus::readTriples(
         SubsetType subsetType, triple::Index* tripleIndex, triple::Component tripleComponent, triple::filter::Filter<INT>* filter, triple::Encoder<INT>* encoder, bool enableFilters, bool verbose

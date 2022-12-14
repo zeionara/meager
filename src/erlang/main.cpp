@@ -43,7 +43,7 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     // cout << "HEAD BATCH FLAG = " << head_batch_flag << endl;
 
     triple::pattern::Pattern pattern = triple::pattern::decodeName(pattern_name);
-    triple::pattern::description::Description patternDescription = corpus->train->patterns->get(pattern); // patternDescriptions[pattern];
+    triple::pattern::description::Description patternDescription = ::corpus->train->patterns->get(pattern); // patternDescriptions[pattern];
 
     int nTriplesPerPatternInstance = patternDescription.nTriplesPerInstance;
 
@@ -109,7 +109,7 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     // cout << "Created sampler" << endl;
 
-    sampling::batch::Triple* tripleBatch = sampler->sample(corpus, batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag);
+    sampling::batch::Triple* tripleBatch = sampler->sample(::corpus, batch_size, entity_negative_rate, relation_negative_rate, head_batch_flag);
 
     // cout << "Used sampler" << endl;
 

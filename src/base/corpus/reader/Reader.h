@@ -17,49 +17,53 @@ using namespace std;
 using namespace meager::main;
 using namespace meager::main::utils;
 
-template <typename T>
-struct RelationTypeContents {
-    INT relation;
-    INT length;
-    T* entities;
+namespace meager::main::triple::relation {
 
-    RelationTypeContents(T* entities, INT length, INT relation) {
-        this->relation = relation;
-        this->length = length;
-        this->entities = entities;
-    }
+    template <typename T>
+    struct TypeContents {
+        INT relation;
+        INT length;
+        T* entities;
 
-    void encode(triple::Encoder<T>* encoder) {
-        INT j = 0;
-
-        relation = encoder->relation->encode(relation);
-        for (INT i = 0; i < this->length; i++) {
-            if (encoder->entity->contains(entities[i])) {
-                entities[j++] = encoder->entity->encode(entities[i]);
-            }
+        TypeContents(T* entities, INT length, INT relation) {
+            this->relation = relation;
+            this->length = length;
+            this->entities = entities;
         }
 
-        length = j;
-    }
-};
+        void encode(triple::Encoder<T>* encoder) {
+            INT j = 0;
 
-template <typename T>
-struct RelationTypesContents {
-    RelationTypeContents<T>** relations;
-    INT length;
+            relation = encoder->relation->encode(relation);
+            for (INT i = 0; i < this->length; i++) {
+                if (encoder->entity->contains(entities[i])) {
+                    entities[j++] = encoder->entity->encode(entities[i]);
+                }
+            }
 
-    RelationTypesContents(RelationTypeContents<T>** relations, INT length) {
-        this->relations = relations;
-        this->length = length;
-    }
-};
+            length = j;
+        }
+    };
+
+    template <typename T>
+    struct TypesContents {
+        TypeContents<T>** relations;
+        INT length;
+
+        TypesContents(TypeContents<T>** relations, INT length) {
+            this->relations = relations;
+            this->length = length;
+        }
+    };
+
+}
 
 namespace meager::main::triple::filter {
     template <typename T>
     struct Filter;
 }
 
-namespace meager::main::storage::reader {
+namespace meager::main::corpus::reader {
 
     template <typename T>
     struct Corpus {
@@ -73,7 +77,7 @@ namespace meager::main::storage::reader {
 
         virtual INT readVocabularySize(triple::ComponentType componentType, bool verbose = false) = 0;
         virtual vector<regex> readFilterPatterns(bool excluding = false, bool verbose = false, bool drop_duplicates = true) = 0;
-        virtual RelationTypesContents<T>* readRelationTypesContents(bool verbose = false) = 0;
+        virtual triple::relation::TypesContents<T>* readRelationTypesContents(bool verbose = false) = 0;
 
         virtual triple::pattern::relation::BinaryMap<INT>* readBinaryPatterns(triple::pattern::Pattern pattern, triple::Encoder<T>* encoder, bool enableFilters = false, bool verbose = false) = 0;
         virtual triple::pattern::relation::UnarySet<INT>* readUnaryPatterns(triple::pattern::Pattern pattern, triple::Encoder<T>* encoder, bool enableFilters = false, bool verbose = false) = 0;

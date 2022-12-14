@@ -3,7 +3,7 @@
 
 // #include "../triple/list/ThickWrapper.h"
 // #include "../triple/list/ThinWrapper.h"
-#include "../storage/LocalTsvCorpus.h"
+#include "../corpus/local/Default.h"
 #include "Strategy.h"
 // #include "../Random.h"
 // #include "state/RandomizationState.h"
@@ -17,9 +17,9 @@ namespace meager::main::corruption {
         // DefaultCorruptionStrategy(ThickTripleListWrapper* triples, INT threadId, ThinTripleListWrapper* testTriples, ThinTripleListWrapper* validTriples):
         //     CorruptionStrategy(triples, threadId, testTriples, validTriples) {};
 
-        LocalTsvCorpus<T>* corpus;
+        corpus::local::Default<T>* corpus;
 
-        LocalStrategy(LocalTsvCorpus<T>* corpus, INT threadId, Randomizer<R>* randomizer): Strategy<R>(threadId, randomizer) {
+        LocalStrategy(corpus::local::Default<T>* corpus, INT threadId, Randomizer<R>* randomizer): Strategy<R>(threadId, randomizer) {
             this->corpus = corpus;
         };
 

@@ -18,9 +18,9 @@ void initEvaluator(evaluation::metric::score::SetMaker makeMetricSetTracker, eva
     }
 
     evaluator = new evaluation::link_prediction::Evaluator<INT>(
-        corpus,
-        corpus->train,
-        subset == SubsetType::test ? corpus->test : subset == SubsetType::valid ? corpus->valid : throw invalidArgument("Unsupported subset type, cannot evaluate"),
+        ::corpus,
+        ::corpus->train,
+        subset == SubsetType::test ? ::corpus->test : subset == SubsetType::valid ? ::corpus->valid : throw invalidArgument("Unsupported subset type, cannot evaluate"),
         makeMetricSetTracker
     );
 }

@@ -12,7 +12,7 @@ namespace meager::main::triple::relation {
 
         INT relation;
 
-        Type(RelationTypeContents<T>* headContents, RelationTypeContents<T>* tailContents, bool shouldSort = true) {
+        Type(TypeContents<T>* headContents, TypeContents<T>* tailContents, bool shouldSort = true) {
 
             heads = new AllowedComponents<T>(headContents, shouldSort);
 

@@ -36,7 +36,7 @@ namespace meager::main::triple::list {
         pattern::description::Descriptions<T>* patterns;
 
         ThickWrapper(
-            SubsetType subset, reader::Corpus<T>* reader, filter::Filter<T>* filter, Encoder<T>* encoder, pattern::description::Templates<T>* patterns,
+            SubsetType subset, corpus::reader::Corpus<T>* reader, filter::Filter<T>* filter, Encoder<T>* encoder, pattern::description::Templates<T>* patterns,
             bool enableFilters, bool dropPatternDuplicates = true, bool verbose = false
         ) {
 
@@ -130,7 +130,7 @@ namespace meager::main::triple::list {
         }
 
         void read(
-            filter::Filter<T>* filter, Encoder<T>* encoder, reader::Corpus<T>* reader, pattern::description::Templates<T>* patterns,
+            filter::Filter<T>* filter, Encoder<T>* encoder, corpus::reader::Corpus<T>* reader, pattern::description::Templates<T>* patterns,
             bool enableFilters, bool dropPatternDuplicates = true, bool verbose = false
         ) {
             if (verbose) {

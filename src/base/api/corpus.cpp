@@ -1,17 +1,17 @@
-#include "../storage/LocalTsvCorpus.h"
-#include "../storage/reader/openke/OpenKECorpusReader.h"
+#include "../corpus/local/Default.h"
+#include "../corpus/reader/openke/Reader.h"
 
 using namespace meager::main::utils;
-using namespace meager::main::storage;
+using namespace meager::main::corpus;
 
 // Init
 
-LocalTsvCorpus<INT>* corpus;
+local::Default<INT>* corpus;
 
 bool constexpr DROP_PATTERN_DUPLICATES = true;
 
 void initCorpus(char *path, bool enableFilters, bool verbose) {
-    corpus = new LocalTsvCorpus<INT>(new reader::openke::Corpus(path), enableFilters, verbose);
+    ::corpus = new local::Default<INT>(new reader::openke::Corpus(path), enableFilters, verbose);
     if (verbose) {
         printf("corpus path is set to %s\n", path);
     }
@@ -20,15 +20,15 @@ void initCorpus(char *path, bool enableFilters, bool verbose) {
 // Read
 
 void importFilter(bool dropDuplicates = true, bool verbose = false) {
-    corpus->importFilter(dropDuplicates, verbose); 
+    ::corpus->importFilter(dropDuplicates, verbose); 
 }
 
 void importPattern(bool verbose = false) {
-    corpus->importPattern(verbose); 
+    ::corpus->importPattern(verbose); 
 }
 
 void importTrain(bool dropPatternDuplicates = true, bool verbose = false) {
-    corpus->importTrain(dropPatternDuplicates, verbose); 
+    ::corpus->importTrain(dropPatternDuplicates, verbose); 
 }
 // 
 // void importTest(bool verbose = false) {
@@ -42,13 +42,13 @@ void importTrain(bool dropPatternDuplicates = true, bool verbose = false) {
 void importTriples(SubsetType subset, bool verbose) {
     switch (subset) {
         case SubsetType::train:
-            corpus->importTrain(DROP_PATTERN_DUPLICATES, verbose); 
+            ::corpus->importTrain(DROP_PATTERN_DUPLICATES, verbose); 
             return;
         case SubsetType::test:
-            corpus->importTest(verbose); 
+            ::corpus->importTest(verbose); 
             return;
         case SubsetType::valid:
-            corpus->importValid(verbose); 
+            ::corpus->importValid(verbose); 
             return;
         default:
             throw invalidArgument("Unsupported subset type given. Cannot import triples");
@@ -56,36 +56,36 @@ void importTriples(SubsetType subset, bool verbose) {
 }
 
 void importTypes(bool verbose = false) {
-    corpus->importTypes(verbose); 
+    ::corpus->importTypes(verbose); 
 }
 
 // Get
 
 long countEntities(bool verbose) {
-    return corpus->countEntities();
+    return ::corpus->countEntities();
 }
 
 long countRelations(bool verbose) {
-    return corpus->countRelations();
+    return ::corpus->countRelations();
 }
 
 long countTriples(SubsetType subset, bool verbose) {
     switch (subset) {
         case SubsetType::train:
-            if (corpus->train == nullptr) {
-                throw invalidArgument(TRAIN_IS_NOT_INITIALIZED);
+            if (::corpus->train == nullptr) {
+                throw invalidArgument(corpus::local::TRAIN_IS_NOT_INITIALIZED);
             }
-            return corpus->train->length;
+            return ::corpus->train->length;
         case SubsetType::test:
-            if (corpus->test == nullptr) {
-                throw invalidArgument(TEST_IS_NOT_INITIALIZED);
+            if (::corpus->test == nullptr) {
+                throw invalidArgument(corpus::local::TEST_IS_NOT_INITIALIZED);
             }
-            return corpus->test->length;
+            return ::corpus->test->length;
         case SubsetType::valid:
-            if (corpus->valid == nullptr) {
-                throw invalidArgument(VALID_IS_NOT_INITIALIZED);
+            if (::corpus->valid == nullptr) {
+                throw invalidArgument(corpus::local::VALID_IS_NOT_INITIALIZED);
             }
-            return corpus->valid->length;
+            return ::corpus->valid->length;
         default:
             throw invalidArgument("Unsupported subset type given. Cannot count triples");
     }
@@ -93,5 +93,5 @@ long countTriples(SubsetType subset, bool verbose) {
 
 long countTriples(bool verbose) {
     // return countTrainTriples() + countTestTriples() + countValidTriples();
-    return corpus->getLength();
+    return ::corpus->getLength();
 }

@@ -1,17 +1,12 @@
 #ifndef TRIPLE_PATTERN_DESCRIPTION_TEMPLATES_H
 #define TRIPLE_PATTERN_DESCRIPTION_TEMPLATES_H
 
-// #include "../main.h"
-
-// #include "../triple/list/List.h"
-#include "../../../storage/reader/CorpusReader.h"
-// #include "../../Index.h"
+#include "../../../corpus/reader/Reader.h"
 
 #define invalidArgument invalid_argument
 #define Map unordered_map
 
-using namespace meager::main::storage;
-
+// using namespace meager::main::storage;
 
 namespace meager::main::triple::pattern::description {
 
@@ -32,7 +27,7 @@ namespace meager::main::triple::pattern::description {
 
         relation::BinaryMap<T>* content;
 
-        BinaryTemplate(Pattern pattern, reader::Corpus<T>* reader, triple::Encoder<T>* encoder, bool enableFilters = false, bool verbose = false): Template(pattern) {
+        BinaryTemplate(Pattern pattern, corpus::reader::Corpus<T>* reader, triple::Encoder<T>* encoder, bool enableFilters = false, bool verbose = false): Template(pattern) {
             try {
                 content = reader->readBinaryPatterns(pattern, encoder, enableFilters, verbose);
             } catch (invalidArgument&) {
@@ -47,7 +42,7 @@ namespace meager::main::triple::pattern::description {
 
         relation::UnarySet<T>* content;
 
-        UnaryTemplate(Pattern pattern, reader::Corpus<T>* reader, triple::Encoder<T>* encoder, bool enableFilters = false, bool verbose = false): Template(pattern) {
+        UnaryTemplate(Pattern pattern, corpus::reader::Corpus<T>* reader, triple::Encoder<T>* encoder, bool enableFilters = false, bool verbose = false): Template(pattern) {
             try {
                 content = reader->readUnaryPatterns(pattern, encoder, enableFilters, verbose);
             } catch (invalidArgument&) {
@@ -63,7 +58,7 @@ namespace meager::main::triple::pattern::description {
         BinaryTemplate<T>* inverse;
         UnaryTemplate<T>* symmetric;
         
-        Templates(reader::Corpus<T>* reader, triple::Encoder<T>* encoder, bool enableFilters = true, bool verbose = false) {
+        Templates(corpus::reader::Corpus<T>* reader, triple::Encoder<T>* encoder, bool enableFilters = true, bool verbose = false) {
             inverse = new BinaryTemplate<T>(Pattern::Inverse, reader, encoder, enableFilters, verbose);
             symmetric = new UnaryTemplate<T>(Pattern::Symmetric, reader, encoder, enableFilters, verbose);
         }

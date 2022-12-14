@@ -12,11 +12,11 @@ void initSampler(triple::pattern::Pattern pattern, INT nObservedTriplesPerPatter
 }
 
 sampling::batch::Triple* sample(INT batchSize, INT entityNegativeRate, INT relationNegativeRate, bool headBatchFlag, bool verbose) {
-    return sampler->sample(corpus, batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, verbose);
+    return sampler->sample(::corpus, batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, verbose);
 }
 
 INT validateNobservedTriplesPerPatternInstance(triple::pattern::Pattern pattern, INT nObservedTriplesPerPatternInstance) {
-    triple::pattern::description::Description patternDescription = corpus->train->patterns->get(pattern);
+    triple::pattern::description::Description patternDescription = ::corpus->train->patterns->get(pattern);
 
     INT nTriplesPerPatternInstance = patternDescription.nTriplesPerInstance;
 

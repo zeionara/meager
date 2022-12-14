@@ -1,6 +1,6 @@
-#include "../OpenKECorpusReader.h"
+#include "../Reader.h"
 
-namespace meager::main::storage::reader::openke {
+namespace meager::main::corpus::reader::openke {
 
     triple::pattern::relation::UnarySet<INT>* Corpus::readUnaryPatterns(triple::pattern::Pattern pattern, triple::Encoder<INT>* encoder, bool enableFilters, bool verbose) {
         string relativePath;

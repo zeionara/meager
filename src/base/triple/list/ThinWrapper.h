@@ -10,7 +10,7 @@
 // #include "../../filters/TripleFilter.h"
 #include "../filter/Filter.h"
 
-using namespace meager::main::storage;
+// using namespace meager::main::storage;
 
 namespace meager::main::triple::list {
 
@@ -22,7 +22,7 @@ namespace meager::main::triple::list {
 
         Index* index;
 
-        ThinWrapper(SubsetType subset, reader::Corpus<T>* reader, filter::Filter<T>* filter, Encoder<INT>* encoder, bool enableFilters, bool verbose = false) {
+        ThinWrapper(SubsetType subset, corpus::reader::Corpus<T>* reader, filter::Filter<T>* filter, Encoder<INT>* encoder, bool enableFilters, bool verbose = false) {
             this->index = new Index();
 
             if (verbose) {

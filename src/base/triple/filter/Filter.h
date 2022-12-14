@@ -13,7 +13,7 @@ namespace meager::main::triple::filter {
         Patterns<T>* excluding;
         Patterns<T>* including;
 
-        Filter(storage::reader::Corpus<T>* reader, bool dropDuplicates, bool verbose) {
+        Filter(corpus::reader::Corpus<T>* reader, bool dropDuplicates, bool verbose) {
             if (verbose) {
                 cout << "started initializing filter" << endl;
             }

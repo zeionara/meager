@@ -8,7 +8,7 @@
 #include "../../sampling/batch/Triple.h"
 // #include "../corruption/Strategy.h"
 #include "../metric/score/Cluster.h"
-#include "../../storage/Corpus.h"
+#include "../../corpus/Corpus.h"
 
 namespace meager::main::evaluation::link_prediction {
 
@@ -18,7 +18,7 @@ namespace meager::main::evaluation::link_prediction {
         INT currentTripleIndex;
 
         metric::score::Cluster* state;
-        Corpus* corpus;
+        corpus::Corpus* corpus;
 
         triple::list::ThickWrapper<T>* triples;
         triple::list::ThinWrapper<T>* testTriples;
@@ -28,7 +28,7 @@ namespace meager::main::evaluation::link_prediction {
         // virtual bool isTripleFromDataset(Triple triple) = 0;
         // virtual bool isCorrectTriple(Triple triple) = 0;
        
-        Entity(Corpus* corpus, triple::list::ThickWrapper<T>* triples, triple::list::ThinWrapper<T>* testTriples, metric::score::SetMaker makeMetricSetTracker, string label) {
+        Entity(corpus::Corpus* corpus, triple::list::ThickWrapper<T>* triples, triple::list::ThinWrapper<T>* testTriples, metric::score::SetMaker makeMetricSetTracker, string label) {
             this->corpus = corpus;
             this->triples = triples;
             this->testTriples = testTriples;

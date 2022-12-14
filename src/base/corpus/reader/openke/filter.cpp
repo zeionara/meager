@@ -1,6 +1,6 @@
-#include "OpenKECorpusReader.h"
+#include "Reader.h"
 
-namespace meager::main::storage::reader::openke {
+namespace meager::main::corpus::reader::openke {
 
     vector<regex> Corpus::readFilterPatterns(bool excluding, bool verbose, bool dropDuplicates) {
         File file = File(path + (excluding ? EXCLUDING_FILTERS_FILENAME : INCLUDING_FILTERS_FILENAME), verbose);

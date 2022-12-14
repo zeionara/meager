@@ -11,7 +11,7 @@ namespace meager::main::evaluation::link_prediction {
     template <typename T>
     struct Evaluator {
 
-        Corpus* corpus;
+        corpus::Corpus* corpus;
 
         triple::list::ThickWrapper<T>* triples;
         triple::list::ThinWrapper<T>* testTriples;
@@ -19,7 +19,7 @@ namespace meager::main::evaluation::link_prediction {
         Head<T>* head;
         Tail<T>* tail;
 
-        Evaluator(Corpus* corpus, triple::list::ThickWrapper<T>* triples, triple::list::ThinWrapper<T>* testTriples, metric::score::SetMaker makeMetricSetTracker) {
+        Evaluator(corpus::Corpus* corpus, triple::list::ThickWrapper<T>* triples, triple::list::ThinWrapper<T>* testTriples, metric::score::SetMaker makeMetricSetTracker) {
             this->corpus = corpus;
             this->triples = triples;
             this->testTriples = testTriples;

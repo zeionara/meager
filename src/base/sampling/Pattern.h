@@ -28,7 +28,7 @@ typedef void * (*PTR)(void *);
 namespace meager::main::sampling {
 
     template <typename T, typename R>
-    struct Pattern: Sampler<LocalTsvCorpus<INT>> {
+    struct Pattern: Sampler<corpus::local::Default<INT>> {
         triple::pattern::Pattern pattern;
         INT nObservedTriplesPerPatternInstance;
         INT nWorkers;
@@ -50,7 +50,7 @@ namespace meager::main::sampling {
             }
         }
 
-        batch::Triple* sample(LocalTsvCorpus<INT>* corpus, INT batchSize, INT entityNegativeRate, INT relationNegativeRate, bool headBatchFlag, bool verbose = false) {
+        batch::Triple* sample(corpus::local::Default<INT>* corpus, INT batchSize, INT entityNegativeRate, INT relationNegativeRate, bool headBatchFlag, bool verbose = false) {
             // if (verbose) {
             //     cout << "started initializing global state, number of observed triples per pattern instance = " << nObservedTriplesPerPatternInstance << endl;
             // }

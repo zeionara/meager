@@ -3,7 +3,7 @@
 
 #include "../../types.h"
 
-#include "../../storage/reader/CorpusReader.h"
+#include "../../corpus/reader/Reader.h"
 
 using namespace std;
 
@@ -35,7 +35,7 @@ namespace meager::main::triple::relation {
         INT* items;
         INT length;
 
-        AllowedComponents(RelationTypeContents<T>* contents, bool shouldSort = true) {
+        AllowedComponents(TypeContents<T>* contents, bool shouldSort = true) {
             this->items = contents->entities;
             this->length = contents->length;
 

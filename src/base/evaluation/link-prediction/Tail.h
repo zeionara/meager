@@ -14,7 +14,7 @@ namespace meager::main::evaluation::link_prediction {
     template <typename T>
     struct Tail: Entity<T> {
 
-        Tail(Corpus* corpus, triple::list::ThickWrapper<T>* triples, triple::list::ThinWrapper<T>* testTriples, metric::score::SetMaker makeMetricSetTracker):
+        Tail(corpus::Corpus* corpus, triple::list::ThickWrapper<T>* triples, triple::list::ThinWrapper<T>* testTriples, metric::score::SetMaker makeMetricSetTracker):
             Entity<T>(corpus, triples, testTriples, makeMetricSetTracker, tail::name) {};
 
         triple::Triple makeTriple(INT i) {
