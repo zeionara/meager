@@ -1,11 +1,6 @@
 #ifndef DEFAULT_LOCAL_TSV_CORPUS_H
 #define DEFAULT_LOCAL_TSV_CORPUS_H
 
-#include "../../triple/list/ThickWrapper.h"
-#include "../../triple/list/ThinWrapper.h"
-
-#include "../../triple/relation/Types.h"
-
 #include "has.h"
 #include "count.h"
 #include "import.h"
@@ -58,37 +53,7 @@ namespace meager::main::corpus::local {
         INT getLength() { return getLength_<T>(this); }
 
         bool contains(triple::Triple triple) { return contains_<T>(this, triple); }
-
-        // bool allowsHead(triple::Triple triple);
-
-        // bool allowsTail(triple::Triple triple);
-
         bool allows(triple::Triple triple) { return allows_<T>(this, triple); }
-
-        // bool contains(triple::Triple triple) {
-        //     return (
-        //         train != nullptr &&
-        //         train->index->contains(triple)
-        //     ) || (
-        //         test != nullptr &&
-        //         test->index->contains(triple)
-        //     ) || (
-        //         valid != nullptr &&
-        //         valid->index->contains(triple)
-        //     );
-        // }
-
-        // bool allowsHead(triple::Triple triple) {
-        //     return types->get(triple.r)->heads->contains(triple.h);
-        // }
-
-        // bool allowsTail(triple::Triple triple) {
-        //     return types->get(triple.r)->tails->contains(triple.t);
-        // }
-
-        // bool allows(triple::Triple triple) {
-        //     return allowsHead(triple) && allowsTail(triple);
-        // }
 
     };
 
