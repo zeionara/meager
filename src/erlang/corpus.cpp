@@ -87,7 +87,7 @@ extern ERL_NIF_TERM
 importTriples_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
         importTriples(
-            decodeSubsetType(enif_get_atom_(env, argv[0])),
+            subset::decodeName(enif_get_atom_(env, argv[0])),
             enif_get_bool(env, argv[1])
         );
     } catch (invalid_argument& e) {
@@ -173,7 +173,7 @@ countTriples_2(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
             enif_make_long(
                 env,
                 countTriples(
-                    decodeSubsetType(enif_get_atom_(env, argv[0])),
+                    subset::decodeName(enif_get_atom_(env, argv[0])),
                     enif_get_bool(env, argv[1])
                 )
             )

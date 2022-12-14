@@ -7,21 +7,25 @@ namespace meager::main::utils {
         return file;
     }
 
-    SubsetType decodeSubsetType(string name) {
+    namespace subset {
 
-        if (name == "train") {
-            return SubsetType::train;
+        Type decodeName(string name) {
+
+            if (name == "train") {
+                return Type::train;
+            }
+
+            if (name == "test") {
+                return Type::test;
+            }
+
+            if (name == "valid") {
+                return Type::valid;
+            }
+
+            throw invalidArgument("Unknown corpus subset provided: " + name);
         }
 
-        if (name == "test") {
-            return SubsetType::test;
-        }
-
-        if (name == "valid") {
-            return SubsetType::valid;
-        }
-
-        throw invalidArgument("Unknown corpus subset provided: " + name);
     }
 
 }

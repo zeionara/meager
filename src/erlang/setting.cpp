@@ -44,17 +44,17 @@ get_entity_total(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
 extern ERL_NIF_TERM
 get_train_total(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    return enif_make_int(env, countTriples(SubsetType::train));
+    return enif_make_int(env, countTriples(subset::Type::train));
 }
 
 extern ERL_NIF_TERM
 get_test_total(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    return enif_make_int(env, countTriples(SubsetType::test));
+    return enif_make_int(env, countTriples(subset::Type::test));
 }
 
 extern ERL_NIF_TERM
 get_valid_total(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-    return enif_make_int(env, countTriples(SubsetType::valid));
+    return enif_make_int(env, countTriples(subset::Type::valid));
 }
 
 extern ERL_NIF_TERM

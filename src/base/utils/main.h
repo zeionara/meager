@@ -12,13 +12,17 @@ using namespace std;
 
 namespace meager::main::utils {
 
-    enum class SubsetType {
-        train,
-        test,
-        valid
-    };
+    namespace subset {
 
-    SubsetType decodeSubsetType(string name);
+        enum class Type {
+            train,
+            test,
+            valid
+        };
+
+        Type decodeName(string name);
+
+    }
 
     class File {
 

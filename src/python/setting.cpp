@@ -30,16 +30,16 @@ INT get_entity_total() {
 
 extern "C"
 INT get_train_total() {
-    return countTriples(SubsetType::train);
+    return countTriples(subset::Type::train);
 }
 
 extern "C"
 INT get_test_total() {
-    return countTriples(SubsetType::test);
+    return countTriples(subset::Type::test);
 }
 
 extern "C"
 INT get_valid_total() {
-    return countTriples(SubsetType::valid);
+    return countTriples(subset::Type::valid);
 }
 

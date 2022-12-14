@@ -23,7 +23,7 @@ extern
 long countRelations(bool verbose = false); 
 
 extern
-long countTriples(SubsetType subset, bool verbose = false);
+long countTriples(subset::Type subset, bool verbose = false);
 
 extern
 long countTriples(bool verbose = false); 
@@ -47,7 +47,7 @@ extern
 void importTrain(bool dropPatternDuplicates = true, bool verbose = false);
 
 extern
-void importTriples(SubsetType subset, bool verbose = false);
+void importTriples(subset::Type subset, bool verbose = false);
 
 // extern
 // void importTest(bool verbose = false);

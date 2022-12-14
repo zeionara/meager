@@ -22,7 +22,7 @@ namespace meager::main::triple::list {
 
         Index* index;
 
-        ThinWrapper(SubsetType subset, corpus::reader::Corpus<T>* reader, filter::Filter<T>* filter, Encoder<INT>* encoder, bool enableFilters, bool verbose = false) {
+        ThinWrapper(subset::Type subset, corpus::reader::Corpus<T>* reader, filter::Filter<T>* filter, Encoder<INT>* encoder, bool enableFilters, bool verbose = false) {
             this->index = new Index();
 
             if (verbose) {

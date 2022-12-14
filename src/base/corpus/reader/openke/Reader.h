@@ -39,7 +39,7 @@ namespace meager::main::corpus::reader::openke {
         }
 
         triple::list::List* readTriples(
-            SubsetType subsetType, triple::Index* tripleIndex, triple::Component tripleComponent, triple::filter::Filter<INT>* filter, triple::Encoder<INT>* encoder,
+            subset::Type subsetType, triple::Index* tripleIndex, triple::Component tripleComponent, triple::filter::Filter<INT>* filter, triple::Encoder<INT>* encoder,
             bool enableFilters = false, bool verbose = false
         );
 

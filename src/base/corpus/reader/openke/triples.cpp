@@ -4,13 +4,13 @@
 namespace meager::main::corpus::reader::openke {
 
     triple::list::List* Corpus::readTriples(
-        SubsetType subsetType, triple::Index* tripleIndex, triple::Component tripleComponent, triple::filter::Filter<INT>* filter, triple::Encoder<INT>* encoder, bool enableFilters, bool verbose
+        subset::Type subsetType, triple::Index* tripleIndex, triple::Component tripleComponent, triple::filter::Filter<INT>* filter, triple::Encoder<INT>* encoder, bool enableFilters, bool verbose
     ) {
         FileWithHeader file = FileWithHeader(
             path + (
-                subsetType == SubsetType::train ? TRAIN_FILENAME :
-                subsetType == SubsetType::test ? TEST_FILENAME :
-                subsetType == SubsetType::valid ? VALID_FILENAME :
+                subsetType == subset::Type::train ? TRAIN_FILENAME :
+                subsetType == subset::Type::test ? TEST_FILENAME :
+                subsetType == subset::Type::valid ? VALID_FILENAME :
                 throw invalidArgument("Unknown subset type")
             ), verbose
         );

@@ -17,7 +17,7 @@ initEvaluator_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     try {
 
         evaluation::task::Task task = evaluation::task::decodeName(enif_get_atom_(env, argv[1]));
-        SubsetType subset = decodeSubsetType(enif_get_atom_(env, argv[2]));
+        subset::Type subset = subset::decodeName(enif_get_atom_(env, argv[2]));
         bool verbose = enif_get_bool(env, argv[3]);
 
         initEvaluator([env, argv](string label){

@@ -1,5 +1,5 @@
-#ifndef EVALUATION_STOPWATCH_H
-#define EVALUATION_STOPWATCH_H
+#ifndef UTILS_STOPWATCH_H
+#define UTILS_STOPWATCH_H
 
 #include <stdexcept>
 #include <iostream>

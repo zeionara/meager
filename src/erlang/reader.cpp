@@ -50,8 +50,8 @@ import_test_files(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     //     enif_get_bool(env, argv[2])
     // );
 
-    importTriples(SubsetType::test, enif_get_bool(env, argv[0], argv[1]));
-    importTriples(SubsetType::valid, enif_get_bool(env, argv[0], argv[1]));
+    importTriples(subset::Type::test, enif_get_bool(env, argv[0], argv[1]));
+    importTriples(subset::Type::valid, enif_get_bool(env, argv[0], argv[1]));
 
     return enif_make_int(env, 0);
 }

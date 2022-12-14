@@ -9,7 +9,7 @@ using namespace meager::main::utils;
 extern
 evaluation::link_prediction::Evaluator<INT>* evaluator;
 
-void initEvaluator(evaluation::metric::score::SetMaker makeMetricSetTracker, evaluation::task::Task task, SubsetType subset = SubsetType::test, bool verbose = false);
+void initEvaluator(evaluation::metric::score::SetMaker makeMetricSetTracker, evaluation::task::Task task, subset::Type subset = subset::Type::test, bool verbose = false);
 
 sampling::batch::Triple* trial(triple::Component tripleComponent, bool verbose = false);
 

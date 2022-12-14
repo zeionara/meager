@@ -39,15 +39,15 @@ void importTrain(bool dropPatternDuplicates = true, bool verbose = false) {
 //     corpus->importValid(verbose); 
 // }
 
-void importTriples(SubsetType subset, bool verbose) {
+void importTriples(subset::Type subset, bool verbose) {
     switch (subset) {
-        case SubsetType::train:
+        case subset::Type::train:
             ::corpus->importTrain(DROP_PATTERN_DUPLICATES, verbose); 
             return;
-        case SubsetType::test:
+        case subset::Type::test:
             ::corpus->importTest(verbose); 
             return;
-        case SubsetType::valid:
+        case subset::Type::valid:
             ::corpus->importValid(verbose); 
             return;
         default:
@@ -69,19 +69,19 @@ long countRelations(bool verbose) {
     return ::corpus->countRelations();
 }
 
-long countTriples(SubsetType subset, bool verbose) {
+long countTriples(subset::Type subset, bool verbose) {
     switch (subset) {
-        case SubsetType::train:
+        case subset::Type::train:
             if (::corpus->train == nullptr) {
                 throw invalidArgument(corpus::local::TRAIN_IS_NOT_INITIALIZED);
             }
             return ::corpus->train->length;
-        case SubsetType::test:
+        case subset::Type::test:
             if (::corpus->test == nullptr) {
                 throw invalidArgument(corpus::local::TEST_IS_NOT_INITIALIZED);
             }
             return ::corpus->test->length;
-        case SubsetType::valid:
+        case subset::Type::valid:
             if (::corpus->valid == nullptr) {
                 throw invalidArgument(corpus::local::VALID_IS_NOT_INITIALIZED);
             }

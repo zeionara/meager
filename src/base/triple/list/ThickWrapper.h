@@ -36,7 +36,7 @@ namespace meager::main::triple::list {
         pattern::description::Descriptions<T>* patterns;
 
         ThickWrapper(
-            SubsetType subset, corpus::reader::Corpus<T>* reader, filter::Filter<T>* filter, Encoder<T>* encoder, pattern::description::Templates<T>* patterns,
+            subset::Type subset, corpus::reader::Corpus<T>* reader, filter::Filter<T>* filter, Encoder<T>* encoder, pattern::description::Templates<T>* patterns,
             bool enableFilters, bool dropPatternDuplicates = true, bool verbose = false
         ) {
 

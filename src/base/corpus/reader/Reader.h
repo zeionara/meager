@@ -71,7 +71,7 @@ namespace meager::main::corpus::reader {
         string path; // TODO: Delete this
 
         virtual triple::list::List* readTriples(
-            SubsetType subsetType, triple::Index* tripleIndex, triple::Component tripleComponent, triple::filter::Filter<T>* filter, triple::Encoder<T>* encoder,
+            subset::Type subsetType, triple::Index* tripleIndex, triple::Component tripleComponent, triple::filter::Filter<T>* filter, triple::Encoder<T>* encoder,
             bool enableFilters = false, bool verbose = false
         ) = 0;
 

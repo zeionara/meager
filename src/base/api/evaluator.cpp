@@ -9,8 +9,8 @@ using namespace meager::main::utils;
 
 evaluation::link_prediction::Evaluator<INT>* evaluator;
 
-void initEvaluator(evaluation::metric::score::SetMaker makeMetricSetTracker, evaluation::task::Task task, SubsetType subset, bool verbose) {
-    if (subset == SubsetType::train) {
+void initEvaluator(evaluation::metric::score::SetMaker makeMetricSetTracker, evaluation::task::Task task, subset::Type subset, bool verbose) {
+    if (subset == subset::Type::train) {
         throw invalidArgument("Cannot use train subset for evaluation");
     }
     if (task != evaluation::task::Task::LinkPrediction) {
@@ -20,7 +20,7 @@ void initEvaluator(evaluation::metric::score::SetMaker makeMetricSetTracker, eva
     evaluator = new evaluation::link_prediction::Evaluator<INT>(
         ::corpus,
         ::corpus->train,
-        subset == SubsetType::test ? ::corpus->test : subset == SubsetType::valid ? ::corpus->valid : throw invalidArgument("Unsupported subset type, cannot evaluate"),
+        subset == subset::Type::test ? ::corpus->test : subset == subset::Type::valid ? ::corpus->valid : throw invalidArgument("Unsupported subset type, cannot evaluate"),
         makeMetricSetTracker
     );
 }
