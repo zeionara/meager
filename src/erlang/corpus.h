@@ -3,40 +3,38 @@
 
 #include "erl_nif.h"
 
-extern ERL_NIF_TERM
-initCorpus_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+namespace meager::erlang::api::corpus {
 
-extern ERL_NIF_TERM
-importFilter_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+    extern ERL_NIF_TERM
+    init(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 
-extern ERL_NIF_TERM
-importPattern_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+    extern ERL_NIF_TERM
+    importFilter(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 
-extern ERL_NIF_TERM
-importTrain_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+    extern ERL_NIF_TERM
+    importPattern(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 
-// extern ERL_NIF_TERM
-// importTest_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
-// 
-// extern ERL_NIF_TERM
-// importValid_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+    extern ERL_NIF_TERM
+    importTrain(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 
-extern ERL_NIF_TERM
-importTriples_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+    extern ERL_NIF_TERM
+    importTriples(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 
-extern ERL_NIF_TERM
-importTypes_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+    extern ERL_NIF_TERM
+    importTypes(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 
-extern ERL_NIF_TERM
-countEntities_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+    extern ERL_NIF_TERM
+    countEntities(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 
-extern ERL_NIF_TERM
-countRelations_(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+    extern ERL_NIF_TERM
+    countRelations(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 
-extern ERL_NIF_TERM
-countTriples_1(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+    extern ERL_NIF_TERM
+    countTriples_1(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);  // 1 argument (verbose)
 
-extern ERL_NIF_TERM
-countTriples_2(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+    extern ERL_NIF_TERM
+    countTriples_2(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);  // 2 arguments (subset name, verbose)
+
+}
 
 #endif

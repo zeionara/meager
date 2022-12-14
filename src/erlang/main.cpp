@@ -17,8 +17,8 @@
 #include "../base/api/sampling.h"
 
 #include "corpus.h"
-#include "sampler.h"
-#include "evaluator.h"
+#include "sampling.h"
+#include "evaluation.h"
 
 using namespace std;
 using namespace meager;
@@ -155,98 +155,101 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     );
 }
 
-static ErlNifFunc meager_nif_funcs[] = {
-    // Corpus
+namespace meager::erlang::api {
 
-    {"_init_corpus", 4, initCorpus_},
+    static ErlNifFunc functions[] = {
+        // Corpus
 
-    {"_import_filter", 2, importFilter_},
-    {"_import_pattern", 1, importPattern_},
+        {"_init_corpus", 4, corpus::init},
 
-    {"_import_train", 2, importTrain_},
-    {"_import_triples", 2, importTriples_},
-    // {"_import_test", 1, importTest_},
-    // {"_import_valid", 1, importValid_},
+        {"_import_filter", 2, corpus::importFilter},
+        {"_import_pattern", 1, corpus::importPattern},
 
-    {"_import_types", 1, importTypes_},
+        {"_import_train", 2, corpus::importTrain},
+        {"_import_triples", 2, corpus::importTriples},
+        // {"_import_test", 1, importTest_},
+        // {"_import_valid", 1, importValid_},
 
-    {"_count_entities", 1, countEntities_},
-    {"_count_relations", 1, countRelations_},
-    {"_count_triples", 1, countTriples_1},
-    {"_count_triples", 2, countTriples_2},
+        {"_import_types", 1, corpus::importTypes},
 
-    // Sampler
+        {"_count_entities", 1, corpus::countEntities},
+        {"_count_relations", 1, corpus::countRelations},
+        {"_count_triples", 1, corpus::countTriples_1},
+        {"_count_triples", 2, corpus::countTriples_2},
 
-    {"_init_sampler", 6, initSampler_},
-    {"_sample", 5, sample_},
+        // Sampler
 
-    // Evaluator
+        {"_init_sampler", 6, sampling::init},
+        {"_sample", 5, sampling::sample},
 
-    {"_init_evaluator", 4, initEvaluator_},
-    {"_trial", 2, trial_},
-    {"_evaluate", 4, evaluate_},
-    {"_compute_metrics", 1, computeMetrics_},
+        // Evaluator
 
-    //
-    //  Settings
-    //  
+        {"_init_evaluator", 4, evaluation::init},
+        {"_trial", 2, evaluation::trial},
+        {"_evaluate", 4, evaluation::evaluate},
+        {"_compute_metrics", 1, evaluation::computeMetrics},
 
-    {"set_in_path", 4, set_in_path},
-    {"set_bern", 1, set_bern},
-    {"set_head_tail_cross_sampling", 1, set_head_tail_cross_sampling},
-    {"set_work_threads", 1, set_work_threads},
+        //
+        //  Settings
+        //  
 
-    {"get_relation_total", 0, get_relation_total},
-    {"get_entity_total", 0, get_entity_total},
-    {"get_train_total", 0, get_train_total},
-    {"get_test_total", 0, get_test_total},
-    {"get_valid_total", 0, get_valid_total},
-    
-    //
-    //  Random
-    // 
+        {"set_in_path", 4, set_in_path},
+        {"set_bern", 1, set_bern},
+        {"set_head_tail_cross_sampling", 1, set_head_tail_cross_sampling},
+        {"set_work_threads", 1, set_work_threads},
 
-    {"rand_reset", 0, rand_reset},
+        {"get_relation_total", 0, get_relation_total},
+        {"get_entity_total", 0, get_entity_total},
+        {"get_train_total", 0, get_train_total},
+        {"get_test_total", 0, get_test_total},
+        {"get_valid_total", 0, get_valid_total},
+        
+        //
+        //  Random
+        // 
 
-    // 
-    //  Reader
-    //  
+        {"rand_reset", 0, rand_reset},
 
-    {"import_filter_patterns", 3, import_filter_patterns},
+        // 
+        //  Reader
+        //  
 
-    {"import_train_files", 3, import_train_files},
-    {"import_test_files", 3, import_test_files},
-    {"import_type_files", 0, import_type_files},
+        {"import_filter_patterns", 3, import_filter_patterns},
 
-    //
-    //  Sampling
-    //
+        {"import_train_files", 3, import_train_files},
+        {"import_test_files", 3, import_test_files},
+        {"import_type_files", 0, import_type_files},
 
-    {"sample", 7, sample},
-    // {"sample_symmetric", 7, sample_symmetric},
+        //
+        //  Sampling
+        //
 
-    //
-    //  Testing
-    //
-    
-    {"get_head_batch", 0, get_head_batch},
-    {"test_head", 2, test_head},
-    {"get_tail_batch", 0, get_tail_batch},
-    {"test_tail", 2, test_tail},
+        {"sample", 7, sample},
+        // {"sample_symmetric", 7, sample_symmetric},
 
-    {"init_test", 0, init_test},
+        //
+        //  Testing
+        //
+        
+        {"get_head_batch", 0, get_head_batch},
+        {"test_head", 2, test_head},
+        {"get_tail_batch", 0, get_tail_batch},
+        {"test_tail", 2, test_tail},
 
-    //
-    //  Validation
-    //
+        {"init_test", 0, init_test},
 
-    {"get_valid_head_batch", 0, get_valid_head_batch},
-    {"valid_head", 2, valid_head},
-    {"get_valid_tail_batch", 0, get_valid_tail_batch},
-    {"valid_tail", 2, valid_tail},
+        //
+        //  Validation
+        //
 
-    {"test_link_prediction", 2, test_link_prediction_}
-};
+        {"get_valid_head_batch", 0, get_valid_head_batch},
+        {"valid_head", 2, valid_head},
+        {"get_valid_tail_batch", 0, get_valid_tail_batch},
+        {"valid_tail", 2, valid_tail},
 
-ERL_NIF_INIT(Elixir.Grapex.Meager, meager_nif_funcs, NULL, NULL, NULL, NULL)
+        {"test_link_prediction", 2, test_link_prediction_}
+    };
 
+}
+
+ERL_NIF_INIT(Elixir.Grapex.Meager, meager::erlang::api::functions, NULL, NULL, NULL, NULL)
