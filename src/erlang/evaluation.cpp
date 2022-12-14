@@ -21,12 +21,12 @@ namespace meager::erlang::api::evaluation {
     init(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         try {
 
-            main::evaluation::task::Task task = main::evaluation::task::decodeName(enif_get_atom_(env, argv[1]));
-            subset::Type subset = subset::decodeName(enif_get_atom_(env, argv[2]));
-            bool verbose = enif_get_bool(env, argv[3]);
+            main::evaluation::task::Task task = main::evaluation::task::decodeName(utils::nif::decode::atom(env, argv[1]));
+            subset::Type subset = subset::decodeName(utils::nif::decode::atom(env, argv[2]));
+            bool verbose = utils::nif::decode::boolean(env, argv[3]);
 
             main::api::evaluation::init([env, argv](string label){
-                List<main::evaluation::metric::tracker::TrackerBase*>* trackers = decodeList<main::evaluation::metric::tracker::TrackerBase*>(
+                utils::nif::decode::List<main::evaluation::metric::tracker::TrackerBase*>* trackers = utils::nif::decode::list<main::evaluation::metric::tracker::TrackerBase*>(
                     env, argv[0], [](ErlNifEnv* env, ERL_NIF_TERM metric
                 ) -> main::evaluation::metric::tracker::TrackerBase* {
                     int length;
@@ -38,12 +38,12 @@ namespace meager::erlang::api::evaluation {
                         throw invalidArgument("Empty metric descriptions are not allowed");
                     }
 
-                    char* metricName = enif_get_atom_(env, metricDescription[0]);
+                    char* metricName = utils::nif::decode::atom(env, metricDescription[0]);
 
                     switch (main::evaluation::metric::decodeName(metricName)) {
                         case main::evaluation::metric::Metric::Count:
                             if (length > 1)
-                                return new main::evaluation::metric::tracker::Count(enif_get_long_(env, metricDescription[1])); 
+                                return new main::evaluation::metric::tracker::Count(utils::nif::decode::longInteger(env, metricDescription[1])); 
                             throw invalidArgument("Metric count requires one parameter (top-n)");
                         case main::evaluation::metric::Metric::Rank:
                             if (length < 2)
@@ -62,10 +62,10 @@ namespace meager::erlang::api::evaluation {
             }, task, subset, verbose);
 
         } catch (invalidArgument& e) {
-            return completed_with_error(env, e.what());
+            return utils::nif::complete::error(env, e.what());
         }
 
-        return completed_with_success(env);
+        return utils::nif::complete::success(env);
     }
 
     extern ERL_NIF_TERM
@@ -73,15 +73,15 @@ namespace meager::erlang::api::evaluation {
         try {
             // cout << "foo" << endl;
             main::sampling::batch::Triple* tripleBatch = main::api::evaluation::trial(
-                triple::decodeComponent(enif_get_atom_(env, argv[0])),
-                enif_get_bool(env, argv[1])
+                triple::decodeComponent(utils::nif::decode::atom(env, argv[0])),
+                utils::nif::decode::boolean(env, argv[1])
             );
 
             ERL_NIF_TERM encoded = sampling::encodeTripleBatch(env, tripleBatch, false);
 
-            return completed_with_success(env, encoded);
+            return utils::nif::complete::success(env, encoded);
         } catch (invalidArgument& e) {
-            return completed_with_error(env, e.what());
+            return utils::nif::complete::error(env, e.what());
         }
     }
 
@@ -89,7 +89,7 @@ namespace meager::erlang::api::evaluation {
     evaluate(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         try {
             // cout << "Encoding predictions" << endl;
-            List<REAL>* predictions = decodeList<REAL>(env, argv[1], [](ErlNifEnv* env, ERL_NIF_TERM prediction){
+            utils::nif::decode::List<REAL>* predictions = utils::nif::decode::list<REAL>(env, argv[1], [](ErlNifEnv* env, ERL_NIF_TERM prediction){
                 double decodedPrediction;
                 enif_get_double(env, prediction, &decodedPrediction);
                 return (REAL)decodedPrediction;
@@ -97,16 +97,16 @@ namespace meager::erlang::api::evaluation {
             // cout << "Encoded predictions" << endl;
 
             main::api::evaluation::evaluate(
-                triple::decodeComponent(enif_get_atom_(env, argv[0])),
+                triple::decodeComponent(utils::nif::decode::atom(env, argv[0])),
                 predictions->items,
-                enif_get_bool(env, argv[2]),
-                enif_get_bool(env, argv[3])
+                utils::nif::decode::boolean(env, argv[2]),
+                utils::nif::decode::boolean(env, argv[3])
             );
         } catch (invalidArgument& e) {
-            return completed_with_error(env, e.what());
+            return utils::nif::complete::error(env, e.what());
         }
 
-        return completed_with_success(env);
+        return utils::nif::complete::success(env);
     }
 
     ERL_NIF_TERM encodeMetric(ErlNifEnv* env, main::evaluation::metric::tracker::TrackerBase* metric) {
@@ -161,15 +161,15 @@ namespace meager::erlang::api::evaluation {
     computeMetrics(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         try {
             main::evaluation::metric::tree::Root* root = main::api::evaluation::computeMetrics(
-                enif_get_bool(env, argv[0])
+                utils::nif::decode::boolean(env, argv[0])
             );
             // cout << "Started encoding tree" << endl;
             ERL_NIF_TERM encodedTree = encodeMetricTree(env, root->tree, root->normalizationCoefficient);
             delete root;
             // cout << "Finished encoding tree" << endl;
-            return completed_with_success(env, encodedTree);
+            return utils::nif::complete::success(env, encodedTree);
         } catch (invalidArgument& e) {
-            return completed_with_error(env, e.what());
+            return utils::nif::complete::error(env, e.what());
         }
 
         // return completed_with_success(env, enif_make_long(env, 17));

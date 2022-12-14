@@ -12,41 +12,41 @@ namespace meager::erlang::api::sampling {
     extern ERL_NIF_TERM
     init(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         try {
-            triple::pattern::Pattern pattern = triple::pattern::decodeName(enif_get_atom_(env, argv[0]));
+            triple::pattern::Pattern pattern = triple::pattern::decodeName(utils::nif::decode::atom(env, argv[0]));
 
             main::api::sampling::init(
                 pattern,  // pattern
-                enif_get_long_(env, argv[1]),  // nObservedTriplesPerPatternInstance
-                enif_get_bool(env, argv[2]),  // bern
-                enif_get_bool(env, argv[3]),  // crossSampling
-                enif_get_long_(env, argv[4]),  // nWorkers
-                enif_get_bool(env, argv[5])   // verbose
+                utils::nif::decode::longInteger(env, argv[1]),  // nObservedTriplesPerPatternInstance
+                utils::nif::decode::boolean(env, argv[2]),  // bern
+                utils::nif::decode::boolean(env, argv[3]),  // crossSampling
+                utils::nif::decode::longInteger(env, argv[4]),  // nWorkers
+                utils::nif::decode::boolean(env, argv[5])   // verbose
             );
         } catch (invalidArgument& e) {
-            return completed_with_error(env, e.what());
+            return utils::nif::complete::error(env, e.what());
         }
 
-        return completed_with_success(env);
+        return utils::nif::complete::success(env);
     }
 
     extern ERL_NIF_TERM
     sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
         try{
-            INT batchSize = enif_get_long_(env, argv[0]); 
+            INT batchSize = utils::nif::decode::longInteger(env, argv[0]); 
 
-            INT entityNegativeRate = enif_get_long_(env, argv[1]); 
-            INT relationNegativeRate = enif_get_long_(env, argv[2]); 
+            INT entityNegativeRate = utils::nif::decode::longInteger(env, argv[1]); 
+            INT relationNegativeRate = utils::nif::decode::longInteger(env, argv[2]); 
 
-            bool headBatchFlag = enif_get_bool(env, argv[3]);
-            bool verbose = enif_get_bool(env, argv[4]);
+            bool headBatchFlag = utils::nif::decode::boolean(env, argv[3]);
+            bool verbose = utils::nif::decode::boolean(env, argv[4]);
 
             main::sampling::batch::Triple* tripleBatch = main::api::sampling::sample(batchSize, entityNegativeRate, relationNegativeRate, headBatchFlag, verbose);
 
             ERL_NIF_TERM encoded = encodeTripleBatch(env, tripleBatch);
 
-            return completed_with_success(env, encoded);
+            return utils::nif::complete::success(env, encoded);
         } catch (invalidArgument& e) {
-            return completed_with_error(env, e.what());
+            return utils::nif::complete::error(env, e.what());
         }
     }
 
@@ -65,12 +65,12 @@ namespace meager::erlang::api::sampling {
 
         if (encodeLabels) {
             batch_y = new ERL_NIF_TERM[batchSize]();
-            enif_encode_array_of_float(env, tripleBatch->labels, batch_y, batchSize);
+            utils::nif::encode::list(env, tripleBatch->labels, batch_y, batchSize);
         }
 
-        enif_encode_array_of_long(env, tripleBatch->head, batch_h, batchSize);
-        enif_encode_array_of_long(env, tripleBatch->tail, batch_t, batchSize);
-        enif_encode_array_of_long(env, tripleBatch->relation, batch_r, batchSize);
+        utils::nif::encode::list(env, tripleBatch->head, batch_h, batchSize);
+        utils::nif::encode::list(env, tripleBatch->tail, batch_t, batchSize);
+        utils::nif::encode::list(env, tripleBatch->relation, batch_r, batchSize);
 
         delete tripleBatch;
 

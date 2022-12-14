@@ -19,8 +19,8 @@ import_filter_patterns(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     // );
 
     main::api::corpus::importFilter(
-        enif_get_bool(env, argv[0]),
-        enif_get_bool(env, argv[1])
+        meager::erlang::utils::nif::decode::boolean(env, argv[0]),
+        meager::erlang::utils::nif::decode::boolean(env, argv[1])
     );
 
     return enif_make_int(env, 0);
@@ -33,7 +33,7 @@ import_train_files(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     //     enif_get_bool(env, argv[2])
     // );
 
-    main::api::corpus::importTrain(enif_get_bool(env, argv[0], argv[1]));
+    main::api::corpus::importTrain(meager::erlang::utils::nif::decode::boolean(env, argv[0], argv[1]));
 
     // corpus->importTrain(
     //     getInputPath(triples, train),
@@ -51,8 +51,8 @@ import_test_files(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     //     enif_get_bool(env, argv[2])
     // );
 
-    main::api::corpus::importTriples(subset::Type::test, enif_get_bool(env, argv[0], argv[1]));
-    main::api::corpus::importTriples(subset::Type::valid, enif_get_bool(env, argv[0], argv[1]));
+    main::api::corpus::importTriples(subset::Type::test, meager::erlang::utils::nif::decode::boolean(env, argv[0], argv[1]));
+    main::api::corpus::importTriples(subset::Type::valid, meager::erlang::utils::nif::decode::boolean(env, argv[0], argv[1]));
 
     return enif_make_int(env, 0);
 }

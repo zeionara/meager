@@ -26,18 +26,18 @@ using namespace meager;
 extern ERL_NIF_TERM
 sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     // cout << "Start sampling" << endl;
-    INT batch_size = enif_get_long_(env, argv[0]); 
+    INT batch_size = meager::erlang::utils::nif::decode::longInteger(env, argv[0]); 
 
     // cout << "batch size = " << batch_size << endl;
 
-    INT entity_negative_rate = enif_get_long_(env, argv[1]); 
-    INT relation_negative_rate = enif_get_long_(env, argv[2]); 
-    int n_observed_triples_per_pattern_instance = enif_get_int_(env, argv[5]); 
-    char* pattern_name = enif_get_atom_(env, argv[6]);
+    INT entity_negative_rate = meager::erlang::utils::nif::decode::longInteger(env, argv[1]); 
+    INT relation_negative_rate = meager::erlang::utils::nif::decode::longInteger(env, argv[2]); 
+    int n_observed_triples_per_pattern_instance = meager::erlang::utils::nif::decode::integer(env, argv[5]); 
+    char* pattern_name = meager::erlang::utils::nif::decode::atom(env, argv[6]);
 
     INT head_batch_flag = 0;
     
-    if (enif_get_bool(env, argv[3], argv[4])) {
+    if (meager::erlang::utils::nif::decode::boolean(env, argv[3], argv[4])) {
         head_batch_flag = 1;
     }
 
@@ -103,7 +103,7 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     if (patternDescription.instanceSets[n_observed_triples_per_pattern_instance]->size() < 1) {
         stringstream message;
         message << "Cannot sample " << pattern_name << " pattern instances in which there are at least " << n_observed_triples_per_pattern_instance << " observed triples since there are no observed sets of triples that satisfy these conditions";
-        return completed_with_error(env, &message);
+        return meager::erlang::utils::nif::complete::error(env, &message);
     }
 
     // PatternSampler<long>* sampler = new PatternSampler<INT>(pattern, n_observed_triples_per_pattern_instance, false, false, 8);
@@ -121,10 +121,10 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     // enif_encode_array_of_long(env, batch_r_encoded, batch_r, batch_tuple_size);
     // enif_encode_array_of_float(env, batch_y_encoded, batch_y, batch_tuple_size);
 
-    enif_encode_array_of_long(env, tripleBatch->head, batch_h, batch_tuple_size);
-    enif_encode_array_of_long(env, tripleBatch->tail, batch_t, batch_tuple_size);
-    enif_encode_array_of_long(env, tripleBatch->relation, batch_r, batch_tuple_size);
-    enif_encode_array_of_float(env, tripleBatch->labels, batch_y, batch_tuple_size);
+    meager::erlang::utils::nif::encode::list(env, tripleBatch->head, batch_h, batch_tuple_size);
+    meager::erlang::utils::nif::encode::list(env, tripleBatch->tail, batch_t, batch_tuple_size);
+    meager::erlang::utils::nif::encode::list(env, tripleBatch->relation, batch_r, batch_tuple_size);
+    meager::erlang::utils::nif::encode::list(env, tripleBatch->labels, batch_y, batch_tuple_size);
 
     delete [] batch_h_encoded;
     delete [] batch_t_encoded;
@@ -149,7 +149,7 @@ sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     // cout << "Stop sampling" << endl;
 
-    return completed_with_success(
+    return meager::erlang::utils::nif::complete::success(
         env,
         result
     );

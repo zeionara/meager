@@ -41,10 +41,10 @@ get_head_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     // cout << "Made head batch" << endl;
 
     // cout << "Segmentation fault?" << endl;
-    enif_encode_array_of_long(env, tripleBatch->head, batch_h, batch_tuple_size);
+    meager::erlang::utils::nif::encode::list(env, tripleBatch->head, batch_h, batch_tuple_size);
     // cout << "Segmentation fault?" << endl;
-    enif_encode_array_of_long(env, tripleBatch->tail, batch_t, batch_tuple_size);
-    enif_encode_array_of_long(env, tripleBatch->relation, batch_r, batch_tuple_size);
+    meager::erlang::utils::nif::encode::list(env, tripleBatch->tail, batch_t, batch_tuple_size);
+    meager::erlang::utils::nif::encode::list(env, tripleBatch->relation, batch_r, batch_tuple_size);
     // cout << "Segmentation fault?" << endl;
 
     // enif_encode_array_of_long(env, batch_h_encoded, batch_h, batch_tuple_size);
@@ -80,13 +80,13 @@ test_head(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     REAL* predictions_encoded = new REAL[batch_tuple_size]();
 
-    encode_array_of_float(env, argv[0], predictions_encoded, batch_tuple_size);
+    meager::erlang::utils::nif::decode::list(env, argv[0], predictions_encoded, batch_tuple_size);
     
     // testHead(predictions_encoded, enif_get_bool(env, argv[1]));
 
     // cout << "Testing head" << endl;
 
-    main::api::evaluation::evaluatorr->head->evaluate(predictions_encoded, enif_get_bool(env, argv[1]));
+    main::api::evaluation::evaluatorr->head->evaluate(predictions_encoded, meager::erlang::utils::nif::decode::boolean(env, argv[1]));
 
     // cout << "Tested head" << endl;
 
@@ -115,9 +115,9 @@ get_tail_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     // cout << "Made tail batch" << endl;
 
-    enif_encode_array_of_long(env, tripleBatch->head, batch_h, batch_tuple_size);
-    enif_encode_array_of_long(env, tripleBatch->tail, batch_t, batch_tuple_size);
-    enif_encode_array_of_long(env, tripleBatch->relation, batch_r, batch_tuple_size);
+    meager::erlang::utils::nif::encode::list(env, tripleBatch->head, batch_h, batch_tuple_size);
+    meager::erlang::utils::nif::encode::list(env, tripleBatch->tail, batch_t, batch_tuple_size);
+    meager::erlang::utils::nif::encode::list(env, tripleBatch->relation, batch_r, batch_tuple_size);
 
     // enif_encode_array_of_long(env, batch_h_encoded, batch_h, batch_tuple_size);
     // enif_encode_array_of_long(env, batch_t_encoded, batch_t, batch_tuple_size);
@@ -151,11 +151,11 @@ test_tail(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     REAL* predictions_encoded = new REAL[batch_tuple_size]();
 
-    encode_array_of_float(env, argv[0], predictions_encoded, batch_tuple_size);
+    meager::erlang::utils::nif::decode::list(env, argv[0], predictions_encoded, batch_tuple_size);
 
     // testTail(predictions_encoded, enif_get_bool(env, argv[1]));
 
-    main::api::evaluation::evaluatorr->tail->evaluate(predictions_encoded, enif_get_bool(env, argv[1]));
+    main::api::evaluation::evaluatorr->tail->evaluate(predictions_encoded, meager::erlang::utils::nif::decode::boolean(env, argv[1]));
 
     return enif_make_int(env, 0);
 }
@@ -179,9 +179,9 @@ get_valid_head_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     // getValidHeadBatch(batch_h_encoded, batch_t_encoded, batch_r_encoded);
 
-    enif_encode_array_of_long(env, batch_h_encoded, batch_h, batch_tuple_size);
-    enif_encode_array_of_long(env, batch_t_encoded, batch_t, batch_tuple_size);
-    enif_encode_array_of_long(env, batch_r_encoded, batch_r, batch_tuple_size);
+    meager::erlang::utils::nif::encode::list(env, batch_h_encoded, batch_h, batch_tuple_size);
+    meager::erlang::utils::nif::encode::list(env, batch_t_encoded, batch_t, batch_tuple_size);
+    meager::erlang::utils::nif::encode::list(env, batch_r_encoded, batch_r, batch_tuple_size);
 
     delete [] batch_h_encoded;
     delete [] batch_t_encoded;
@@ -210,7 +210,7 @@ valid_head(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     REAL* predictions_encoded = new REAL[batch_tuple_size]();
 
-    encode_array_of_float(env, argv[0], predictions_encoded, batch_tuple_size);
+    meager::erlang::utils::nif::decode::list(env, argv[0], predictions_encoded, batch_tuple_size);
     
     // validHead(predictions_encoded, enif_get_bool(env, argv[1]));
 
@@ -231,9 +231,9 @@ get_valid_tail_batch(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     // getValidTailBatch(batch_h_encoded, batch_t_encoded, batch_r_encoded);
 
-    enif_encode_array_of_long(env, batch_h_encoded, batch_h, batch_tuple_size);
-    enif_encode_array_of_long(env, batch_t_encoded, batch_t, batch_tuple_size);
-    enif_encode_array_of_long(env, batch_r_encoded, batch_r, batch_tuple_size);
+    meager::erlang::utils::nif::encode::list(env, batch_h_encoded, batch_h, batch_tuple_size);
+    meager::erlang::utils::nif::encode::list(env, batch_t_encoded, batch_t, batch_tuple_size);
+    meager::erlang::utils::nif::encode::list(env, batch_r_encoded, batch_r, batch_tuple_size);
 
     delete [] batch_h_encoded;
     delete [] batch_t_encoded;
@@ -262,7 +262,7 @@ valid_tail(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
 
     REAL* predictions_encoded = new REAL[batch_tuple_size]();
 
-    encode_array_of_float(env, argv[0], predictions_encoded, batch_tuple_size);
+    meager::erlang::utils::nif::decode::list(env, argv[0], predictions_encoded, batch_tuple_size);
 
     // validTail(predictions_encoded, enif_get_bool(env, argv[1]));
 

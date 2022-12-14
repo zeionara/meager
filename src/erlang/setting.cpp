@@ -9,7 +9,7 @@ using namespace meager;
 extern ERL_NIF_TERM
 set_in_path(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
     main::api::corpus::init(
-        enif_get_string_(env, argv[0], argv[2])
+        meager::erlang::utils::nif::decode::string(env, argv[0], argv[2])
     );
 
     return enif_make_int(env, 0);
