@@ -4,20 +4,20 @@ extern "C" void meager__python__api__corpus__init(char* path, bool enableFilters
     meager::main::api::corpus::init(path, enableFilters, verbose);
 }
 
-extern "C" void meager__python__api__corpus__countEntities(bool verbose) {
-    meager::main::api::corpus::countEntities(verbose);
+extern "C" long meager__python__api__corpus__countEntities(bool verbose) {
+    return meager::main::api::corpus::countEntities(verbose);
 }
 
-extern "C" void meager__python__api__corpus__countRelations(bool verbose) {
-    meager::main::api::corpus::countRelations(verbose);
+extern "C" long meager__python__api__corpus__countRelations(bool verbose) {
+    return meager::main::api::corpus::countRelations(verbose);
 }
 
-extern "C" void meager__python__api__corpus__countTriples_1(bool verbose) {
-    meager::main::api::corpus::countTriples(verbose);
+extern "C" long meager__python__api__corpus__countTriples_1(bool verbose) {
+    return meager::main::api::corpus::countTriples(verbose);
 }
 
-extern "C" void meager__python__api__corpus__countTriples_2(char* subsetName, bool verbose) {
-    meager::main::api::corpus::countTriples(subset::decodeName(subsetName), verbose);
+extern "C" long meager__python__api__corpus__countTriples_2(char* subsetName, bool verbose) {
+    return meager::main::api::corpus::countTriples(subset::decodeName(subsetName), verbose);
 }
 
 extern "C" void meager__python__api__corpus__importFilter(bool dropDuplicates, bool verbose) {
