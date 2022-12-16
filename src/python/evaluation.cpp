@@ -36,71 +36,94 @@ extern "C" void meager__python__api__evaluation__evaluate(char* componentName, R
 
 #define METRIC_T double
 
-// ERL_NIF_TERM encodeMetric(ErlNifEnv* env, main::evaluation::metric::tracker::TrackerBase* metric) {
-//     switch (metric->getId()) {
-//         case main::evaluation::metric::Metric::Count:
-//             return enif_make_tuple2(env, enif_make_atom(env, metric->getName().c_str()), enif_make_long(env, ((main::evaluation::metric::tracker::Count*)metric)->n));
-//         default:
-//             return enif_make_atom(env, metric->getName().c_str());
-//     }
-// }
+char* string_to_heap_char(string str) {
+    char* chars = new char[str.length()];
+    strcpy(chars, str.c_str());
+    return chars;
+}
 
-// void** encodeMetricTree(meager::main::evaluation::metric::tree::Tree* tree, INT normalizationCoefficient, char* label) {
-//     if (tree->length > 127) {
-//         throw invalidArgument("Cannot encode node with more than 127 descendants");
-//     }
-// 
-//     if (tree->nodes != nullptr) {
-// 
-//         // const char _length = 1;
-// 
-//         unsigned char* result = new unsigned char[sizeof(void*) * tree->length + sizeof(char*) + 1];
-// 
-//         result[0] = tree->length;
-// 
-//         void** nodes = (void**)(result + 1);
-// 
-//         // nodes[0] = result;
-// 
-//         char** name_pointer = (char**)(result + 1 + sizeof(void*) * tree->length);
-// 
-//         name_pointer[0] = label;
-// 
-//         // cout << tree->length << endl;
-//         // ERL_NIF_TERM* encodedChildren = new ERL_NIF_TERM[tree->length]();
-// 
-//         for (INT i = 0; i < tree->length; i++) {
-//             string label = tree->nodes[i]->label;
-//             // cout << "label = " << label << endl;
-//             main::evaluation::metric::tree::Tree* subtree = tree->nodes[i]->value;
-// 
-//             ERL_NIF_TERM encodedChild = enif_make_tuple2(env, enif_make_atom(env, label.c_str()), encodeMetricTree(env, subtree, normalizationCoefficient));
-//             encodedChildren[i] = encodedChild;
-//         }
-// 
-//         return enif_make_list_from_array(env, encodedChildren, tree->length);
-//     } else {
-//         ERL_NIF_TERM* encodedMetrics = new ERL_NIF_TERM[tree->metrics->length]();
-// 
-//         if (tree->metrics) {
-//             for (INT i = 0; i < tree->metrics->length; i++) {
-//                 main::evaluation::metric::tracker::TrackerBase* metric = tree->metrics->trackers[i];
-// 
-//                 // evaluation::metric::Metric id = metric->getId();
-// 
-//                 encodedMetrics[i] = enif_make_tuple2(env, encodeMetric(env, metric), enif_make_double(env, metric->divide(normalizationCoefficient)));
-//             }
-//         }
-// 
-// 
-//         return enif_make_list_from_array(env, encodedMetrics, tree->metrics->length);
-//     }
-//     throw invalidArgument("Each metric tree node must either contain links to other nodes either contain a list of metrics");
-// }
+string encodeMetric(meager::main::evaluation::metric::tracker::TrackerBase* metric) {
+    return metric->getName();
+    // switch (metric->getId()) {
+    //     case meager::main::evaluation::metric::Metric::Count:
+    //         return enif_make_tuple2(env, enif_make_atom(env, metric->getName().c_str()), enif_make_long(env, ((main::evaluation::metric::tracker::Count*)metric)->n));
+    //     default:
+    //         return enif_make_atom(env, metric->getName().c_str());
+    // }
+}
+
+void* encodeMetricTree(meager::main::evaluation::metric::tree::Tree* tree, INT normalizationCoefficient) {
+    if (tree->length > 127) {
+        throw invalidArgument("Cannot encode node with more than 127 descendants");
+    }
+
+    if (tree->nodes != nullptr) {
+
+        unsigned char* result = new unsigned char[sizeof(void*) * tree->length + 1];
+
+        result[0] = tree->length;
+
+        void** nodes = (void**)(result + 1);
+
+        for (INT i = 0; i < tree->length; i++) {
+            string label = tree->nodes[i]->label;
+
+            void** node = new void*[2];
+
+            // node[0] = result;
+            // node[1] = (void*)label.c_str();
+            // char* name = new char[label.length()];
+            // strcpy(name, label.c_str());
+
+            node[1] = string_to_heap_char(label);
+            // cout << "label = " << label << endl;
+            auto subtree = tree->nodes[i]->value;
+            node[0] = encodeMetricTree(subtree, normalizationCoefficient);
+
+            nodes[i] = node;
+        }
+
+        return result;
+    } else {
+
+        if (tree->metrics) {
+
+            // cout << "allocate memory for metrics" << sizeof(METRIC_T*) * tree->metrics->length + sizeof(char*) * tree->metrics->length + 1 << endl;
+            unsigned char* result = new unsigned char[sizeof(METRIC_T*) * tree->metrics->length + sizeof(char*) * tree->metrics->length + 1];
+            // cout << "allocated memory for metrics" << endl;
+
+            result[0] = tree->metrics->length;
+            result[0] |= (unsigned char)0x80;
+
+            METRIC_T* values = (METRIC_T*)(result + 1);
+            char** names = (char**)(result + 1 + sizeof(METRIC_T) * tree->metrics->length);
+
+            for (INT i = 0; i < tree->metrics->length; i++) {
+                auto metric = tree->metrics->trackers[i];
+
+                values[i] = metric->divide(normalizationCoefficient);
+                names[i] = string_to_heap_char(encodeMetric(metric)); // (char*)encodeMetric(metric).c_str();
+            }
+
+            return result;
+        }
+
+        throw invalidArgument("If list of nodes is not set then metrics must be set");
+
+    }
+    throw invalidArgument("Each metric tree node must either contain links to other nodes either contain a list of metrics");
+}
 
 
 extern "C" void** meager__python__api__evaluation__computeMetrics(bool verbose) {
     meager::main::evaluation::metric::tree::Root* root = meager::main::api::evaluation::computeMetrics(verbose);
+
+    unsigned char** baz = new unsigned char*[1];
+    // bar[0] = result;
+    // cout << "Encoding metrics tree" << endl;
+    baz[0] = (unsigned char*)encodeMetricTree(root->tree, root->normalizationCoefficient);
+
+    return (void**)baz;
 
     // long* foo = new long[1];
     // foo[0] = 2;
