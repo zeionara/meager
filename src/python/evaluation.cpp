@@ -42,14 +42,36 @@ char* string_to_heap_char(string str) {
     return chars;
 }
 
-string encodeMetric(meager::main::evaluation::metric::tracker::TrackerBase* metric) {
-    return metric->getName();
-    // switch (metric->getId()) {
-    //     case meager::main::evaluation::metric::Metric::Count:
-    //         return enif_make_tuple2(env, enif_make_atom(env, metric->getName().c_str()), enif_make_long(env, ((main::evaluation::metric::tracker::Count*)metric)->n));
-    //     default:
-    //         return enif_make_atom(env, metric->getName().c_str());
-    // }
+template <typename T>
+void* encodeMetric(string name, T* parameters = NULL, unsigned char length = 0) {
+    unsigned char* result = new unsigned char[1 + name.length() + 1 + sizeof(T) * length];
+
+    result[0] = length;
+
+    char* name_ = (char*)(result + 1);
+
+    strcpy(name_, name.c_str());
+
+    T* params = (T*)(result + 1 + name.length() + 1);
+
+    for (unsigned char i = 0; i < length; i++) {
+        params[i] = parameters[i];
+    }
+
+    return result;
+}
+
+
+void* encodeMetric(meager::main::evaluation::metric::tracker::TrackerBase* metric) {
+    switch (metric->getId()) {
+        case meager::main::evaluation::metric::Metric::Count: {
+            unsigned short parameters[1] = {(unsigned short)(((meager::main::evaluation::metric::tracker::Count*)metric)->n)};
+            return encodeMetric(metric->getName(), parameters, 1);
+            break;
+        }
+        default:
+            return encodeMetric<unsigned short>(metric->getName());
+    }
 }
 
 void* encodeMetricTree(meager::main::evaluation::metric::tree::Tree* tree, INT normalizationCoefficient) {
@@ -102,7 +124,8 @@ void* encodeMetricTree(meager::main::evaluation::metric::tree::Tree* tree, INT n
                 auto metric = tree->metrics->trackers[i];
 
                 values[i] = metric->divide(normalizationCoefficient);
-                names[i] = string_to_heap_char(encodeMetric(metric)); // (char*)encodeMetric(metric).c_str();
+                // names[i] = string_to_heap_char(encodeMetric(metric)); // (char*)encodeMetric(metric).c_str();
+                names[i] = (char*)encodeMetric(metric); // (char*)encodeMetric(metric).c_str();
             }
 
             return result;
@@ -149,9 +172,15 @@ extern "C" void** meager__python__api__evaluation__computeMetrics(bool verbose) 
     
     char** names = (char**)(result + 1 + sizeof(METRIC_T) * length);
 
-    names[0] = (char*)"foo";
-    names[1] = (char*)"bar";
-    names[2] = (char*)"qux";
+    // names[0] = (char*)"foo";
+    // names[1] = (char*)"bar";
+    // names[2] = (char*)"qux";
+    
+    unsigned short params[2] = {17, 19};
+
+    names[0] = (char*)encodeMetric("foo", params, 2);
+    names[1] = (char*)encodeMetric("bar", params, 2);
+    names[2] = (char*)encodeMetric("baz", params, 2);
 
     //
 
