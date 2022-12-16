@@ -27,11 +27,8 @@ extern "C" void meager__python__api__evaluation__evaluate(char* componentName, R
     meager::main::api::evaluation::evaluate(triple::decodeComponent(componentName), predictions, reverse, verbose);
 }
 
-extern "C" void** meager__python__api__evaluation__computeMetrics(bool verbose) {
+extern "C" void* meager__python__api__evaluation__computeMetrics(bool verbose) {
     meager::main::evaluation::metric::tree::Root* root = meager::main::api::evaluation::computeMetrics(verbose);
 
-    unsigned char** baz = new unsigned char*[1];
-    baz[0] = (unsigned char*)meager::python::utils::encode::metric::tree<double, unsigned short>(root->tree, root->normalizationCoefficient);
-
-    return (void**)baz;
+    return meager::python::utils::encode::metric::tree<double, unsigned short>(root->tree, root->normalizationCoefficient);
 }
