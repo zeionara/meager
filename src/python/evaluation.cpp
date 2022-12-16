@@ -36,6 +36,69 @@ extern "C" void meager__python__api__evaluation__evaluate(char* componentName, R
 
 #define METRIC_T double
 
+// ERL_NIF_TERM encodeMetric(ErlNifEnv* env, main::evaluation::metric::tracker::TrackerBase* metric) {
+//     switch (metric->getId()) {
+//         case main::evaluation::metric::Metric::Count:
+//             return enif_make_tuple2(env, enif_make_atom(env, metric->getName().c_str()), enif_make_long(env, ((main::evaluation::metric::tracker::Count*)metric)->n));
+//         default:
+//             return enif_make_atom(env, metric->getName().c_str());
+//     }
+// }
+
+// void** encodeMetricTree(meager::main::evaluation::metric::tree::Tree* tree, INT normalizationCoefficient, char* label) {
+//     if (tree->length > 127) {
+//         throw invalidArgument("Cannot encode node with more than 127 descendants");
+//     }
+// 
+//     if (tree->nodes != nullptr) {
+// 
+//         // const char _length = 1;
+// 
+//         unsigned char* result = new unsigned char[sizeof(void*) * tree->length + sizeof(char*) + 1];
+// 
+//         result[0] = tree->length;
+// 
+//         void** nodes = (void**)(result + 1);
+// 
+//         // nodes[0] = result;
+// 
+//         char** name_pointer = (char**)(result + 1 + sizeof(void*) * tree->length);
+// 
+//         name_pointer[0] = label;
+// 
+//         // cout << tree->length << endl;
+//         // ERL_NIF_TERM* encodedChildren = new ERL_NIF_TERM[tree->length]();
+// 
+//         for (INT i = 0; i < tree->length; i++) {
+//             string label = tree->nodes[i]->label;
+//             // cout << "label = " << label << endl;
+//             main::evaluation::metric::tree::Tree* subtree = tree->nodes[i]->value;
+// 
+//             ERL_NIF_TERM encodedChild = enif_make_tuple2(env, enif_make_atom(env, label.c_str()), encodeMetricTree(env, subtree, normalizationCoefficient));
+//             encodedChildren[i] = encodedChild;
+//         }
+// 
+//         return enif_make_list_from_array(env, encodedChildren, tree->length);
+//     } else {
+//         ERL_NIF_TERM* encodedMetrics = new ERL_NIF_TERM[tree->metrics->length]();
+// 
+//         if (tree->metrics) {
+//             for (INT i = 0; i < tree->metrics->length; i++) {
+//                 main::evaluation::metric::tracker::TrackerBase* metric = tree->metrics->trackers[i];
+// 
+//                 // evaluation::metric::Metric id = metric->getId();
+// 
+//                 encodedMetrics[i] = enif_make_tuple2(env, encodeMetric(env, metric), enif_make_double(env, metric->divide(normalizationCoefficient)));
+//             }
+//         }
+// 
+// 
+//         return enif_make_list_from_array(env, encodedMetrics, tree->metrics->length);
+//     }
+//     throw invalidArgument("Each metric tree node must either contain links to other nodes either contain a list of metrics");
+// }
+
+
 extern "C" void** meager__python__api__evaluation__computeMetrics(bool verbose) {
     meager::main::evaluation::metric::tree::Root* root = meager::main::api::evaluation::computeMetrics(verbose);
 
@@ -66,22 +129,31 @@ extern "C" void** meager__python__api__evaluation__computeMetrics(bool verbose) 
     names[0] = (char*)"foo";
     names[1] = (char*)"bar";
     names[2] = (char*)"qux";
+
+    //
+
+    void** node = new void*[2];
+
+    node[0] = result;
+    node[1] = (char*)"filtered";
+
+    void** node2 = new void*[2];
+
+    node2[0] = result;
+    node2[1] = (char*)"unfiltered";
     
     //
 
-    const char _length = 1;
+    const char _length = 2;
 
-    unsigned char* _result = new unsigned char[sizeof(void*) * _length + sizeof(char*) + 1];
+    unsigned char* _result = new unsigned char[sizeof(void*) * _length + 1];
 
     _result[0] = _length;
 
     void** nodes = (void**)(_result + 1);
 
-    nodes[0] = result;
-
-    char** name_pointer = (char**)(_result + 1 + sizeof(void*) * _length);
-
-    name_pointer[0] = (char*)"filtered";
+    nodes[0] = node;
+    nodes[1] = node2;
 
     //
 
