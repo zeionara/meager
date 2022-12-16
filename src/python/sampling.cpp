@@ -1,4 +1,5 @@
 #include "../base/api/sampling.h"
+#include "utils.h"
 
 extern "C" void meager__python__api__sampling__init(char* pattern, long nObservedTriplesPerPatternInstance, bool bern, bool crossSampling, long nWorkers, bool verbose) {
     meager::main::api::sampling::init(
@@ -14,15 +15,7 @@ extern "C" void** meager__python__api__sampling__sample(
         size, entityNegativeRate, relationNegativeRate, headBatch, verbose
     );
 
-    void** result = new void*[5];
+    return meager::python::utils::encode::tripleBatch(batch);
 
-    int i = 0;
-
-    result[i++] = batch->head;
-    result[i++] = batch->relation;
-    result[i++] = batch->tail;
-    result[i++] = batch->labels;
-    result[i++] = (void*)batch->length;
-
-    return result;
 }
+
