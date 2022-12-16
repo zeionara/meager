@@ -66,9 +66,28 @@ extern "C" void** meager__python__api__evaluation__computeMetrics(bool verbose) 
     names[0] = (char*)"foo";
     names[1] = (char*)"bar";
     names[2] = (char*)"qux";
+    
+    //
+
+    const char _length = 1;
+
+    unsigned char* _result = new unsigned char[sizeof(void*) * _length + sizeof(char*) + 1];
+
+    _result[0] = _length;
+
+    void** nodes = (void**)(_result + 1);
+
+    nodes[0] = result;
+
+    char** name_pointer = (char**)(_result + 1 + sizeof(void*) * _length);
+
+    name_pointer[0] = (char*)"filtered";
+
+    //
 
     unsigned char** bar = new unsigned char*[1];
-    bar[0] = result;
+    // bar[0] = result;
+    bar[0] = _result;
 
     return (void**)bar;
 }
