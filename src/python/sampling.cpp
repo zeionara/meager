@@ -1,5 +1,5 @@
 #include "../base/api/sampling.h"
-#include "utils.h"
+#include "utils/main.h"
 
 extern "C" void meager__python__api__sampling__init(char* pattern, long nObservedTriplesPerPatternInstance, bool bern, bool crossSampling, long nWorkers, bool verbose) {
     meager::main::api::sampling::init(
