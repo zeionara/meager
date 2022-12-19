@@ -88,7 +88,7 @@ namespace meager::main::triple::list {
                 }
             }
 
-            cout << "FOO" << endl;
+            // cout << "FOO" << endl;
 
             this->length = nUniqueTriples;
             this->content->length = nUniqueTriples;

@@ -120,6 +120,8 @@ namespace meager::main::evaluation::link_prediction {
 
                 }
             }
+
+            // cout << "unconstrained unfiltered: " << state->unconstrained->unfiltered->value << endl;
             // loopStopwatch->stop();
 
             // cout << endl << endl;
