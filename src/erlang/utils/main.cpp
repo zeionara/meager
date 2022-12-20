@@ -30,7 +30,6 @@ namespace meager::erlang::utils::encode {
 
         delete tripleBatch;
 
-
         ERL_NIF_TERM* batch = new ERL_NIF_TERM[nElements]();
 
         batch[0] = enif_make_list_from_array(env, batch_h, batchSize);

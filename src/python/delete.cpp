@@ -6,7 +6,5 @@ extern "C" void meager__python__api__delete__triple__batch(meager::main::samplin
 }
 
 extern "C" void meager__python__api__delete__metree(meager::python::utils::encode::metric::EncodedTree* pointer, bool verbose) {
-    // printf("deleting metree: %d\n", pointer);
-    // cout << endl;
     delete pointer;
 }

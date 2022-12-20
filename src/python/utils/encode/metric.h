@@ -54,40 +54,26 @@ namespace meager::python::utils::encode::metric {
 
     struct EncodedNode;
 
-    // template <typename T>
     struct EncodedTree {
         unsigned char* content;
-        // T* values;
         EncodedNode** values;
         unsigned long length;
 
-        // EncodedTree(void* content, T* values = NULL) {
         EncodedTree(unsigned char* content, EncodedNode** values = NULL) {
             this->content = content;
             this->values = values;
-            // this->length = length;
             this->length = content[0] & 0x7f;
         }
 
         ~EncodedTree();
-        // ~EncodedTree() {
-        //     cout << "foo" << endl;
-        //     for (unsigned long i = 0; i < length; i++) {
-        //         cout << "deleting " << i << " value" << endl;
-        //         delete values[i];
-        //     }
-        //     delete [] content;
-        // }
     };
 
     struct EncodedNode {
-        // void* tree;
         void* treeContent;
         char* label;
 
         EncodedTree* tree;
 
-        // EncodedNode(void* tree, char* label) {
         EncodedNode(EncodedTree* tree, char* label) {
             this->treeContent = tree->content;
             this->tree = tree;
@@ -95,15 +81,12 @@ namespace meager::python::utils::encode::metric {
         }
 
         ~EncodedNode() {
-            // cout << "clean up node " << label << endl;
             delete tree;
             delete [] label;
         }
     };
 
-
     template <typename M, typename T>
-    /// void* tree(meager::main::evaluation::metric::tree::Tree* tree, INT normalizationCoefficient) {
     EncodedTree* tree(meager::main::evaluation::metric::tree::Tree* tree, INT normalizationCoefficient) {
         if (tree->length > 127) {
             throw invalidArgument("Cannot encode node with more than 127 descendants");
@@ -124,25 +107,15 @@ namespace meager::python::utils::encode::metric {
 
                 std::string label = node->label;
 
-                // void** encodedNode = new void*[2];
-
                 EncodedNode* encodedNode = new EncodedNode(
                     encode::metric::tree<M, T>(node->value, normalizationCoefficient),
                     meager::python::utils::string::toDynamicCharArray(label)
                 );
 
-                // encodedNode[0] = encode::metric::tree<M, T>(node->value, normalizationCoefficient);
-                // encodedNode[1] = meager::python::utils::string::toDynamicCharArray(label);
-
                 encodedNodes[i] = encodedNode;
             }
 
-            // return new EncodedTree<EncodedNode*>((void*)result, (EncodedNode**)encodedNodes);
-            auto obj = new EncodedTree(result, (EncodedNode**)encodedNodes);
-            // delete obj;
-            // cout << "deleted" << endl;
-            return obj;
-            // return result;
+            return new EncodedTree(result, (EncodedNode**)encodedNodes);
         } else {
 
             auto metrics = tree->metrics;
@@ -168,8 +141,6 @@ namespace meager::python::utils::encode::metric {
                     names[i] = (char*)meager::python::utils::encode::metric::metric<T>(metric); // (char*)encodeMetric(metric).c_str();
                 }
 
-                // return result;
-                // return new EncodedTree<M>((void*)result);
                 return new EncodedTree(result);
             }
 

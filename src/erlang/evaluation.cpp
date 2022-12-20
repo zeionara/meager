@@ -80,6 +80,7 @@ namespace meager::erlang::api::evaluation {
             );
 
             ERL_NIF_TERM encodedTree = utils::encode::metric::tree(env, root->tree, root->normalizationCoefficient);
+
             delete root;
 
             return utils::nif::complete::success(env, encodedTree);
