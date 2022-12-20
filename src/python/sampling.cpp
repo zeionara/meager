@@ -7,7 +7,7 @@ extern "C" void meager__python__api__sampling__init(char* pattern, long nObserve
     );
 }
 
-meager::main::sampling::batch::Triple* lastSampledBatch = NULL;
+// meager::main::sampling::batch::Triple* lastSampledBatch = NULL;
 
 extern "C" void** meager__python__api__sampling__sample(
     long size, long entityNegativeRate, long relationNegativeRate, bool headBatch, bool verbose
@@ -16,16 +16,7 @@ extern "C" void** meager__python__api__sampling__sample(
         size, entityNegativeRate, relationNegativeRate, headBatch, verbose
     );
 
-    lastSampledBatch = batch;
+    // lastSampledBatch = batch;
 
     return meager::python::utils::encode::tripleBatch(batch);
-}
-
-extern "C" void meager__python__api__sampling__sample__free(bool verbose) {
-    if (lastSampledBatch == NULL) {
-        throw invalidArgument("There are no sampled batches, nothing to clean");
-    }
-
-    delete lastSampledBatch;
-    lastSampledBatch = NULL;
 }

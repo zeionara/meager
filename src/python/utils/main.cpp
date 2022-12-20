@@ -7,7 +7,7 @@ namespace meager::python::utils {
     namespace encode {
 
         void** tripleBatch(meager::main::sampling::batch::Triple* batch, bool includeLabels) {
-            void** result = new void*[includeLabels ? 5 : 4];
+            void** result = new void*[includeLabels ? 6 : 5];
 
             int i = 0;
 
@@ -20,6 +20,10 @@ namespace meager::python::utils {
             }
 
             result[i++] = (void*)batch->length;
+            result[i++] = batch;
+
+            // printf("encoded triple batch result address: %d\n", result);
+            // cout << endl;
 
             return result;
         }
