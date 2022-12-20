@@ -1,9 +1,9 @@
 #include "erl_nif.h"
-#include "utils.h"
+
+#include "utils/nif/decode.h"
+#include "utils/nif/complete.h"
 
 #include "../base/api/corpus.h"
-
-// using namespace meager;
 
 namespace meager::erlang::api::corpus {
 

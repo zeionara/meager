@@ -12,8 +12,8 @@ namespace meager::erlang::api::sampling {
     extern ERL_NIF_TERM
     sample(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
 
-    extern ERL_NIF_TERM
-    encodeTripleBatch(ErlNifEnv* env, meager::main::sampling::batch::Triple* tripleBatch, bool encodeLabels = true);
+    // extern ERL_NIF_TERM
+    // encodeTripleBatch(ErlNifEnv* env, meager::main::sampling::batch::Triple* tripleBatch, bool encodeLabels = true);
 
 }
 

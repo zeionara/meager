@@ -1,5 +1,8 @@
 #include "erl_nif.h"
-#include "utils.h"
+#include "utils/nif/decode.h"
+#include "utils/nif/encode.h"
+#include "utils/nif/complete.h"
+// #include "utils.h"
 // #include "../base/Setting.h"
 #include "../base/api/corpus.h"
 

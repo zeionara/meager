@@ -3,7 +3,9 @@
 #include "random.h"
 #include "reader.h"
 #include "../base/types.h"
-#include "utils.h"
+#include "utils/nif/decode.h"
+#include "utils/nif/encode.h"
+#include "utils/nif/complete.h"
 // #include "../base/main.h"
 #include <iostream>
 #include "test.h"
