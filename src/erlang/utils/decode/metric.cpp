@@ -4,8 +4,6 @@
 #include "../../../base/evaluation/metric/tracker/Rank.h"
 #include "../../../base/evaluation/metric/tracker/ReciprocalRank.h"
 
-#include "../main.h"
-
 #include "../nif/decode.h"
 
 namespace meager::erlang::utils::decode::metric {

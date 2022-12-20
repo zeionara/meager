@@ -1,6 +1,5 @@
 #include "erl_nif.h"
 
-#include "utils/main.h"
 #include "utils/nif/decode.h"
 #include "utils/nif/complete.h"
 
