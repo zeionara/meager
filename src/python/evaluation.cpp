@@ -30,5 +30,17 @@ extern "C" void meager__python__api__evaluation__evaluate(char* componentName, R
 extern "C" void* meager__python__api__evaluation__computeMetrics(bool verbose) {
     meager::main::evaluation::metric::tree::Root* root = meager::main::api::evaluation::computeMetrics(verbose);
 
-    return meager::python::utils::encode::metric::tree<double, unsigned short>(root->tree, root->normalizationCoefficient);
+    // return ((meager::python::utils::encode::metric::EncodedTree*)meager::python::utils::encode::metric::tree<double, unsigned short>(root->tree, root->normalizationCoefficient))->content;
+    // return meager::python::utils::encode::metric::tree<double, unsigned short>(root->tree, root->normalizationCoefficient)->content;
+    auto tree = meager::python::utils::encode::metric::tree<double, unsigned short>(root->tree, root->normalizationCoefficient);
+    // delete tree;
+
+    // printf("generated metree: %d\n", tree);
+    // cout << endl;
+
+    // auto tmp = new meager::python::utils::encode::metric::EncodedTree(NULL);
+    // delete tmp;
+
+    return tree;
+    // return meager::python::utils::encode::metric::tree<double, unsigned short>(root->tree, root->normalizationCoefficient);
 }
