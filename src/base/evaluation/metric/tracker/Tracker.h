@@ -39,21 +39,9 @@ namespace meager::main::evaluation::metric::tracker {
             return double(value);
         }
 
-        // double divide(INT divisor) {
-        //     return double(value) / divisor;
-        // }
-
     };
 
-    // template <typename T>
-    // double operator/(Tracker<T>& tracker, INT& divisor) {
-    //     return double(tracker.value) / divisor;
-    // }
-
-    double operator/(TrackerBase& tracker, INT& divisor); // {
-    //     // return double(tracker.value) / divisor;
-    //     return 2.0;
-    // }
+    double operator/(TrackerBase& tracker, INT& divisor);
 
 }
 

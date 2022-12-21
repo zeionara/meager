@@ -137,7 +137,6 @@ namespace meager::python::utils::encode::metric {
                 for (INT i = 0; i < tree->metrics->length; i++) {
                     auto metric = tree->metrics->trackers[i];
 
-                    // values[i] = metric->divide(normalizationCoefficient);
                     values[i] = *metric / normalizationCoefficient;
                     names[i] = (char*)meager::python::utils::encode::metric::metric<T>(metric); // (char*)encodeMetric(metric).c_str();
                 }
