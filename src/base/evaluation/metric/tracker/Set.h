@@ -51,7 +51,8 @@ namespace meager::main::evaluation::metric::tracker {
             printf("%s", prefix.c_str());
 
             for (INT i = 0; i < length; i++) {
-                printf("\t%f", trackers[i]->divide(nTriples));
+                // printf("\t%f", trackers[i]->divide(nTriples));
+                printf("\t%f", *trackers[i] / nTriples);
             }
 
             printf("\n");

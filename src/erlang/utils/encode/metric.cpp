@@ -37,7 +37,7 @@ namespace meager::erlang::utils::encode::metric {
 
                     // evaluation::metric::Metric id = metric->getId();
 
-                    encodedMetrics[i] = enif_make_tuple2(env, metric::metric(env, metric), enif_make_double(env, metric->divide(normalizationCoefficient)));
+                    encodedMetrics[i] = enif_make_tuple2(env, metric::metric(env, metric), enif_make_double(env, *metric / normalizationCoefficient));
                 }
             }
 
