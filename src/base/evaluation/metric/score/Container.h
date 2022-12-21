@@ -6,8 +6,10 @@ namespace meager::main::evaluation::metric::score {
     struct Container {
 
         virtual void updateMetrics() = 0;
+
         virtual void resetScore() = 0;
         virtual void resetMetrics() = 0;
+
         virtual void reset() = 0;
 
     };

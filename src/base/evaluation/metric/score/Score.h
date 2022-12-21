@@ -5,7 +5,6 @@
 #include <optional>
 #include <unordered_map>
 
-// #include "../../../types.h"
 #include "Container.h"
 
 #include "../Tree.h"
@@ -16,29 +15,29 @@ namespace meager::main::evaluation::metric::score {
 
     struct Score: Container {
 
-        INT value;
+        INT truePositive;
+        INT falsePositive;
+
+        INT trueNegative;
+        INT falseNegative;
+
         tracker::Set* metrics;
 
         Score(tracker::Set* metrics) {
-            value = 0;
+            resetValue();
             this->metrics = metrics;
         }
 
         void updateMetrics();
-
-        void updateMetrica() {
-            
-        }
+        void resetMetrics();
 
         void resetValue() {
-            value = 0;
+            truePositive = falsePositive = trueNegative = falseNegative = 0;
         }
 
         void resetScore() {
             resetValue();
         }
-
-        void resetMetrics();
 
         void reset() {
             resetValue();

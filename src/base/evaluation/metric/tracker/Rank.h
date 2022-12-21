@@ -3,36 +3,38 @@
 
 #include "Tracker.h"
 
-namespace meager::main::evaluation::metric::rank {
+namespace meager::main::evaluation::metric {
 
-    string const name = "rank";
+    namespace rank {
 
-}
+        string const name = "rank";
 
-namespace meager::main::evaluation::metric::tracker {
+    }
 
-    struct Rank: Tracker<INT> {
+    namespace tracker {
 
-        Rank(): Tracker() {};
-        // RankMetricTracker(string label): MetricTracker(label) {};
-        // RankMetricTracker(): MetricTracker() {};
+        struct Rank: Tracker<INT> {
 
-        void update(score::Score* score) {
-            value += score->value + 1;
-        }
+            Rank(): Tracker() {};
 
-        string getLabel() {
-            return rank::name;
-        }
+            void update(score::Score* score) {
+                value += score->falsePositive + 1;
+            }
 
-        string getName() {
-            return rank::name;
-        }
+            string getLabel() {
+                return rank::name;
+            }
 
-        Metric getId() {
-            return Metric::Rank;
-        }
-    };
+            string getName() {
+                return rank::name;
+            }
+
+            Metric getId() {
+                return Metric::Rank;
+            }
+        };
+
+    }
 
 }
 

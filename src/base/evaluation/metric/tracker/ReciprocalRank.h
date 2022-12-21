@@ -3,36 +3,38 @@
 
 #include "Tracker.h"
 
-namespace meager::main::evaluation::reciprocal_rank {
+namespace meager::main::evaluation::metric {
 
-    string const name = "reciprocal_rank";
+    namespace reciprocal_rank {
 
-}
+        string const name = "reciprocal_rank";
 
-namespace meager::main::evaluation::metric::tracker {
+    }
 
-    struct ReciprocalRank: Tracker<REAL> {
+    namespace tracker {
 
-        /// ReciprocalRankMetricTracker(string label): MetricTracker(label) {};
-        ReciprocalRank(): Tracker() {};
-        // ReciprocalRankMetricTracker(): MetricTracker() {};
+        struct ReciprocalRank: Tracker<REAL> {
 
-        void update(score::Score* score) {
-            value += 1.0 / (score->value + 1);
-        }
+            ReciprocalRank(): Tracker() {};
 
-        string getLabel() {
-            return reciprocal_rank::name;
-        }
+            void update(score::Score* score) {
+                value += 1.0 / (score->falsePositive + 1);
+            }
 
-        string getName() {
-            return reciprocal_rank::name;
-        }
+            string getLabel() {
+                return reciprocal_rank::name;
+            }
 
-        Metric getId() {
-            return Metric::ReciprocalRank;
-        }
-    };
+            string getName() {
+                return reciprocal_rank::name;
+            }
+
+            Metric getId() {
+                return Metric::ReciprocalRank;
+            }
+        };
+
+    }
 
 }
 

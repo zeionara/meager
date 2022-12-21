@@ -98,25 +98,42 @@ namespace meager::main::evaluation::link_prediction {
 
                     REAL hypothesis_distance = probabilities[hypothesis];
                     if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) {
-                        state->unconstrained->unfiltered->value += 1; // Count incorrectly classified triples
-                        if (not corpus->contains(sampledTriple)) // If less probable triple is not present in the dataset
-                            state->unconstrained->filtered->value += 1; // Count incorrectly classified triples which are not present in the dataset (filtered score must be better than unfiltered concerning rank)
+                        // Count incorrectly predicted links
+                        state->unconstrained->unfiltered->falsePositive += 1; 
+
+                        bool not_contains = not corpus->contains(sampledTriple);
+
+                        if (not_contains) { // If less probable triple is not present in the dataset
+                            // Count incorrectly classified triples which are not present in the dataset (filtered score must be better than unfiltered concerning rank)
+                            state->unconstrained->filtered->falsePositive += 1; 
+                        }
+
+                        if (corpus->allows(sampledTriple)) {
+                            // Count incorrectly classified triples the head of which is presented in type constraint list for heads (constrained score must be better than unconstrained)
+                            state->constrained->unfiltered->falsePositive += 1;
+                            if (not_contains) {
+                                // Count incorrectly classified triples the head of which is presented in type constraint list for heads but triple does not exist
+                                state->constrained->filtered->falsePositive += 1;
+                            }
+                        }
                     }
 
                     // unconstrainedStopwatch->stop();
 
                     // constrainedStopwatch->start();
-                    auto allows = corpus->allows(sampledTriple);
+                    // auto allows = corpus->allows(sampledTriple);
                     // constrainedStopwatch->stop();
 
-                    if (allows) {
-                        if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) {
-                            state->constrained->unfiltered->value += 1; // Count incorrectly classified triples the head of which is presented in type constraint list for heads (constrained score must be better than unconstrained)
-                            if (not corpus->contains(sampledTriple)) {
-                                state->constrained->filtered->value += 1; // Count incorrectly classified triples the head of which is presented in type constraint list for heads but triple does not exist
-                            }
-                        }
-                    }
+                    // if (allows) {
+                    //     if ((!reverse && (hypothesis_distance <= reference_distance)) || (reverse && (hypothesis_distance >= reference_distance))) {
+                    //         // Count incorrectly classified triples the head of which is presented in type constraint list for heads (constrained score must be better than unconstrained)
+                    //         state->constrained->unfiltered->falsePositive += 1;
+                    //         if (not corpus->contains(sampledTriple)) {
+                    //             // Count incorrectly classified triples the head of which is presented in type constraint list for heads but triple does not exist
+                    //             state->constrained->filtered->falsePositive += 1;
+                    //         }
+                    //     }
+                    // }
 
                 }
             }
