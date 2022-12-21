@@ -5,6 +5,7 @@
 
 #include "../../types.h"
 #include <stdexcept>
+#include <iostream>
 
 #include "constants.h"
 

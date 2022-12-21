@@ -110,7 +110,7 @@ namespace meager::erlang::api::corpus {
         try {
             return utils::nif::complete::success(
                 env,
-                utils::nif::decode::longInteger(
+                enif_make_long(
                     env,
                     main::api::corpus::countRelations(
                         utils::nif::decode::boolean(env, argv[0])
